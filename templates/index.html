@@ -3,65 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSW Dynamic - Magway</title>
+    <title>CSW Dynamic - Facebook Style</title>
     <style>
         body { font-family: sans-serif; background: linear-gradient(135deg, #090d16, #111827); color: #fff; margin: 0; padding: 0; min-height: 100vh; }
-        header { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); padding: 0.8rem 1.2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.2rem; font-weight: bold; color: #38bdf8; text-decoration: none; }
-        .nav-links { display: flex; align-items: center; gap: 12px; font-size: 14px; }
-        .container { max-width: 550px; margin: 20px auto; padding: 0 12px; }
-        .card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.2rem; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
-        textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid rgba(255,255,255,0.15); background: rgba(11, 15, 25, 0.8); color: #fff; border-radius: 10px; box-sizing: border-box; resize: none; height: 80px; }
+        
+        /* Facebook Style Top Bar */
+        header { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(15px); padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.3rem; font-weight: bold; color: #38bdf8; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .nav-center { display: flex; gap: 15px; }
+        .nav-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 6px 12px; border-radius: 8px; color: #94a3b8; transition: 0.2s; text-decoration: none; }
+        .nav-icon-btn:hover, .nav-icon-btn.active { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .notif-badge { position: relative; }
+        .badge-count { position: absolute; top: 2px; right: 5px; background: #ef4444; color: white; font-size: 10px; padding: 1px 5px; border-radius: 10px; font-weight: bold; }
+
+        .container { max-width: 550px; margin: 15px auto; padding: 0 10px; }
+        
+        /* Stories Tray */
+        .stories-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
+        .stories-container::-webkit-scrollbar { display: none; }
+        .story-card { min-width: 105px; height: 165px; border-radius: 12px; background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; cursor: pointer; text-decoration: none; color: #fff; background-size: cover; background-position: center; }
+        .story-create { background: linear-gradient(135deg, #1e293b, #0f172a); justify-content: center; align-items: center; text-align: center; }
+        .story-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #38bdf8; background: #0ea5e9; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; position: absolute; top: 8px; left: 8px; }
+
+        .card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.2rem; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+        textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid rgba(255,255,255,0.15); background: rgba(11, 15, 25, 0.8); color: #fff; border-radius: 10px; box-sizing: border-box; resize: none; height: 75px; }
         input[type="file"] { width: 100%; padding: 8px; margin: 5px 0 12px 0; background: rgba(11, 15, 25, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #94a3b8; font-size: 14px; box-sizing: border-box; }
         button { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; width: 100%; font-size: 15px; transition: 0.2s; }
         button:hover { background: #0ea5e9; }
+        
         .post-media { width: 100%; border-radius: 12px; margin-top: 10px; max-height: 450px; object-fit: cover; }
-        .address-box { font-size: 13px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); backdrop-filter: blur(8px); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .username { font-weight: bold; color: #38bdf8; font-size: 15px; text-decoration: none; }
         
-        /* Reaction & Action Buttons */
         .post-actions { display: flex; justify-content: space-around; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); position: relative; }
         .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px; padding: 6px 12px; border-radius: 8px; transition: 0.2s; font-weight: 500; }
         .action-btn:hover { background: rgba(255,255,255,0.1); color: #38bdf8; }
         
-        /* Facebook Reaction Popup Hover Box */
         .reaction-box { position: absolute; bottom: 45px; left: 10px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 30px; display: none; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 10; }
         .reaction-box span { font-size: 22px; cursor: pointer; transition: transform 0.2s; }
         .reaction-box span:hover { transform: scale(1.3); }
         .like-container:hover .reaction-box { display: flex; }
 
-        /* Comments Section */
-        .comments-section { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 13px; }
+        .comments-section { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 13px; display: none; }
         .comment-item { background: rgba(11, 15, 25, 0.5); padding: 8px 12px; border-radius: 8px; margin-top: 6px; }
         .comment-form { display: flex; gap: 8px; margin-top: 10px; }
         .comment-input { flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(11, 15, 25, 0.8); color: #fff; font-size: 13px; }
         .comment-btn { width: auto; padding: 8px 14px; font-size: 13px; border-radius: 8px; }
         
-        .profile-link { color: #38bdf8; text-decoration: none; font-weight: 500; }
         .logout-btn { color: #ef4444; background: rgba(239, 68, 68, 0.15); padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
     <header>
-        <a href="{{ url_for('index') }}" class="logo">⚡ CSW Dynamic</a>
-        <div class="nav-links">
-            <a href="{{ url_for('profile') }}" class="profile-link">👤 Profile</a>
-            <span style="color: #64748b;">|</span>
+        <a href="{{ url_for('index') }}" class="logo">⚡ CSW</a>
+        <div class="nav-center">
+            <a href="{{ url_for('index') }}" class="nav-icon-btn active" title="News Feed">🏠</a>
+            <a href="{{ url_for('profile') }}" class="nav-icon-btn" title="Watch / Media">📺</a>
+            <a href="{{ url_for('profile') }}" class="nav-icon-btn" title="Profile">👥</a>
+        </div>
+        <div class="nav-right">
+            <div class="notif-badge">
+                <a href="{{ url_for('index') }}" class="nav-icon-btn" style="padding: 6px;">🔔</a>
+                <span class="badge-count">3</span>
+            </div>
             <a href="{{ url_for('logout') }}" class="logout-btn">ထွက်ရန်</a>
         </div>
     </header>
 
     <div class="container">
-        <!-- Dynamic Studio Address & Info -->
-        <div class="address-box">
-            📍 <b>Dynamic Studio</b> (မကွေးမြို့) 🔥 ျောဖျေရေးနှင့် ကြံ့ခိုင်ရေး မီဒီယာများ <br>
-            <span style="font-size: 11px; opacity: 0.9;">(1 session - 5,000 MMK | 1 Month - 50,000 MMK)</span>
+        <div class="stories-container">
+            <div class="story-card story-create" onclick="document.getElementById('storyModal').style.display='block'">
+                <div style="font-size: 28px; color: #38bdf8; margin-bottom: 5px;">➕</div>
+                <div style="font-size: 12px; font-weight: bold;">စတอรี่တင်ရန်</div>
+            </div>
+
+            {% for story in stories %}
+            <div class="story-card" style="background-image: url('{{ url_for('static', filename='uploads/' + story.media_file) }}');">
+                <div class="story-avatar">{{ story.author.username[0] | upper }}</div>
+                <div style="font-size: 11px; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">@{{ story.author.username }}</div>
+            </div>
+            {% endfor %}
         </div>
 
-        <!-- Create Post Box -->
+        <div id="storyModal" class="card" style="display: none; border: 1px solid #38bdf8; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="margin: 0; font-size: 15px; color: #38bdf8;">✨ စတอรี่အသစ် တင်မည်</h3>
+                <button onclick="document.getElementById('storyModal').style.display='none'" style="background: none; color: #94a3b8; width: auto; padding: 2px 8px; font-size: 16px;">✕</button>
+            </div>
+            <form action="{{ url_for('add_story') }}" method="POST" enctype="multipart/form-data">
+                <input type="file" name="story_file" accept="image/*,video/*" required>
+                <button type="submit" style="padding: 8px; font-size: 14px;">စတอรี่တင်မည် 🚀</button>
+            </form>
+        </div>
+
         <div class="card">
-            <h3 style="margin-top: 0; font-size: 16px; color: #f8fafc;">🚀 ဗီဒီယို/ပုံ အသစ်တင်ရန်</h3>
+            <h3 style="margin-top: 0; font-size: 15px; color: #f8fafc;">🚀 ဗီဒီယို/ပုံ အသစ်တင်ရန်</h3>
             <form method="POST" enctype="multipart/form-data">
                 <textarea name="content" placeholder="ဒီနေ့ လေ့ကျင့်ခန်းအကြောင်း ဘာတွေပြောချင်လဲ..."></textarea>
                 <input type="file" name="media_file" accept="image/*,video/*">
@@ -69,14 +106,13 @@
             </form>
         </div>
 
-        <!-- News Feed Section -->
-        <h3 style="margin-bottom: 15px; font-size: 18px; color: #f8fafc;">📢 သတင်းဖိဒ် (News Feed)</h3>
+        <h3 style="margin-bottom: 12px; font-size: 16px; color: #f8fafc;">📢 သတင်းဖိဒ် (News Feed)</h3>
         
         {% for post in posts %}
         <div class="card">
             <div class="post-header">
                 <a href="{{ url_for('profile') }}" class="username">@{{ post.author.username }}</a>
-                <span style="font-size: 12px; color: #64748b;">ယခုလေးတင်</span>
+                <span style="font-size: 11px; color: #64748b;">ယခုလေးတင်</span>
             </div>
             <p style="margin: 8px 0; line-height: 1.5;">{{ post.content }}</p>
             
@@ -88,16 +124,13 @@
                 {% endif %}
             {% endif %}
 
-            <!-- Like Count Display -->
             <div style="font-size: 13px; color: #94a3b8; margin-top: 10px;">
                 ❤️ <span id="like-count-{{ post.id }}">{{ post.likes }}</span> ဦး သဘောကျသည်
             </div>
 
-            <!-- Interactive Actions & Facebook Reaction Popup -->
             <div class="post-actions">
                 <div class="like-container" style="position: relative;">
                     <button class="action-btn" onclick="likePost({{ post.id }})">❤️ အသည်းပေးရန်</button>
-                    <!-- Facebook Reaction Popup Icons -->
                     <div class="reaction-box">
                         <span onclick="likePost({{ post.id }})">❤️</span>
                         <span onclick="likePost({{ post.id }})">👍</span>
@@ -105,6 +138,45 @@
                         <span onclick="likePost({{ post.id }})">🔥</span>
                         <span onclick="likePost({{ post.id }})">😢</span>
                     </div>
+                </div>
+                <button class="action-btn" onclick="toggleComments({{ post.id }})">💬 Comment</button>
+                <button class="action-btn" onclick="navigator.clipboard.writeText(window.location.href); alert('လင့်ခ်ကို ကူးယူပြီးပါပြီ 🔗');">🔗 Share</button>
+            </div>
+
+            <div id="comment-box-{{ post.id }}" class="comments-section">
+                {% for comment in post.comments %}
+                <div class="comment-item">
+                    <b>@{{ comment.author.username }}:</b> {{ comment.text }}
+                </div>
+                {% endfor %}
+                <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="comment-form">
+                    <input type="text" name="text" placeholder="မှတ်ချက်ရေးရန်..." class="comment-input" required>
+                    <button type="submit" class="comment-btn">ပို့မည်</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="card" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            <p>လောလောဆယ် ဖိဒ်တွင် ပို့စ်များ မရှိသေးပါ။</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function likePost(postId) {
+            fetch('/like/' + postId, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('like-count-' + postId).innerText = data.likes;
+            });
+        }
+        function toggleComments(postId) {
+            let box = document.getElementById('comment-box-' + postId);
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
                 </div>
                 <button class="action-btn" onclick="document.getElementById('comment-box-{{ post.id }}').style.display='block'">💬 Comment</button>
                 <button class="action-btn" onclick="navigator.clipboard.writeText(window.location.href); alert('လင့်ခ်ကို ကူးယူပြီးပါပြီ 🔗');">🔗 Share</button>
