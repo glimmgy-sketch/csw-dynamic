@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Dynamic Studio</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 2rem; border-radius: 12px; width: 100%; max-width: 350px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #38bdf8; margin-bottom: 1.5rem; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #475569; background: #0f172a; color: #fff; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #22c55e; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #16a34a; }
+        .flash { background: #ef4444; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; text-align: center; }
+        p { text-align: center; margin-top: 1rem; font-size: 14px; }
+        a { color: #38bdf8; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🔐 အကောင့်ဝင်ရန်</h2>
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="flash">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="username" placeholder="အကောင့်နာမည် (Username)" required>
+            <input type="password" name="password" placeholder="စကားဝှက် (Password)" required>
+            <button type="submit">လော့ဂ်အင် ဝင်မည်</button>
+        </form>
+        <p>အကောင့်မရှိသေးဘူးလား? <a href="{{ url_for('signup') }}">အကောင့်အသစ်ဖွင့်ရန်</a></p>
+    </div>
+</body>
+</html>
