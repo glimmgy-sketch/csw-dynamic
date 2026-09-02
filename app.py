@@ -7,7 +7,9 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dynamic-studio-secret-key-2026'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+db_path = os.path.join(os.getcwd(), 'database.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -21,6 +23,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    bio = db.Column(db.Text, nullable=True, default="Dynamic Studio (မကွေးမြို့) - 📍 လေ့ကျင့်ခန်းနှင့် ကြံ့ခိုင်ရေး")
+    followers_count = db.Column(db.Integer, default=120)
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,6 +33,12 @@ class Post(db.Model):
     likes = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
+
+class Story(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    media_file = db.Column(db.String(300), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author = db.relationship('User', backref=db.backref('stories', lazy=True))
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,7 +72,20 @@ def index():
         return redirect(url_for('index'))
         
     posts = Post.query.order_by(Post.id.desc()).all()
-    return render_template('index.html', posts=posts)
+    stories = Story.query.order_by(Story.id.desc()).all()
+    return render_template('index.html', posts=posts, stories=stories)
+
+@app.route('/add_story', methods=['POST'])
+@login_required
+def add_story():
+    file = request.files.get('story_file')
+    if file and file.filename != '':
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        new_story = Story(media_file=filename, user_id=current_user.id)
+        db.session.add(new_story)
+        db.session.commit()
+    return redirect(url_for('index'))
 
 @app.route('/like/<int:post_id>', methods=['POST'])
 @login_required
@@ -82,9 +105,28 @@ def add_comment(post_id):
         db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == 'POST':
+        new_bio = request.form.get('bio')
+        if new_bio is not None:
+            current_user.bio = new_bio
+            db.session.commit()
+            return redirect(url_for('profile'))
+            
+        content = request.form.get('content')
+        file = request.files.get('media_file')
+        filename = None
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
+        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('profile'))
+
     user_posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.id.desc()).all()
     return render_template('profile.html', posts=user_posts)
 
@@ -94,17 +136,32 @@ def signup():
         username = request.form.get('username')
         password = request.form.get('password')
         if User.query.filter_by(username=username).first():
-            flash('ဒီအကောင့်နာမည် ရှိနှင့်ပြီးသားပါ၊ အခြားနာမည်သုံးပါ။')
             return redirect(url_for('signup'))
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        db.session.add(User(username=username, password=hashed_password))
+        new_user = User(username=username, password=hashed_password)
+        db.session.add(new_user)
         db.session.commit()
-        flash('အကောင့်ဖွင့်ပြီးပါပြီ၊ လော့ဂ်အင် ဝင်နိုင်ပါပြီ။')
-        return redirect(url_for('login'))
+        login_user(new_user)
+        return redirect(url_for('index'))
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.form.get('username')).first()
+        if user and check_password_hash(user.password, request.form.get('password')):
+            login_user(user)
+            return redirect(url_for('index'))
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form.get('username')).first()
         if user and check_password_hash(user.password, request.form.get('password')):
