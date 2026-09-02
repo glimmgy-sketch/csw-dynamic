@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - {{ current_user.username }}</title>
+    <style>
+        body { font-family: sans-serif; background: linear-gradient(135deg, #090d16, #111827); color: #fff; margin: 0; padding: 0; min-height: 100vh; }
+        header { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); padding: 0.8rem 1.2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo { font-size: 1.2rem; font-weight: bold; color: #38bdf8; text-decoration: none; }
+        .container { max-width: 550px; margin: 20px auto; padding: 0 12px; }
+        .profile-card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        .avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #38bdf8, #0ea5e9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #0f172a; margin: 0 auto 10px auto; }
+        .card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.2rem; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        .post-media { width: 100%; border-radius: 12px; margin-top: 10px; max-height: 450px; object-fit: cover; }
+        a { color: #38bdf8; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">⚡ CSW Dynamic</a>
+        <a href="{{ url_for('index') }}" style="font-size: 14px;">⬅ ဖိဒ်သို့ ပြန်ရန်</a>
+    </header>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="avatar">{{ current_user.username[0] | upper }}</div>
+            <h2>@{{ current_user.username }}</h2>
+            <p style="color: #38bdf8; font-size: 14px;">📍 Dynamic Studio (မကွေးမြို့)</p>
+        </div>
+
+        <h3>📌 ကျွန်ုပ်၏ ပို့စ်များ</h3>
+        {% for post in posts %}
+        <div class="card">
+            <p style="margin: 8px 0; line-height: 1.5;">{{ post.content }}</p>
+            {% if post.media_file %}
+                {% if post.media_file.endswith(('mp4', 'MOV', 'webm', 'ogg')) %}
+                    <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="post-media"></video>
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" class="post-media">
+                {% endif %}
+            {% endif %}
+            <div style="font-size: 13px; color: #94a3b8; margin-top: 10px;">
+                ❤️ {{ post.likes }} ဦး သဘောကျသည်
+            </div>
+        </div>
+        {% else %}
+        <div class="card" style="text-align: center; color: #94a3b8;">
+            <p>သင် တင်ထားသော ပို့စ် မရှိသေးပါ။</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
+
