@@ -22,7 +22,7 @@ login_manager.login_view = 'login'
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     bio = db.Column(db.Text, nullable=True, default="Dynamic Studio (မကွေးမြို့) - 📍 လေ့ကျင့်ခန်းနှင့် ကြံ့ခိုင်ရေး")
     followers_count = db.Column(db.Integer, default=120)
 
@@ -52,10 +52,7 @@ def load_user(user_id):
     return db.session.get(User, int(user_id))
 
 with app.app_context():
-    try:
-        db.create_all()
-    except Exception as e:
-        print("DB error:", e)
+    db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
@@ -133,9 +130,11 @@ def signup():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        if not username or not password:
+            return redirect(url_for('signup'))
         if User.query.filter_by(username=username).first():
             return redirect(url_for('signup'))
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        hashed_password = generate_password_hash(password)
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -146,8 +145,10 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        user = User.query.filter_by(username=request.form.get('username')).first()
-        if user and check_password_hash(user.password, request.form.get('password')):
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('index'))
     return render_template('login.html')
