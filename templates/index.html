@@ -5,30 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSW Dynamic - Magway</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 0; }
-        header { background: #1e293b; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
+        body { font-family: sans-serif; background: linear-gradient(135deg, #090d16, #111827); color: #fff; margin: 0; padding: 0; min-height: 100vh; }
+        header { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); padding: 0.8rem 1.2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: #38bdf8; text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 12px; font-size: 14px; }
         .container { max-width: 550px; margin: 20px auto; padding: 0 12px; }
-        .card { background: #1e293b; padding: 1.2rem; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid #334155; }
-        textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #475569; background: #0b0f19; color: #fff; border-radius: 8px; box-sizing: border-box; resize: none; height: 80px; }
-        input[type="file"] { width: 100%; padding: 8px; margin: 5px 0 12px 0; background: #0b0f19; border: 1px solid #475569; border-radius: 8px; color: #94a3b8; font-size: 14px; box-sizing: border-box; }
-        button { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 15px; transition: 0.2s; }
+        .card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.2rem; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+        textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid rgba(255,255,255,0.15); background: rgba(11, 15, 25, 0.8); color: #fff; border-radius: 10px; box-sizing: border-box; resize: none; height: 80px; }
+        input[type="file"] { width: 100%; padding: 8px; margin: 5px 0 12px 0; background: rgba(11, 15, 25, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #94a3b8; font-size: 14px; box-sizing: border-box; }
+        button { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; width: 100%; font-size: 15px; transition: 0.2s; }
         button:hover { background: #0ea5e9; }
-        .post-media { width: 100%; border-radius: 10px; margin-top: 10px; max-height: 450px; object-fit: cover; }
-        .address-box { font-size: 13px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 10px 14px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #38bdf8; }
+        .post-media { width: 100%; border-radius: 12px; margin-top: 10px; max-height: 450px; object-fit: cover; }
+        .address-box { font-size: 13px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); backdrop-filter: blur(8px); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .username { font-weight: bold; color: #38bdf8; font-size: 15px; }
-        .post-actions { display: flex; gap: 15px; margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; color: #94a3b8; font-size: 14px; }
-        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 5px; width: auto; padding: 5px 10px; border-radius: 6px; }
-        .action-btn:hover { background: #334155; color: #38bdf8; }
-        .logout-btn { color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; }
+        .username { font-weight: bold; color: #38bdf8; font-size: 15px; text-decoration: none; }
+        
+        /* Reaction & Action Buttons */
+        .post-actions { display: flex; justify-content: space-around; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px; padding: 6px 12px; border-radius: 8px; transition: 0.2s; font-weight: 500; }
+        .action-btn:hover { background: rgba(255,255,255,0.1); color: #38bdf8; }
+        
+        /* Facebook Reaction Popup Hover Box */
+        .reaction-box { position: absolute; bottom: 45px; left: 10px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 30px; display: none; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 10; }
+        .reaction-box span { font-size: 22px; cursor: pointer; transition: transform 0.2s; }
+        .reaction-box span:hover { transform: scale(1.3); }
+        .like-container:hover .reaction-box { display: flex; }
+
+        /* Comments Section */
+        .comments-section { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 13px; }
+        .comment-item { background: rgba(11, 15, 25, 0.5); padding: 8px 12px; border-radius: 8px; margin-top: 6px; }
+        .comment-form { display: flex; gap: 8px; margin-top: 10px; }
+        .comment-input { flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(11, 15, 25, 0.8); color: #fff; font-size: 13px; }
+        .comment-btn { width: auto; padding: 8px 14px; font-size: 13px; border-radius: 8px; }
+        
+        .profile-link { color: #38bdf8; text-decoration: none; font-weight: 500; }
+        .logout-btn { color: #ef4444; background: rgba(239, 68, 68, 0.15); padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">⚡ CSW Dynamic</div>
-        <div>
-            <span style="font-size: 14px; margin-right: 8px;">👤 {{ current_user.username }}</span>
+        <a href="{{ url_for('index') }}" class="logo">⚡ CSW Dynamic</a>
+        <div class="nav-links">
+            <a href="{{ url_for('profile') }}" class="profile-link">👤 Profile</a>
+            <span style="color: #64748b;">|</span>
             <a href="{{ url_for('logout') }}" class="logout-btn">ထွက်ရန်</a>
         </div>
     </header>
@@ -36,7 +55,8 @@
     <div class="container">
         <!-- Dynamic Studio Address & Info -->
         <div class="address-box">
-            📍 <b>Dynamic Studio</b> (မကွေးမြို့) 🔥 ျောဖျေရေးနှင့် ကြံ့ခိုင်ရေး မီဒီယာများ (1 session - 5,000 MMK | 1 Month - 50,000 MMK)
+            📍 <b>Dynamic Studio</b> (မကွေးမြို့) 🔥 ျောဖျေရေးနှင့် ကြံ့ခိုင်ရေး မီဒီယာများ <br>
+            <span style="font-size: 11px; opacity: 0.9;">(1 session - 5,000 MMK | 1 Month - 50,000 MMK)</span>
         </div>
 
         <!-- Create Post Box -->
@@ -55,7 +75,7 @@
         {% for post in posts %}
         <div class="card">
             <div class="post-header">
-                <span class="username">@{{ post.author.username }}</span>
+                <a href="{{ url_for('profile') }}" class="username">@{{ post.author.username }}</a>
                 <span style="font-size: 12px; color: #64748b;">ယခုလေးတင်</span>
             </div>
             <p style="margin: 8px 0; line-height: 1.5;">{{ post.content }}</p>
@@ -68,18 +88,56 @@
                 {% endif %}
             {% endif %}
 
-            <!-- Interactive Actions (Like, Comment, Share) -->
+            <!-- Like Count Display -->
+            <div style="font-size: 13px; color: #94a3b8; margin-top: 10px;">
+                ❤️ <span id="like-count-{{ post.id }}">{{ post.likes }}</span> ဦး သဘောကျသည်
+            </div>
+
+            <!-- Interactive Actions & Facebook Reaction Popup -->
             <div class="post-actions">
-                <button class="action-btn" onclick="alert('Like ပေးပြီးပါပြီ 👍')">❤️ Like</button>
-                <button class="action-btn" onclick="alert('Comment လုပ်ရန် မကြာမီ ထည့်သွင်းပေးပါမည် 💬')">💬 Comment</button>
-                <button class="action-btn" onclick="alert('လင့်ခ်ကို ကူးယူပြီးပါပြီ 🔗')">🔗 Share</button>
+                <div class="like-container" style="position: relative;">
+                    <button class="action-btn" onclick="likePost({{ post.id }})">❤️ အသည်းပေးရန်</button>
+                    <!-- Facebook Reaction Popup Icons -->
+                    <div class="reaction-box">
+                        <span onclick="likePost({{ post.id }})">❤️</span>
+                        <span onclick="likePost({{ post.id }})">👍</span>
+                        <span onclick="likePost({{ post.id }})">😆</span>
+                        <span onclick="likePost({{ post.id }})">🔥</span>
+                        <span onclick="likePost({{ post.id }})">😢</span>
+                    </div>
+                </div>
+                <button class="action-btn" onclick="document.getElementById('comment-box-{{ post.id }}').style.display='block'">💬 Comment</button>
+                <button class="action-btn" onclick="navigator.clipboard.writeText(window.location.href); alert('လင့်ခ်ကို ကူးယူပြီးပါပြီ 🔗');">🔗 Share</button>
+            </div>
+
+            <!-- Comments List & Form -->
+            <div id="comment-box-{{ post.id }}" class="comments-section">
+                {% for comment in post.comments %}
+                <div class="comment-item">
+                    <b>@{{ comment.author.username }}:</b> {{ comment.text }}
+                </div>
+                {% endfor %}
+                <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="comment-form">
+                    <input type="text" name="text" placeholder="မှတ်ချက်ရေးရန်..." class="comment-input" required>
+                    <button type="submit" class="comment-btn">ပို့မည်</button>
+                </form>
             </div>
         </div>
         {% else %}
         <div class="card" style="text-align: center; color: #94a3b8; padding: 2rem;">
-            <p>လောလောဆယ် ဖိဒ်တွင် ပို့စ်များ မရှိသေးပါ။ ပထမဆုံး ပို့စ်ကို တင်လိုက်ပါ မောင်လေး 😎!</p>
+            <p>လောလောဆယ် ဖိဒ်တွင် ပို့စ်များ မရှိသေးပါ။</p>
         </div>
         {% endfor %}
     </div>
+
+    <script>
+        function likePost(postId) {
+            fetch('/like/' + postId, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('like-count-' + postId).innerText = data.likes;
+            });
+        }
+    </script>
 </body>
 </html>
