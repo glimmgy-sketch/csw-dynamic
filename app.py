@@ -63,17 +63,14 @@ def index():
     if request.method == 'POST':
         content = request.form.get('content')
         file = request.files.get('media_file')
-        
         filename = None
         if file and file.filename != '':
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
         new_post = Post(content=content, media_file=filename, user_id=current_user.id)
         db.session.add(new_post)
         db.session.commit()
         return redirect(url_for('index'))
-        
     posts = Post.query.order_by(Post.id.desc()).all()
     stories = Story.query.order_by(Story.id.desc()).all()
     return render_template('index.html', posts=posts, stories=stories)
@@ -117,20 +114,17 @@ def profile():
             current_user.bio = new_bio
             db.session.commit()
             return redirect(url_for('profile'))
-            
         content = request.form.get('content')
         file = request.files.get('media_file')
         filename = None
         if file and file.filename != '':
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
         if content or filename:
             new_post = Post(content=content, media_file=filename, user_id=current_user.id)
             db.session.add(new_post)
             db.session.commit()
         return redirect(url_for('profile'))
-
     user_posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.id.desc()).all()
     return render_template('profile.html', posts=user_posts)
 
@@ -165,130 +159,4 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-        db.session.add(comment)
-        db.session.commit()
-    return redirect(url_for('index'))
-
-@app.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
-    if request.method == 'POST':
-        new_bio = request.form.get('bio')
-        if new_bio is not None:
-            current_user.bio = new_bio
-            db.session.commit()
-            return redirect(url_for('profile'))
-            
-        content = request.form.get('content')
-        file = request.files.get('media_file')
-        filename = None
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect(url_for('profile'))
-
-    user_posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.id.desc()).all()
-    return render_template('profile.html', posts=user_posts)
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if User.query.filter_by(username=username).first():
-            return redirect(url_for('signup'))
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('index'))
-    return render_template('signup.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form.get('username')).first()
-        if user and check_password_hash(user.password, request.form.get('password')):
-            login_user(user)
-            return redirect(url_for('index'))
-    return render_template('login.html')
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-@app.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
-    if request.method == 'POST':
-        new_bio = request.form.get('bio')
-        if new_bio is not None:
-            current_user.bio = new_bio
-            db.session.commit()
-            return redirect(url_for('profile'))
-            
-        content = request.form.get('content')
-        file = request.files.get('media_file')
-        filename = None
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect(url_for('profile'))
-
-    user_posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.id.desc()).all()
-    return render_template('profile.html', posts=user_posts)
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if User.query.filter_by(username=username).first():
-            return redirect(url_for('signup'))
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('index'))
-    return render_template('signup.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form.get('username')).first()
-        if user and check_password_hash(user.password, request.form.get('password')):
-            login_user(user)
-            return redirect(url_for('index'))
-    return render_template('login.html')
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
     app.run(host='0.0.0.0', port=5000)
