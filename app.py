@@ -162,15 +162,6 @@ def logout():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form.get('username')).first()
-        if user and check_password_hash(user.password, request.form.get('password')):
-            login_user(user)
-            return redirect(url_for('index'))
-        flash('အကောင့်နာမည် သို့မဟုတ် စကားဝှက် မှားယွင်းနေပါသည်။')
-    return render_template('login.html')
-
-@app.route('/logout')
 @login_required
 def logout():
     logout_user()
