@@ -6,58 +6,79 @@
     <title>CSW Dynamic - Magway</title>
     <style>
         body { font-family: sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 0; }
-        header { background: #1e293b; padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
-        .card { background: #1e293b; padding: 1.5rem; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        input[type="text"], textarea, input[type="file"] { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #475569; background: #0f172a; color: #fff; border-radius: 6px; box-sizing: border-box; }
-        button { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%; }
+        header { background: #1e293b; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
+        .container { max-width: 550px; margin: 20px auto; padding: 0 12px; }
+        .card { background: #1e293b; padding: 1.2rem; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid #334155; }
+        textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #475569; background: #0b0f19; color: #fff; border-radius: 8px; box-sizing: border-box; resize: none; height: 80px; }
+        input[type="file"] { width: 100%; padding: 8px; margin: 5px 0 12px 0; background: #0b0f19; border: 1px solid #475569; border-radius: 8px; color: #94a3b8; font-size: 14px; box-sizing: border-box; }
+        button { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 15px; transition: 0.2s; }
         button:hover { background: #0ea5e9; }
-        .post-media { max-width: 100%; border-radius: 8px; margin-top: 10px; }
-        .address-box { font-size: 13px; color: #38bdf8; margin-bottom: 10px; }
-        a { color: #38bdf8; text-decoration: none; }
+        .post-media { width: 100%; border-radius: 10px; margin-top: 10px; max-height: 450px; object-fit: cover; }
+        .address-box { font-size: 13px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 10px 14px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #38bdf8; }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .username { font-weight: bold; color: #38bdf8; font-size: 15px; }
+        .post-actions { display: flex; gap: 15px; margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; color: #94a3b8; font-size: 14px; }
+        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 5px; width: auto; padding: 5px 10px; border-radius: 6px; }
+        .action-btn:hover { background: #334155; color: #38bdf8; }
+        .logout-btn { color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
     <header>
-        <h2>⚡ CSW Dynamic</h2>
+        <div class="logo">⚡ CSW Dynamic</div>
         <div>
-            <span>👤 {{ current_user.username }}</span> | 
-            <a href="{{ url_for('logout') }}" style="color: #ef4444;">ထွက်ရန်</a>
+            <span style="font-size: 14px; margin-right: 8px;">👤 {{ current_user.username }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">ထွက်ရန်</a>
         </div>
     </header>
 
     <div class="container">
-        <!-- Dynamic Studio Address Banner -->
+        <!-- Dynamic Studio Address & Info -->
         <div class="address-box">
-            📍 <b>Dynamic Studio</b> (မကွေးမြို့) 🔥 ျောဖျေရေးနှင့် ကြံ့ခိုင်ရေး မီဒီယာများ
+            📍 <b>Dynamic Studio</b> (မကွေးမြို့) 🔥 ျောဖျေရေးနှင့် ကြံ့ခိုင်ရေး မီဒီယာများ (1 session - 5,000 MMK | 1 Month - 50,000 MMK)
         </div>
 
-        <!-- Post Upload Box -->
+        <!-- Create Post Box -->
         <div class="card">
-            <h3>🚀 ဗီဒီယို/ပုံ အသစ်တင်ရန်</h3>
+            <h3 style="margin-top: 0; font-size: 16px; color: #f8fafc;">🚀 ဗီဒီယို/ပုံ အသစ်တင်ရန်</h3>
             <form method="POST" enctype="multipart/form-data">
-                <textarea name="content" placeholder="ဘာတွေပြောချင်လဲ..."></textarea>
+                <textarea name="content" placeholder="ဒီနေ့ လေ့ကျင့်ခန်းအကြောင်း ဘာတွေပြောချင်လဲ..."></textarea>
                 <input type="file" name="media_file" accept="image/*,video/*">
-                <button type="submit">တင်မည် ✨</button>
+                <button type="submit">ဖိဒ်သို့ တင်မည် ✨</button>
             </form>
         </div>
 
-        <!-- Feed Posts List -->
-        <h3>📢 ဖိဒ် (Feed)</h3>
+        <!-- News Feed Section -->
+        <h3 style="margin-bottom: 15px; font-size: 18px; color: #f8fafc;">📢 သတင်းဖိဒ် (News Feed)</h3>
+        
         {% for post in posts %}
         <div class="card">
-            <b>@{{ post.author.username }}</b>
-            <p>{{ post.content }}</p>
+            <div class="post-header">
+                <span class="username">@{{ post.author.username }}</span>
+                <span style="font-size: 12px; color: #64748b;">ယခုလေးတင်</span>
+            </div>
+            <p style="margin: 8px 0; line-height: 1.5;">{{ post.content }}</p>
+            
             {% if post.media_file %}
-                {% if post.media_file.endswith(('mp4', 'MOV', 'webm')) %}
+                {% if post.media_file.endswith(('mp4', 'MOV', 'webm', 'ogg')) %}
                     <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="post-media"></video>
                 {% else %}
                     <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" class="post-media">
                 {% endif %}
             {% endif %}
+
+            <!-- Interactive Actions (Like, Comment, Share) -->
+            <div class="post-actions">
+                <button class="action-btn" onclick="alert('Like ပေးပြီးပါပြီ 👍')">❤️ Like</button>
+                <button class="action-btn" onclick="alert('Comment လုပ်ရန် မကြာမီ ထည့်သွင်းပေးပါမည် 💬')">💬 Comment</button>
+                <button class="action-btn" onclick="alert('လင့်ခ်ကို ကူးယူပြီးပါပြီ 🔗')">🔗 Share</button>
+            </div>
         </div>
         {% else %}
-        <p style="text-align: center; color: #94a3b8;">ပို့စ် မရှိသေးပါ ခင်ဗျာ။</p>
+        <div class="card" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            <p>လောလောဆယ် ဖိဒ်တွင် ပို့စ်များ မရှိသေးပါ။ ပထမဆုံး ပို့စ်ကို တင်လိုက်ပါ မောင်လေး 😎!</p>
+        </div>
         {% endfor %}
     </div>
 </body>
