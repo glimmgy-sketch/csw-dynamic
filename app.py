@@ -1,183 +1,106 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
+from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'csw-dynamic-secret-key-2026'
+app.config['SECRET_KEY'] = 'chan_secret_key_2026'
 
+# File Upload Settings
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi', 'webm'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Database Setup (Supabase PostgreSQL / SQLite Fallback)
 basedir = os.path.abspath(os.path.dirname(__file__))
-# Database နာမည်အသစ် database_v5.db သို့ ပြောင်းလဲထားပါသည်
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v5.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
+db_url = os.environ.get('DATABASE_URL')
 
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# Render/Supabase postgres:// URL ကို SQLAlchemy ဖတ်နိုင်သော postgresql:// သို့ ပြောင်းပေးခြင်း
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url or ('sqlite:///' + os.path.join(basedir, 'database_v6.db'))
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
+login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# Helper Function
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Database Models
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    bio = db.Column(db.Text, nullable=True, default="CSW Dynamic Studio - ✨ အလှအပနှင့် ဝန်ဆောင်မှုများ")
-    followers_count = db.Column(db.Integer, default=120)
+    password = db.Column(db.String(200), nullable=False)
+    posts = db.relationship('Post', backref='author', lazy=True)
+    reactions = db.relationship('Reaction', backref='user', lazy=True)
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=True)
-    media_file = db.Column(db.String(300), nullable=True)
+    media_url = db.Column(db.String(300), nullable=True)
+    media_type = db.Column(db.String(50), nullable=True) # 'image' or 'video'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    author = db.relationship('User', backref=db.backref('posts', lazy=True))
-    comments = db.relationship('Comment', backref='post', lazy=True, cascade="all, delete-orphan")
     reactions = db.relationship('Reaction', backref='post', lazy=True, cascade="all, delete-orphan")
-
-class Story(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    media_file = db.Column(db.String(300), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    author = db.relationship('User', backref=db.backref('stories', lazy=True))
-
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.Text, nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    author = db.relationship('User', backref=db.backref('comments', lazy=True))
 
 class Reaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(50), nullable=False) # like, love, haha, wow, sad
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    type = db.Column(db.String(20), nullable=False) # 'like', 'love', 'haha', 'wow', 'sad', 'angry'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    return User.query.get(int(user_id))
 
-with app.app_context():
-    db.create_all()
-
+# Routes
 @app.route('/')
 @login_required
 def index():
-    posts = Post.query.order_by(Post.id.desc()).all()
-    stories = Story.query.order_by(Story.id.desc()).all()
-    return render_template('index.html', posts=posts, stories=stories)
-
-@app.route('/create_post', methods=['POST'])
-@login_required
-def create_post():
-    try:
-        content = request.form.get('content')
-        file = request.files.get('media_file')
-        filename = None
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        if content or filename:
-            new_post = Post(content=content, media_file=filename, user_id=current_user.id)
-            db.session.add(new_post)
-            db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        print("Error creating post:", e)
-    return redirect(request.referrer or url_for('index'))
-
-@app.route('/add_story', methods=['POST'])
-@login_required
-def add_story():
-    try:
-        file = request.files.get('story_file')
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            new_story = Story(media_file=filename, user_id=current_user.id)
-            db.session.add(new_story)
-            db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-    return redirect(request.referrer or url_for('index'))
-
-@app.route('/react/<int:post_id>', methods=['POST'])
-@login_required
-def react_post(post_id):
-    data = request.get_json() or {}
-    reaction_type = data.get('type', 'like')
-    
-    existing = Reaction.query.filter_by(post_id=post_id, user_id=current_user.id).first()
-    if existing:
-        existing.type = reaction_type
-    else:
-        new_reaction = Reaction(type=reaction_type, post_id=post_id, user_id=current_user.id)
-        db.session.add(new_reaction)
-    db.session.commit()
-    
-    count = Reaction.query.filter_by(post_id=post_id).count()
-    return jsonify({'status': 'ok', 'count': count, 'type': reaction_type})
-
-@app.route('/comment/<int:post_id>', methods=['POST'])
-@login_required
-def add_comment(post_id):
-    text = request.form.get('text')
-    if text and text.strip():
-        comment = Comment(text=text.strip(), post_id=post_id, user_id=current_user.id)
-        db.session.add(comment)
-        db.session.commit()
-    return redirect(request.referrer or url_for('index'))
-
-@app.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
-    if request.method == 'POST':
-        new_bio = request.form.get('bio')
-        if new_bio is not None:
-            current_user.bio = new_bio.strip()
-            db.session.commit()
-            return redirect(url_for('profile'))
-            
-    user_posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.id.desc()).all()
-    user_stories = Story.query.filter_by(user_id=current_user.id).order_by(Story.id.desc()).all()
-    return render_template('profile.html', posts=user_posts, stories=user_stories)
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    return render_template('index.html', posts=posts)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').strip()
         password = request.form.get('password')
-        if not username or not password:
-            return redirect(url_for('signup'))
-        if User.query.filter_by(username=username).first():
-            return redirect(url_for('signup'))
         
-        hashed_password = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password)
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user)
-            return redirect(url_for('index'))
-        except Exception:
-            db.session.rollback()
+        user_exists = User.query.filter_by(username=username).first()
+        if user_exists:
+            flash('ဒီ အကောင့်အမည် သုံးပြီးသားဖြစ်နေပါတယ်! အခြားအမည်ပြောင်းပါ။', 'danger')
             return redirect(url_for('signup'))
             
+        hashed_pw = generate_password_hash(password, method='scrypt')
+        new_user = User(username=username, password=hashed_pw)
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        return redirect(url_for('index'))
+        
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').strip()
         password = request.form.get('password')
-        if username and password:
-            user = User.query.filter_by(username=username).first()
-            if user and check_password_hash(user.password, password):
-                login_user(user)
-                return redirect(url_for('index'))
+        
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Username သို့မဟုတ် Password မှားယွင်းနေပါသည်။', 'danger')
+            
     return render_template('login.html')
 
 @app.route('/logout')
@@ -186,5 +109,60 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/create_post', methods=['POST'])
+@login_required
+def create_post():
+    content = request.form.get('content')
+    file = request.files.get('file')
+    
+    media_url = None
+    media_type = None
+    
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_")
+        saved_filename = timestamp + filename
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], saved_filename))
+        
+        media_url = url_for('static', filename='uploads/' + saved_filename)
+        ext = filename.rsplit('.', 1)[1].lower()
+        if ext in ['mp4', 'mov', 'avi', 'webm']:
+            media_type = 'video'
+        else:
+            media_type = 'image'
+
+    if content or media_url:
+        new_post = Post(
+            content=content,
+            media_url=media_url,
+            media_type=media_type,
+            user_id=current_user.id
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        
+    return redirect(url_for('index'))
+
+@app.route('/react/<int:post_id>/<string:reaction_type>', methods=['POST'])
+@login_required
+def react(post_id, reaction_type):
+    existing_reaction = Reaction.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+    
+    if existing_reaction:
+        if existing_reaction.type == reaction_type:
+            db.session.delete(existing_reaction) # Toggle Off
+        else:
+            existing_reaction.type = reaction_type # Change Reaction
+    else:
+        new_reaction = Reaction(type=reaction_type, user_id=current_user.id, post_id=post_id)
+        db.session.add(new_reaction)
+        
+    db.session.commit()
+    return redirect(url_for('index'))
+
+# Database Table Auto-creation
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
