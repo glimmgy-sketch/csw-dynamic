@@ -4,52 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - {{ current_user.username }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: linear-gradient(135deg, #090d16, #111827); color: #fff; margin: 0; padding: 0; min-height: 100vh; }
-        header { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); padding: 0.8rem 1.2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .logo { font-size: 1.2rem; font-weight: bold; color: #38bdf8; text-decoration: none; }
-        .container { max-width: 550px; margin: 20px auto; padding: 0 12px; }
-        .profile-card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
-        .avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #38bdf8, #0ea5e9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #0f172a; margin: 0 auto 10px auto; }
-        .card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); padding: 1.2rem; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
-        .post-media { width: 100%; border-radius: 12px; margin-top: 10px; max-height: 450px; object-fit: cover; }
-        a { color: #38bdf8; text-decoration: none; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; padding-bottom: 70px; }
+        .card-custom { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-bottom: 15px; }
+        .profile-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #06b6d4; object-fit: cover; }
+        .story-avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid #06b6d4; object-fit: cover; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1e293b; border-top: 1px solid #334155; z-index: 1000; }
+        .btn-glow { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; }
     </style>
 </head>
 <body>
-    <header>
-        <a href="{{ url_for('index') }}" class="logo">⚡ CSW Dynamic</a>
-        <a href="{{ url_for('index') }}" style="font-size: 14px;">⬅ ဖိဒ်သို့ ပြန်ရန်</a>
-    </header>
 
-    <div class="container">
-        <div class="profile-card">
-            <div class="avatar">{{ current_user.username[0] | upper }}</div>
-            <h2>@{{ current_user.username }}</h2>
-            <p style="color: #38bdf8; font-size: 14px;">📍 Dynamic Studio (မကွေးမြို့)</p>
+    <div class="container mt-3" style="max-width: 600px;">
+        <div class="card card-custom p-3 text-center">
+            <div class="d-flex justify-content-center mb-2">
+                <div class="profile-avatar bg-secondary d-flex align-items-center justify-content-center fs-1">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+            <h4>{{ current_user.username }}</h4>
+            <p class="text-info small mb-2">{{ current_user.bio }}</p>
+
+            <form action="{{ url_for('profile') }}" method="POST" class="mb-3">
+                <div class="input-group input-group-sm">
+                    <input type="text" name="bio" class="form-control bg-dark text-white border-secondary" placeholder="Bio အသစ် ပြင်ရန်..." value="{{ current_user.bio }}">
+                    <button class="btn btn-outline-info" type="submit">Bio ပြင်မည်</button>
+                </div>
+            </form>
         </div>
 
-        <h3>📌 ကျွန်ုပ်၏ ပို့စ်များ</h3>
-        {% for post in posts %}
-        <div class="card">
-            <p style="margin: 8px 0; line-height: 1.5;">{{ post.content }}</p>
-            {% if post.media_file %}
-                {% if post.media_file.endswith(('mp4', 'MOV', 'webm', 'ogg')) %}
-                    <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="post-media"></video>
+        <div class="card card-custom p-3">
+            <h6><i class="fa-solid fa-circle-play text-info"></i> ကျွန်ုပ်၏ Story များ</h6>
+            <div class="d-flex overflow-auto py-2" style="gap: 10px;">
+                {% for story in stories %}
+                <img src="{{ url_for('static', filename='uploads/' + story.media_file) }}" class="story-avatar">
                 {% else %}
-                    <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" class="post-media">
-                {% endif %}
-            {% endif %}
-            <div style="font-size: 13px; color: #94a3b8; margin-top: 10px;">
-                ❤️ {{ post.likes }} ဦး သဘောကျသည်
+                <small class="text-muted">Story မရှိသေးပါ</small>
+                {% endfor %}
             </div>
         </div>
-        {% else %}
-        <div class="card" style="text-align: center; color: #94a3b8;">
-            <p>သင် တင်ထားသော ပို့စ် မရှိသေးပါ။</p>
+
+        <div class="card card-custom p-3">
+            <h6><i class="fa-solid fa-pen text-info"></i> Post တင်ရန်</h6>
+            <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data">
+                <textarea class="form-control bg-dark text-white border-secondary mb-2" name="content" rows="2" placeholder="Profile မှာ Post တင်ရန်..."></textarea>
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="file" name="media_file" class="form-control form-control-sm bg-dark text-white border-secondary me-2" style="max-width: 200px;">
+                    <button type="submit" class="btn btn-glow btn-sm px-3">တင်မည်</button>
+                </div>
+            </form>
         </div>
+
+        <h6 class="mt-3 mb-2"><i class="fa-solid fa-box-archive text-info"></i> ကျွန်ုပ်၏ Post များ</h6>
+        {% for post in posts %}
+        <div class="card card-custom p-3">
+            <span class="fw-bold text-info"><i class="fa-solid fa-circle-user"></i> {{ post.author.username }}</span>
+            {% if post.content %}<p class="my-2">{{ post.content }}</p>{% endif %}
+            {% if post.media_file %}
+            {% if post.media_file.endswith(('.mp4', '.mov', '.avi')) %}
+            <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="w-100 rounded"></video>
+            {% else %}
+            <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" class="w-100 rounded">
+            {% endif %}
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center">Post မရှိသေးပါ</p>
         {% endfor %}
     </div>
+
+    <div class="bottom-nav d-flex justify-content-around py-2">
+        <a href="{{ url_for('index') }}" class="text-muted fs-4"><i class="fa-solid fa-house"></i></a>
+        <a href="{{ url_for('profile') }}" class="text-info fs-4"><i class="fa-solid fa-user"></i></a>
+    </div>
+
 </body>
 </html>
-
