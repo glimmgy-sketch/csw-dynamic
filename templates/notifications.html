@@ -1,4 +1,44 @@
-    <!-- Bottom Nav with Unread Badge Calculation -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - CSW Social</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 70px; }
+        .header { background: #fff; padding: 15px; font-size: 20px; font-weight: bold; text-align: center; border-bottom: 1px solid #ddd; }
+        .notif-container { max-width: 600px; margin: 10px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .notif-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; text-decoration: none; color: #333; transition: background 0.2s; }
+        .notif-item.unread { background: #e7f3ff; }
+        .notif-item:hover { background: #f5f6f7; }
+        .notif-text { font-size: 15px; }
+        .no-notif { text-align: center; padding: 40px; color: #777; font-size: 16px; }
+        
+        /* Bottom Navigation Bar Styles */
+        .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1000; box-shadow: 0 -2px 5px rgba(0,0,0,0.05); }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #65676b; font-size: 12px; flex: 1; position: relative; }
+        .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 2px; }
+        .bottom-nav-item.active { color: #1877f2; }
+        .create-circle-btn { width: 45px; height: 45px; background: #1877f2; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; box-shadow: 0 4px 8px rgba(24,119,242,0.3); margin: 0 auto; cursor: pointer; }
+        .badge-count { position: absolute; top: 2px; right: 28%; background: #e41e3f; color: white; border-radius: 10px; padding: 1px 6px; font-size: 10px; font-weight: bold; border: 2px solid #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="header">Notifications</div>
+
+    <div class="notif-container">
+        {% if notifications %}
+            {% for notif in notifications %}
+                <a href="{{ url_for('notif_bp.click_notification', notif_id=notif.id) }}" class="notif-item {% if not notif.is_read %}unread{% endif %}">
+                    <div class="notif-text">{{ notif.message }}</div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <div class="no-notif">Notification တစ်စုံတစ်ရာ မရှိသေးပါ 📭</div>
+        {% endif %}
+    </div>
+
     {% set unread_count = current_user.notifications | selectattr('is_read', 'equalto', false) | list | length %}
     <div class="chan-bottom-nav">
         <a href="{{ url_for('index') }}" class="bottom-nav-item">
@@ -26,3 +66,6 @@
             <span>Menu</span>
         </a>
     </div>
+
+</body>
+</html>
