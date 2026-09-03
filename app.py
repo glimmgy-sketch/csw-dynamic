@@ -48,6 +48,11 @@ def load_user(user_id):
 
 with app.app_context():
     db.create_all()
+    # အကောင့်အသစ်လုံးဝမရှိသေးရင် Default အနေနဲ့ Test Account တစ်ခုကို အလိုအလျောက် ဆောက်ပေးထားမည်
+    if not User.query.filter_by(username='MinNaungChan').first():
+        default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
+        db.session.add(default_user)
+        db.session.commit()
 
 # --- ROUTES ---
 
@@ -65,7 +70,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         
         if user and check_password_hash(user.password, password):
-            login_user(user)
+            login_user(user, remember=True) # အမြဲတမ်း Login ဆက်မြဲနေစေရန် remember=True ထည့်သွင်းထားသည်
             return redirect(url_for('index'))
         flash('Username သို့မဟုတ် Password မှားနေပါတယ် သားကြီး!')
     return render_template('login.html')
@@ -86,7 +91,7 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
         
-        login_user(new_user)
+        login_user(new_user, remember=True)
         return redirect(url_for('index'))
     return render_template('signup.html')
 
