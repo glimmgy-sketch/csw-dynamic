@@ -10,7 +10,19 @@
         body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; padding-bottom: 70px; }
         .navbar-custom { background: #1e293b; border-bottom: 1px solid #334155; }
         .card-custom { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-bottom: 15px; }
+        
+        /* Story Styles */
+        .story-container { position: relative; width: 65px; text-center; cursor: pointer; }
         .story-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #06b6d4; padding: 2px; object-fit: cover; }
+        .story-plus-badge { position: absolute; bottom: 18px; right: 5px; background: #06b6d4; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid #1e293b; }
+        
+        /* Reaction Bar */
+        .reaction-wrapper { position: relative; display: inline-block; }
+        .reaction-box { display: none; position: absolute; bottom: 35px; left: 0; background: #334155; border-radius: 30px; padding: 5px 10px; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 100; }
+        .reaction-wrapper:hover .reaction-box { display: flex; }
+        .reaction-icon { font-size: 20px; cursor: pointer; transition: transform 0.2s; }
+        .reaction-icon:hover { transform: scale(1.4); }
+
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1e293b; border-top: 1px solid #334155; z-index: 1000; }
         .btn-glow { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; }
     </style>
@@ -26,28 +38,29 @@
     </nav>
 
     <div class="container mt-3" style="max-width: 600px;">
-        <!-- Stories Row -->
+        
         <div class="d-flex overflow-auto py-2 mb-3 align-items-center" style="gap: 12px;">
-            <div class="text-center">
+            <div class="story-container text-center">
                 <form action="{{ url_for('add_story') }}" method="POST" enctype="multipart/form-data" id="storyForm">
-                    <label for="story_file" style="cursor: pointer;">
+                    <label for="story_file" class="position-relative" style="cursor: pointer;">
                         <div class="story-avatar d-flex align-items-center justify-content-center bg-secondary">
-                            <i class="fa-solid fa-plus text-white"></i>
+                            <i class="fa-solid fa-user text-white"></i>
                         </div>
+                        <div class="story-plus-badge"><i class="fa-solid fa-plus"></i></div>
                     </label>
                     <input type="file" id="story_file" name="story_file" class="d-none" onchange="document.getElementById('storyForm').submit()">
                 </form>
                 <small class="d-block text-muted mt-1" style="font-size: 10px;">Story ထည့်ရန်</small>
             </div>
+
             {% for story in stories %}
-            <div class="text-center">
+            <div class="story-container text-center" onclick="viewStory('{{ url_for('static', filename='uploads/' + story.media_file) }}', '{{ story.author.username }}')">
                 <img src="{{ url_for('static', filename='uploads/' + story.media_file) }}" class="story-avatar">
                 <small class="d-block text-truncate mt-1" style="max-width: 60px; font-size: 10px;">{{ story.author.username }}</small>
             </div>
             {% endfor %}
         </div>
 
-        <!-- Post Create Box -->
         <div class="card card-custom p-3">
             <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data">
                 <textarea class="form-control bg-dark text-white border-secondary mb-2" name="content" rows="2" placeholder="ဘာတွေဝေမျှချင်လဲ ညီလေး..."></textarea>
@@ -58,7 +71,6 @@
             </form>
         </div>
 
-        <!-- Feed Posts -->
         {% for post in posts %}
         <div class="card card-custom p-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -76,27 +88,73 @@
                 {% endif %}
             </div>
             {% endif %}
-            <div class="d-flex justify-content-between text-muted border-top border-secondary pt-2 mt-2">
-                <button class="btn btn-sm text-info" onclick="likePost({{ post.id }})"><i class="fa-solid fa-heart"></i> <span id="likes-{{ post.id }}">{{ post.likes }}</span></button>
-                <span class="btn btn-sm text-muted"><i class="fa-solid fa-comment"></i> {{ post.comments|length }}</span>
+
+            <div class="d-flex justify-content-between border-top border-secondary pt-2 mt-2">
+                <div class="reaction-wrapper">
+                    <div class="reaction-box">
+                        <span class="reaction-icon" onclick="sendReaction({{ post.id }}, 'like')">👍</span>
+                        <span class="reaction-icon" onclick="sendReaction({{ post.id }}, 'love')">❤️</span>
+                        <span class="reaction-icon" onclick="sendReaction({{ post.id }}, 'haha')">😆</span>
+                        <span class="reaction-icon" onclick="sendReaction({{ post.id }}, 'wow')">😮</span>
+                        <span class="reaction-icon" onclick="sendReaction({{ post.id }}, 'sad')">😢</span>
+                    </div>
+                    <button class="btn btn-sm text-info"><i class="fa-solid fa-thumbs-up"></i> <span id="react-count-{{ post.id }}">{{ post.reactions|length }}</span></button>
+                </div>
+                <span class="btn btn-sm text-muted"><i class="fa-solid fa-comment"></i> {{ post.comments|length }} Comments</span>
+            </div>
+
+            <div class="mt-3 border-top border-secondary pt-2">
+                {% for comment in post.comments %}
+                <div class="bg-dark p-2 rounded mb-1" style="font-size: 13px;">
+                    <strong class="text-info">{{ comment.author.username }}:</strong> {{ comment.text }}
+                </div>
+                {% endfor %}
+                <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="d-flex mt-2">
+                    <input type="text" name="text" class="form-control form-control-sm bg-dark text-white border-secondary me-2" placeholder="မန့်ရေးရန်..." required>
+                    <button type="submit" class="btn btn-sm btn-info">မန့်မည်</button>
+                </form>
             </div>
         </div>
         {% endfor %}
     </div>
 
-    <!-- Bottom Navigation -->
+    <div class="modal fade" id="storyModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white text-center">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="storyUser"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="storyImg" src="" class="img-fluid rounded" style="max-height: 70vh;">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="bottom-nav d-flex justify-content-around py-2">
         <a href="{{ url_for('index') }}" class="text-info fs-4"><i class="fa-solid fa-house"></i></a>
         <a href="{{ url_for('profile') }}" class="text-muted fs-4"><i class="fa-solid fa-user"></i></a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function likePost(postId) {
-            fetch('/like/' + postId, { method: 'POST' })
+        function viewStory(url, username) {
+            document.getElementById('storyImg').src = url;
+            document.getElementById('storyUser').innerText = username + " ရဲ့ Story";
+            new bootstrap.Modal(document.getElementById('storyModal')).show();
+        }
+
+        function sendReaction(postId, type) {
+            fetch('/react/' + postId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: type })
+            })
             .then(res => res.json())
             .then(data => {
-                if (data.likes !== undefined) {
-                    document.getElementById('likes-' + postId).innerText = data.likes;
+                if (data.count !== undefined) {
+                    document.getElementById('react-count-' + postId).innerText = data.count;
                 }
             });
         }
