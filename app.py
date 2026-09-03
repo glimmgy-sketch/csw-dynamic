@@ -138,7 +138,7 @@ def signup():
         if User.query.filter_by(username=username).first():
             return redirect(url_for('signup'))
         
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        hashed_password = generate_password_hash(password)
         new_user = User(username=username, password=hashed_password)
         try:
             db.session.add(new_user)
@@ -147,7 +147,6 @@ def signup():
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
-            print("Signup Error:", e)
             return redirect(url_for('signup'))
             
     return render_template('signup.html')
@@ -157,10 +156,11 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('index'))
+        if username and password:
+            user = User.query.filter_by(username=username).first()
+            if user and check_password_hash(user.password, password):
+                login_user(user)
+                return redirect(url_for('index'))
     return render_template('login.html')
 
 @app.route('/logout')
