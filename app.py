@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key-2026'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-# Database ဖိုင်အသစ်စက်စက်ဖြစ်အောင် database_v2.db သို့ ပြောင်းထားပါသည်
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v2.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
@@ -56,23 +55,27 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 @login_required
 def index():
-    if request.method == 'POST':
-        content = request.form.get('content')
-        file = request.files.get('media_file')
-        filename = None
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect(url_for('index'))
     posts = Post.query.order_by(Post.id.desc()).all()
     stories = Story.query.order_by(Story.id.desc()).all()
     return render_template('index.html', posts=posts, stories=stories)
+
+@app.route('/create_post', methods=['POST'])
+@login_required
+def create_post():
+    content = request.form.get('content')
+    file = request.files.get('media_file')
+    filename = None
+    if file and file.filename != '':
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    if content or filename:
+        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
+        db.session.add(new_post)
+        db.session.commit()
+    return redirect(url_for('index'))
 
 @app.route('/add_story', methods=['POST'])
 @login_required
@@ -145,7 +148,7 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
             return redirect(url_for('signup'))
