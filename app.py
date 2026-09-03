@@ -54,6 +54,7 @@ def login():
 def signup():
     if request.method == 'POST':
         username = request.form.get('username')
+        name = request.form.get('name') # နာမည်အမှန် (Display Name) ကို ယူရန်
         password = request.form.get('password')
         
         user_exists = User.query.filter_by(username=username).first()
@@ -62,7 +63,8 @@ def signup():
             return redirect(url_for('signup'))
             
         hashed_password = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password)
+        # new_user ဆောက်တဲ့နေရာမှာ name=name ထည့်ပေးရန်
+        new_user = User(username=username, name=name, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         
