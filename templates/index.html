@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chan - ပင်မစာမျက်နှာ</title>
+    <title>Chan - Home</title>
     <style>
         body {
             background-color: #0f172a;
@@ -63,22 +63,22 @@
         <div class="nav-links">
             <h1>✨ Chan</h1>
             <div>
-                <a href="{{ url_for('profile', username=current_user.username) }}">ကိုယ်ပိုင် Profile</a> | 
-                <a href="{{ url_for('logout') }}" style="color: #ef4444;">ထွက်ရန်</a>
+                <a href="{{ url_for('profile', username=current_user.username) }}">Profile</a> | 
+                <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
             </div>
         </div>
 
-        <p>မင်္ဂလာပါ, <strong>{{ current_user.username }}</strong> ရေ! 👋</p>
+        <p>Welcome, <strong>{{ current_user.username }}</strong>! 👋</p>
 
         <!-- Post Form -->
         <form action="{{ url_for('add_post') }}" method="POST">
-            <textarea name="content" rows="3" placeholder="ဘာတွေတွေးနေလဲ ပြောပြပါဦး..." required></textarea>
-            <button type="submit">တင်မည်</button>
+            <textarea name="content" rows="3" placeholder="What's on your mind?" required></textarea>
+            <button type="submit">Post</button>
         </form>
 
         <hr style="border: 0; border-top: 1px solid #475569; margin: 20px 0;">
 
-        <h3>📌 Feed များ</h3>
+        <h3>📌 Feeds</h3>
         {% if posts %}
             {% for post in posts %}
                 <div class="post-card">
@@ -87,7 +87,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p style="color: #94a3b8;">ပို့စ် မရှိသေးပါဘူး သားကြီး။ ပထမဆုံး ပို့စ်ကို စတင်တင်လိုက်ပါဦး!</p>
+            <p style="color: #94a3b8;">No posts yet. Create your first post above!</p>
         {% endif %}
     </div>
 </body>
