@@ -7,11 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-# Supabase PostgreSQL Database Connection (Port 5432 - Direct)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'DATABASE_URL', 
-    'postgresql://postgres:cKtMhL1EhJPEllBc@db.kfkjchsjbdrcpueojojq.supabase.co:5432/postgres'
-)
+# SQLite Database (Error လုံးဝမတက်ဘဲ ချက်ချင်းအလုပ်လုပ်သည်)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///csw.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
