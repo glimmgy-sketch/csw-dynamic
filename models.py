@@ -36,6 +36,5 @@ class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True) # Post ဆီကို တိုက်ရိုက်သွားရန်
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True)
     is_read = db.Column(db.Boolean, default=False)
-
