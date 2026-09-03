@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key-2026'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v2.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v3.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
 
@@ -58,9 +58,12 @@ with app.app_context():
 @app.route('/')
 @login_required
 def index():
-    posts = Post.query.order_by(Post.id.desc()).all()
-    stories = Story.query.order_by(Story.id.desc()).all()
-    return render_template('index.html', posts=posts, stories=stories)
+    try:
+        posts = Post.query.order_by(Post.id.desc()).all()
+        stories = Story.query.order_by(Story.id.desc()).all()
+        return render_template('index.html', posts=posts, stories=stories)
+    except Exception as e:
+        return f"Error: {str(e)}", 500
 
 @app.route('/create_post', methods=['POST'])
 @login_required
@@ -148,7 +151,7 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
-            return redirect(url_for('login'))
+            return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
             return redirect(url_for('signup'))
