@@ -10,7 +10,7 @@
             color: #050505;
             font-family: sans-serif;
             margin: 0;
-            padding-bottom: 60px; /* Space for bottom nav */
+            padding-bottom: 70px;
         }
 
         /* Top Header Bar */
@@ -23,15 +23,30 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
         }
         .chan-logo-area {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #1877f2;
+            letter-spacing: -1px;
+        }
+        /* ညီလေးပြထားတဲ့ ပုံစံအတိုင်း C လိုဂို Gradient အဝိုင်းပုံစံ */
+        .chan-custom-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(168, 85, 247, 0.4);
         }
         .chan-top-icons {
             display: flex;
@@ -47,31 +62,58 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 18px;
             text-decoration: none;
             color: #050505;
+            position: relative;
+        }
+        .top-icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        .badge-count {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #e41e3f;
+            color: white;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
-        /* Top Sub-Tab Navigation Bar */
+        /* Top Sub-Tab Navigation Bar (ပုံပါအတိုင်း အပြာရောင် Active Bar ပါဝင်သည်) */
         .chan-sub-nav {
             display: flex;
             justify-content: space-around;
             background: #ffffff;
             border-bottom: 1px solid #e4e6eb;
-            padding: 0 10px;
+            padding: 0 5px;
         }
         .sub-nav-item {
             flex: 1;
             text-align: center;
             padding: 12px 0;
-            font-size: 20px;
             color: #65676b;
             cursor: pointer;
             border-bottom: 3px solid transparent;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .sub-nav-item.active {
             color: #1877f2;
             border-bottom: 3px solid #1877f2;
+        }
+        .sub-nav-item svg {
+            width: 26px;
+            height: 26px;
+            fill: currentColor;
+        }
+        .sub-nav-item.active svg {
+            fill: #1877f2;
         }
 
         .container {
@@ -80,7 +122,7 @@
             padding: 10px;
         }
 
-        /* Stories Row (Circular story design) */
+        /* Stories Row */
         .stories-container {
             display: flex;
             gap: 8px;
@@ -92,7 +134,7 @@
         
         .story-card {
             min-width: 110px;
-            height: 180px;
+            height: 190px;
             background: #ffffff;
             border-radius: 12px;
             overflow: hidden;
@@ -104,55 +146,69 @@
             flex-direction: column;
             justify-content: flex-end;
             padding: 10px;
-            border: 1px solid #e4e6eb;
         }
         .story-card.create-story {
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
             background: #ffffff;
+            border: 1px solid #e4e6eb;
+            padding-bottom: 15px;
         }
-        .create-story-icon {
-            width: 40px;
-            height: 40px;
+        .create-story-avatar {
+            width: 100%;
+            height: 125px;
+            background: #f0f2f5;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .create-story-icon-wrapper {
+            position: absolute;
+            top: 110px;
+            width: 36px;
+            height: 36px;
             background: #1877f2;
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 30px;
             border: 4px solid #ffffff;
+            z-index: 2;
         }
         .create-story-text {
-            position: absolute;
-            bottom: 12px;
             font-size: 13px;
             font-weight: bold;
             text-align: center;
-            width: 100%;
             color: #050505;
+            margin-top: 45px;
         }
-        .story-avatar-ring {
+        .story-mini-avatar {
             position: absolute;
             top: 10px;
             left: 10px;
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border: 3px solid #1877f2;
             border-radius: 50%;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1877f2;
+            z-index: 2;
         }
         .story-name {
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             z-index: 2;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            position: relative;
         }
 
         /* Post Creation Box */
@@ -343,12 +399,12 @@
             border-top: 1px solid #e4e6eb;
             padding: 6px 0;
             z-index: 1000;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
         }
         .bottom-nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 22px;
             color: #65676b;
             text-decoration: none;
             flex: 1;
@@ -356,9 +412,14 @@
         .bottom-nav-item.active {
             color: #1877f2;
         }
+        .bottom-nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
         .bottom-nav-item span {
             font-size: 10px;
-            margin-top: 2px;
+            margin-top: 3px;
             font-weight: bold;
         }
 
@@ -367,43 +428,59 @@
     </style>
 </head>
 <body>
-    <!-- Top Header Bar -->
+    <!-- Top Header Bar (Chan Logo Added) -->
     <div class="chan-header">
         <div class="chan-logo-area">
-            <span style="background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; padding: 2px 8px; border-radius: 50%; font-size: 18px;">✨</span> Chan
+            <div class="chan-custom-logo">C</div> Chan
         </div>
         <div class="chan-top-icons">
-            <button class="top-icon-btn" onclick="alert('Search feature coming soon!')">🔍</button>
-            <a href="https://m.me" target="_blank" class="top-icon-btn">💬</a>
+            <button class="top-icon-btn" onclick="alert('Search feature coming soon!')">
+                <svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+            </button>
+            <a href="https://m.me" target="_blank" class="top-icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.91 1.442 5.503 3.69 7.185V22l3.447-1.89c.895.25 1.848.388 2.863.388 5.523 0 10-4.145 10-9.243S17.523 2 12 2zm1.045 12.565l-2.58-2.75-5.02 2.75 5.52-5.865 2.58 2.75 5.02-2.75-5.52 5.865z"/></svg>
+                <span class="badge-count">6</span>
+            </a>
         </div>
     </div>
 
     <!-- Top Sub-Tab Navigation Bar -->
     <div class="chan-sub-nav">
-        <div class="sub-nav-item active">🏠</div>
-        <div class="sub-nav-item" onclick="alert('Friends tab coming soon!')">👥</div>
-        <div class="sub-nav-item" onclick="alert('Watch tab coming soon!')">▶️</div>
-        <div class="sub-nav-item" onclick="alert('Notifications coming soon!')">🔔</div>
-        <div class="sub-nav-item"><a href="{{ url_for('profile', username=current_user.username) }}" style="color: inherit;">👤</a></div>
+        <a href="{{ url_for('index') }}" class="sub-nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
+        </a>
+        <a href="#" class="sub-nav-item" onclick="alert('Friends tab coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </a>
+        <a href="#" class="sub-nav-item" onclick="alert('Watch tab coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 8.5l9 5.5-9 5.5z"/></svg>
+        </a>
+        <a href="#" class="sub-nav-item" onclick="alert('Notifications coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        </a>
+        <a href="{{ url_for('profile', username=current_user.username) }}" class="sub-nav-item">
+            <div style="width:26px;height:26px;background:#1877f2;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">{{ current_user.username[0] | upper }}</div>
+        </a>
     </div>
 
     <div class="container">
         <!-- Stories Row -->
         <div class="stories-container">
             <div class="story-card create-story" onclick="alert('Create story feature coming soon!')">
-                <div class="create-story-icon">+</div>
+                <div class="create-story-avatar"></div>
+                <div class="create-story-icon-wrapper">+</div>
                 <div class="create-story-text">Create story</div>
             </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
-                <div class="story-avatar-ring"><div style="width:28px;height:28px;background:#1877f2;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">{{ current_user.username[0] | upper }}</div></div>
+            <div class="story-card" style="background: linear-gradient(135deg, #6366f1, #a855f7);">
+                <div class="story-mini-avatar">{{ current_user.username[0] | upper }}</div>
                 <div class="story-name">Min Naung Chan</div>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
-                <div class="story-avatar-ring"><div style="width:28px;height:28px;background:#e11d48;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">C</div></div>
+                <div class="story-mini-avatar">C</div>
                 <div class="story-name">Chan Store</div>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
-                <div class="story-avatar-ring"><div style="width:28px;height:28px;background:#059669;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">D</div></div>
+                <div class="story-mini-avatar">D</div>
                 <div class="story-name">Dynamic Studio</div>
             </div>
         </div>
@@ -486,11 +563,26 @@
 
     <!-- Bottom Fixed Navigation Bar -->
     <div class="chan-bottom-nav">
-        <a href="{{ url_for('index') }}" class="bottom-nav-item active">🏠<span>Home</span></a>
-        <a href="#" class="bottom-nav-item" onclick="alert('Friends tab coming soon!')">👥<span>Friends</span></a>
-        <a href="#" class="bottom-nav-item" onclick="alert('Create tab coming soon!')">➕<span>Create</span></a>
-        <a href="#" class="bottom-nav-item" onclick="alert('Notifications coming soon!')">🔔<span>Notifications</span></a>
-        <a href="{{ url_for('profile', username=current_user.username) }}" class="bottom-nav-item">☰<span>Menu</span></a>
+        <a href="{{ url_for('index') }}" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Friends tab coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <span>Friends</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Create tab coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            <span>Create</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Notifications coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+            <span>Notifications</span>
+        </a>
+        <a href="{{ url_for('profile', username=current_user.username) }}" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            <span>Menu</span>
+        </a>
     </div>
 
     <script>
@@ -647,3 +739,4 @@
     </script>
 </body>
 </html>
+
