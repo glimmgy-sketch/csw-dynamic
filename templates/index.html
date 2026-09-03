@@ -5,459 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chan</title>
     <style>
-        body {
-            background-color: #f0f2f5;
-            color: #050505;
-            font-family: sans-serif;
-            margin: 0;
-            padding-bottom: 70px;
-        }
-
-        /* Top Header Bar */
-        .chan-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffffff;
-            padding: 10px 15px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-        }
-        .chan-logo-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 26px;
-            font-weight: bold;
-            color: #1877f2;
-            letter-spacing: -0.5px;
-        }
-        .chan-custom-logo {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #a855f7, #3b82f6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            box-shadow: 0 2px 6px rgba(168, 85, 247, 0.4);
-        }
-        .chan-top-icons {
-            display: flex;
-            gap: 8px;
-        }
-        .top-icon-btn {
-            background: #e4e6eb;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: #050505;
-            position: relative;
-        }
-        .top-icon-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-
-        /* What's on your mind Box */
-        .post-create-box {
-            background: #ffffff;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .user-avatar-sm {
-            width: 40px;
-            height: 40px;
-            background: #1877f2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 16px;
-            color: white;
-            flex-shrink: 0;
-        }
-        .fake-input {
-            flex: 1;
-            padding: 10px 15px;
-            background: #f0f2f5;
-            color: #65676b;
-            border-radius: 20px;
-            font-size: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Modal Popup for Post Creation */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: #ffffff;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e4e6eb;
-            padding-bottom: 10px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .close-modal {
-            background: #e4e6eb;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .modal-content textarea {
-            width: 100%;
-            padding: 12px;
-            background: #f0f2f5;
-            color: #050505;
-            border: none;
-            border-radius: 8px;
-            resize: vertical;
-            box-sizing: border-box;
-            margin-top: 15px;
-            font-size: 15px;
-            outline: none;
-            min-height: 100px;
-        }
-        .modal-submit-btn {
-            background: #1877f2;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 15px;
-            font-size: 16px;
-        }
-
-        /* Stories Row */
-        .stories-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 5px 0 10px 0;
-            scrollbar-width: none;
-        }
+        body { background-color: #f0f2f5; color: #050505; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
+        .chan-header { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+        .chan-logo-area { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: bold; color: #1877f2; letter-spacing: -0.5px; }
+        .chan-custom-logo { width: 36px; height: 36px; background: linear-gradient(135deg, #a855f7, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold; box-shadow: 0 2px 6px rgba(168, 85, 247, 0.4); }
+        .chan-top-icons { display: flex; gap: 8px; }
+        .top-icon-btn { background: #e4e6eb; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; color: #050505; position: relative; }
+        .top-icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        .container { max-width: 600px; margin: 0 auto; padding: 10px; }
+        .post-create-box { background: #ffffff; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .user-avatar-sm { width: 40px; height: 40px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: white; flex-shrink: 0; }
+        .fake-input { flex: 1; padding: 10px 15px; background: #f0f2f5; color: #65676b; border-radius: 20px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #ffffff; width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e4e6eb; padding-bottom: 10px; font-weight: bold; font-size: 18px; }
+        .close-modal { background: #e4e6eb; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .modal-content textarea { width: 100%; padding: 12px; background: #f0f2f5; color: #050505; border: none; border-radius: 8px; resize: vertical; box-sizing: border-box; margin-top: 15px; font-size: 15px; outline: none; min-height: 100px; }
+        .modal-submit-btn { background: #1877f2; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; font-size: 16px; }
+        .stories-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0 10px 0; scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
-        
-        .story-card {
-            min-width: 110px;
-            height: 190px;
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 10px;
-        }
-        .story-card.create-story {
-            justify-content: flex-end;
-            align-items: center;
-            background: #ffffff;
-            border: 1px solid #e4e6eb;
-            padding-bottom: 15px;
-        }
-        .create-story-avatar {
-            width: 100%;
-            height: 125px;
-            background: #f0f2f5;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .create-story-icon-wrapper {
-            position: absolute;
-            top: 110px;
-            width: 36px;
-            height: 36px;
-            background: #1877f2;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            border: 4px solid #ffffff;
-            z-index: 2;
-        }
-        .create-story-text {
-            font-size: 13px;
-            font-weight: bold;
-            text-align: center;
-            color: #050505;
-            margin-top: 45px;
-        }
-        .story-mini-avatar {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 34px;
-            height: 34px;
-            border: 3px solid #1877f2;
-            border-radius: 50%;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            color: #1877f2;
-            z-index: 2;
-        }
-        .story-name {
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 2;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-            position: relative;
-        }
-
-        /* Post Card Styling */
-        .post-card {
-            background: #ffffff;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-top: 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .post-author-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        /* Stats Bar */
-        .post-stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #65676b;
-            padding: 8px 0;
-            border-bottom: 1px solid #e4e6eb;
-            margin-bottom: 4px;
-        }
-
-        /* Action Buttons Bar */
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            position: relative;
-        }
-        .action-btn {
-            background: transparent;
-            border: none;
-            color: #65676b;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-weight: 600;
-            flex: 1;
-            text-align: center;
-        }
+        .story-card { min-width: 110px; height: 190px; background: #ffffff; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
+        .story-card.create-story { justify-content: flex-end; align-items: center; background: #ffffff; border: 1px solid #e4e6eb; padding-bottom: 15px; }
+        .create-story-avatar { width: 100%; height: 125px; background: #f0f2f5; position: absolute; top: 0; left: 0; }
+        .create-story-icon-wrapper { position: absolute; top: 110px; width: 36px; height: 36px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 4px solid #ffffff; z-index: 2; }
+        .create-story-text { font-size: 13px; font-weight: bold; text-align: center; color: #050505; margin-top: 45px; }
+        .story-mini-avatar { position: absolute; top: 10px; left: 10px; width: 34px; height: 34px; border: 3px solid #1877f2; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #1877f2; z-index: 2; }
+        .story-name { color: white; font-size: 12px; font-weight: bold; z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.9); position: relative; }
+        .post-card { background: #ffffff; padding: 12px 15px; border-radius: 10px; margin-top: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .post-author-info { display: flex; align-items: center; gap: 10px; }
+        .post-stats { display: flex; justify-content: space-between; font-size: 13px; color: #65676b; padding: 8px 0; border-bottom: 1px solid #e4e6eb; margin-bottom: 4px; }
+        .post-actions { display: flex; justify-content: space-around; position: relative; }
+        .action-btn { background: transparent; border: none; color: #65676b; font-size: 14px; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-weight: 600; flex: 1; text-align: center; }
         .action-btn:hover { background: #f0f2f5; color: #050505; }
+        
+        /* Reaction Popup Box with Drag/Hover Support */
+        .reaction-popup { display: none; position: absolute; bottom: 45px; left: 0; background: #ffffff; border: 1px solid #e4e6eb; border-radius: 35px; padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); gap: 12px; z-index: 100; animation: popUpAnim 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform-origin: bottom left; }
+        @keyframes popUpAnim { 0% { transform: scale(0.4) translateY(10px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        .reaction-popup span { font-size: 26px; cursor: pointer; transition: transform 0.15s ease; user-select: none; display: inline-block; }
+        .reaction-popup span.active-hover { transform: scale(1.5) translateY(-8px); }
 
-        /* Reaction Popup Box */
-        .reaction-popup {
-            display: none;
-            position: absolute;
-            bottom: 45px;
-            left: 0;
-            background: #ffffff;
-            border: 1px solid #e4e6eb;
-            border-radius: 35px;
-            padding: 8px 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            gap: 12px;
-            z-index: 100;
-            animation: popUpAnim 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            transform-origin: bottom left;
-        }
-
-        @keyframes popUpAnim {
-            0% { transform: scale(0.4) translateY(10px); opacity: 0; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .reaction-popup button {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            transition: transform 0.15s ease;
-        }
-        .reaction-popup button:hover {
-            transform: scale(1.4) translateY(-5px);
-        }
-
-        /* Comment Section */
-        .comment-section {
-            display: none;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #e4e6eb;
-        }
-        .comment-input-box {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .comment-input-box input {
-            flex: 1;
-            padding: 8px 12px;
-            background: #f0f2f5;
-            border: none;
-            color: #050505;
-            border-radius: 20px;
-            font-size: 13px;
-            outline: none;
-        }
-        .comment-input-box button {
-            background: #1877f2;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .comment-list {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #65676b;
-            background: #f0f2f5;
-            padding: 8px 12px;
-            border-radius: 8px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        /* Bottom Fixed Navigation Bar (5 Items) */
-        .chan-bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #ffffff;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #e4e6eb;
-            padding: 6px 0;
-            z-index: 1000;
-            box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
-        }
-        .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #65676b;
-            text-decoration: none;
-            flex: 1;
-        }
-        .bottom-nav-item.active {
-            color: #1877f2;
-        }
-        .bottom-nav-item svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-        .bottom-nav-item span {
-            font-size: 10px;
-            margin-top: 3px;
-            font-weight: bold;
-        }
-        .create-circle-btn {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #a855f7, #9333ea);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4);
-            cursor: pointer;
-            margin: auto;
-        }
-
+        .comment-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e4e6eb; }
+        .comment-input-box { display: flex; gap: 8px; margin-top: 8px; }
+        .comment-input-box input { flex: 1; padding: 8px 12px; background: #f0f2f5; border: none; color: #050505; border-radius: 20px; font-size: 13px; outline: none; }
+        .comment-input-box button { background: #1877f2; color: white; border: none; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; font-weight: bold; }
+        .comment-list { margin-top: 8px; font-size: 13px; color: #65676b; background: #f0f2f5; padding: 8px 12px; border-radius: 8px; max-height: 150px; overflow-y: auto; }
+        .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e4e6eb; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.05); }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #65676b; text-decoration: none; flex: 1; }
+        .bottom-nav-item.active { color: #1877f2; }
+        .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+        .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
+        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
         a { color: #1877f2; text-decoration: none; }
-        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <!-- Top Header Bar -->
     <div class="chan-header">
-        <div class="chan-logo-area">
-            <div class="chan-custom-logo">C</div> Chan
-        </div>
+        <div class="chan-logo-area"><div class="chan-custom-logo">C</div> Chan</div>
         <div class="chan-top-icons">
             <button class="top-icon-btn" onclick="alert('Search feature coming soon!')">
                 <svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
@@ -469,7 +73,6 @@
     </div>
 
     <div class="container">
-        <!-- What's on your mind Box -->
         <div class="post-create-box" onclick="openPostModal()">
             <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
             <div class="fake-input">
@@ -478,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Post Creation Modal Popup -->
         <div class="modal-overlay" id="postModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -492,7 +94,6 @@
             </div>
         </div>
 
-        <!-- Stories Row -->
         <div class="stories-container">
             <div class="story-card create-story" onclick="alert('Create story feature coming soon!')">
                 <div class="create-story-avatar"></div>
@@ -513,7 +114,6 @@
             </div>
         </div>
 
-        <!-- Feeds Section (Database Connected) -->
         {% if posts %}
             {% for post in posts %}
                 <div class="post-card">
@@ -528,7 +128,6 @@
                     </div>
                     <p style="margin: 8px 0; word-break: break-word;">{{ post.content }}</p>
                     
-                    <!-- Stats Bar (Database Data) -->
                     <div class="post-stats">
                         <span>{{ post.likes|length }} likes</span>
                         <div>
@@ -537,54 +136,41 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons Bar -->
-                    <div class="post-actions">
-                        <!-- Reaction Box -->
+                    <div class="post-actions" style="position: relative;">
+                        <!-- Hidden form to submit selected reaction via JS -->
+                        <form id="like-form-{{ post.id }}" action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:none;">
+                            <input type="hidden" name="emoji" id="like-emoji-input-{{ post.id }}" value="👍">
+                        </form>
+
+                        <!-- Reaction Popup Box -->
                         <div class="reaction-popup" id="reactions-{{ post.id }}">
-                            <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                                <input type="hidden" name="emoji" value="👍">
-                                <button type="submit">👍</button>
-                            </form>
-                            <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                                <input type="hidden" name="emoji" value="❤️">
-                                <button type="submit">❤️</button>
-                            </form>
-                            <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                                <input type="hidden" name="emoji" value="😆">
-                                <button type="submit">😆</button>
-                            </form>
-                            <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                                <input type="hidden" name="emoji" value="😮">
-                                <button type="submit">😮</button>
-                            </form>
-                            <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                                <input type="hidden" name="emoji" value="😢">
-                                <button type="submit">😢</button>
-                            </form>
+                            <span data-emoji="👍" onclick="submitReaction({{ post.id }}, '👍')">👍</span>
+                            <span data-emoji="❤️" onclick="submitReaction({{ post.id }}, '❤️')">❤️</span>
+                            <span data-emoji="😆" onclick="submitReaction({{ post.id }}, '😆')">😆</span>
+                            <span data-emoji="😮" onclick="submitReaction({{ post.id }}, '😮')">😮</span>
+                            <span data-emoji="😢" onclick="submitReaction({{ post.id }}, '😢')">😢</span>
                         </div>
 
-                        <!-- Like Button with Toggle Form -->
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="flex: 1; display: flex;">
-                            <input type="hidden" name="emoji" value="👍">
-                            <button type="submit" class="action-btn" 
-                                    onmousedown="startLongPress(event, {{ post.id }})" 
-                                    ontouchstart="startLongPress(event, {{ post.id }})"
-                                    onmouseup="endLongPress({{ post.id }})" 
-                                    ontouchend="endLongPress({{ post.id }})">
-                                    {% set user_liked = post.likes | selectattr('user_id', 'equalto', current_user.id) | list %}
-                                    {% if user_liked %}
-                                        {{ user_liked[0].emoji }} Liked
-                                    {% else %}
-                                        Like
-                                    {% endif %}
-                            </button>
-                        </form>
+                        {% set user_liked = post.likes | selectattr('user_id', 'equalto', current_user.id) | list %}
+                        <button class="action-btn" id="like-btn-{{ post.id }}" 
+                                onclick="likeClick({{ post.id }})" 
+                                onmousedown="startLongPress(event, {{ post.id }})" 
+                                ontouchstart="startLongPress(event, {{ post.id }})"
+                                onmouseup="endLongPress({{ post.id }})" 
+                                ontouchend="endLongPress({{ post.id }})"
+                                onmousemove="handleMove(event, {{ post.id }})"
+                                ontouchmove="handleTouchMove(event, {{ post.id }})">
+                            {% if user_liked %}
+                                {{ user_liked[0].emoji }} Liked
+                            {% else %}
+                                Like
+                            {% endif %}
+                        </button>
                         
                         <button class="action-btn" onclick="toggleComment({{ post.id }})">Comment</button>
                         <button class="action-btn" onclick="alert('Post link copied!')">Share</button>
                     </div>
 
-                    <!-- Comment Section (Database Data) -->
                     <div class="comment-section" id="comment-section-{{ post.id }}">
                         <div class="comment-list">
                             {% if post.comments %}
@@ -609,7 +195,6 @@
         {% endif %}
     </div>
 
-    <!-- Bottom Fixed Navigation Bar (5 Items) -->
     <div class="chan-bottom-nav">
         <a href="{{ url_for('index') }}" class="bottom-nav-item active">
             <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
@@ -635,17 +220,18 @@
     </div>
 
     <script>
-        function openPostModal() {
-            document.getElementById('postModal').style.display = 'flex';
-        }
-        function closePostModal() {
-            document.getElementById('postModal').style.display = 'none';
-        }
+        function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
+        function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
 
         let pressTimer;
+        let isLongPressActive = false;
+        let activeHoverEmoji = null;
 
         function startLongPress(event, postId) {
+            isLongPressActive = false;
+            activeHoverEmoji = null;
             pressTimer = setTimeout(() => {
+                isLongPressActive = true;
                 const popup = document.getElementById('reactions-' + postId);
                 popup.style.display = 'flex';
             }, 400);
@@ -653,6 +239,64 @@
 
         function endLongPress(postId) {
             clearTimeout(pressTimer);
+            if (isLongPressActive) {
+                if (activeHoverEmoji) {
+                    submitReaction(postId, activeHoverEmoji);
+                } else {
+                    document.getElementById('reactions-' + postId).style.display = 'none';
+                    isLongPressActive = false;
+                }
+            }
+        }
+
+        function handleMove(event, postId) {
+            if (!isLongPressActive) return;
+            const popup = document.getElementById('reactions-' + postId);
+            const icons = popup.querySelectorAll('span');
+            activeHoverEmoji = null;
+            icons.forEach(icon => {
+                const rect = icon.getBoundingClientRect();
+                if (event.clientX >= rect.left && event.clientX <= rect.right &&
+                    event.clientY >= rect.top && event.clientY <= rect.bottom) {
+                    icon.classList.add('active-hover');
+                    activeHoverEmoji = icon.getAttribute('data-emoji');
+                } else {
+                    icon.classList.remove('active-hover');
+                }
+            });
+        }
+
+        function handleTouchMove(event, postId) {
+            if (!isLongPressActive) return;
+            const touch = event.touches[0];
+            const popup = document.getElementById('reactions-' + postId);
+            const icons = popup.querySelectorAll('span');
+            activeHoverEmoji = null;
+            icons.forEach(icon => {
+                const rect = icon.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                    icon.classList.add('active-hover');
+                    activeHoverEmoji = icon.getAttribute('data-emoji');
+                } else {
+                    icon.classList.remove('active-hover');
+                }
+            });
+        }
+
+        function submitReaction(postId, emoji) {
+            document.getElementById('like-emoji-input-' + postId).value = emoji;
+            document.getElementById('like-form-' + postId).submit();
+        }
+
+        function likeClick(postId) {
+            if (isLongPressActive) return;
+            const popup = document.getElementById('reactions-' + postId);
+            if (popup.style.display === 'flex') {
+                popup.style.display = 'none';
+                return;
+            }
+            submitReaction(postId, '👍');
         }
 
         function toggleComment(postId) {
@@ -670,4 +314,3 @@
     </script>
 </body>
 </html>
-
