@@ -138,7 +138,7 @@
 
                     <div class="post-actions" style="position: relative;">
                         <!-- Hidden form to submit selected reaction via JS -->
-                        <form id="like-form-{{ post.id }}" action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:none;">
+                        <form id="like-form-{{ post.id }}" action="{{ url_for('like_post', post_id=post.id) }}#post-{{ post.id }}" method="POST" style="display:none;">
                             <input type="hidden" name="emoji" id="like-emoji-input-{{ post.id }}" value="👍">
                         </form>
 
