@@ -25,6 +25,7 @@
 
         <form action="{{ url_for('signup') }}" method="POST">
             <div class="mb-3">
+                <input type="text" name="name" placeholder="အမည် (Display Name) ဖြည့်ပါ" required>
                 <input type="text" name="username" class="form-control" placeholder="Username ရိုက်ထည့်ပါ" required>
             </div>
             <div class="mb-3">
