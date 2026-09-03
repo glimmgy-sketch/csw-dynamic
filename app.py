@@ -50,7 +50,7 @@ class Comment(db.Model):
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # Notification လက်ခံမည့်သူ (Recipient)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     is_read = db.Column(db.Boolean, default=False)
 
 @login_manager.user_loader
@@ -58,6 +58,8 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 with app.app_context():
+    # Render တွင် Database Table အသစ်များ အပြည့်အစုံ ဆောက်လုပ်ရန်
+    db.drop_all() # Temporary fix to reset clean tables and avoid internal server errors
     db.create_all()
     if not User.query.filter_by(username='MinNaungChan').first():
         default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
@@ -127,8 +129,6 @@ def add_post():
         db.session.commit()
     return redirect(url_for('index'))
 
-# --- LIKE, COMMENT & NOTIFICATION ENDPOINTS ---
-
 @app.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
@@ -137,21 +137,19 @@ def like_post(post_id):
     
     existing_like = Like.query.filter_by(user_id=current_user.id, post_id=post_id).first()
     if existing_like:
-        # တကယ်လို့ Like ထားပြီးသားဆိုရင် ပြန်ဖြုတ်မယ် (Toggle)
-        db.session.delete(existing_like)
-        db.session.commit()
+        if existing_like.emoji == emoji:
+            db.session.delete(existing_like)
+        else:
+            existing_like.emoji = emoji
     else:
-        # အသစ် Like မယ်
         new_like = Like(user_id=current_user.id, post_id=post_id, emoji=emoji)
         db.session.add(new_like)
-        
-        # ပို့စ်ပိုင်ရှင် ကိုယ့်ဟာကိုယ် မဟုတ်ရင် Notification ပို့မယ်
         if post.user_id != current_user.id:
             notif_msg = f"{current_user.username} က သင့်ပို့စ်ကို {emoji} ပေးသွားပါတယ်။"
             notif = Notification(message=notif_msg, user_id=post.user_id)
             db.session.add(notif)
             
-        db.session.commit()
+    db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/comment/<int:post_id>', methods=['POST'])
@@ -162,13 +160,10 @@ def add_comment(post_id):
     if content:
         new_comment = Comment(content=content, user_id=current_user.id, post_id=post_id)
         db.session.add(new_comment)
-        
-        # ပို့စ်ပိုင်ရှင် ကိုယ့်ဟာကိုယ် မဟုတ်ရင် Comment အတွက် Notification ပို့မယ်
         if post.user_id != current_user.id:
             notif_msg = f"{current_user.username} က သင့်ပို့စ်တွင် မန့်သွားသည်: '{content[:20]}...'"
             notif = Notification(message=notif_msg, user_id=post.user_id)
             db.session.add(notif)
-            
         db.session.commit()
     return redirect(url_for('index'))
 
