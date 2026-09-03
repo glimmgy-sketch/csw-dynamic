@@ -5,7 +5,8 @@ db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
+    username = db.Column(db.String(150), unique=True, nullable=False) # @ပါတဲ့ unique ဖြစ်ရမယ့်နာမည်
+    name = db.Column(db.String(150), nullable=True) # လူတိုင်းပေးလို့ရတဲ့ Display Name (ဥပမာ- Min Naung Chan)
     password = db.Column(db.String(200), nullable=False)
     
     posts = db.relationship('Post', backref='author', lazy=True)
