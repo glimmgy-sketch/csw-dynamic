@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-# Render ရဲ့ /tmp folder ကိုသုံးမှ Database Error မတက်ဘဲ အလုပ်လုပ်ပါမယ်
 db_path = os.path.join('/tmp', 'csw.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -19,28 +18,40 @@ login_manager.login_view = 'login'
 
 # --- DATABASE MODELS ---
 
-friendships = db.Table('friendships',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('friend_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
-)
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     
     posts = db.relationship('Post', backref='author', lazy=True)
-    notifications = db.relationship('Notification', backref='recipient', lazy=True)
+    notifications = db.relationship('Notification', backref='recipient', lazy=True, cascade="all, delete-orphan")
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    likes = db.relationship('Like', backref='post', lazy=True, cascade="all, delete-orphan")
+    comments = db.relationship('Comment', backref='post', lazy=True, cascade="all, delete-orphan")
+
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    emoji = db.Column(db.String(10), default='👍')
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    author = db.relationship('User', backref='user_comments')
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # Notification လက်ခံမည့်သူ (Recipient)
+    is_read = db.Column(db.Boolean, default=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -48,7 +59,6 @@ def load_user(user_id):
 
 with app.app_context():
     db.create_all()
-    # အကောင့်အသစ်လုံးဝမရှိသေးရင် Default အနေနဲ့ Test Account တစ်ခုကို အလိုအလျောက် ဆောက်ပေးထားမည်
     if not User.query.filter_by(username='MinNaungChan').first():
         default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
         db.session.add(default_user)
@@ -59,7 +69,7 @@ with app.app_context():
 @app.route('/')
 @login_required
 def index():
-    posts = Post.query.all()
+    posts = Post.query.order_by(Post.id.desc()).all()
     return render_template('index.html', posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,7 +80,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         
         if user and check_password_hash(user.password, password):
-            login_user(user, remember=True) # အမြဲတမ်း Login ဆက်မြဲနေစေရန် remember=True ထည့်သွင်းထားသည်
+            login_user(user, remember=True)
             return redirect(url_for('index'))
         flash('Username သို့မဟုတ် Password မှားနေပါတယ် သားကြီး!')
     return render_template('login.html')
@@ -116,6 +126,57 @@ def add_post():
         db.session.add(new_post)
         db.session.commit()
     return redirect(url_for('index'))
+
+# --- LIKE, COMMENT & NOTIFICATION ENDPOINTS ---
+
+@app.route('/like/<int:post_id>', methods=['POST'])
+@login_required
+def like_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    emoji = request.form.get('emoji', '👍')
+    
+    existing_like = Like.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+    if existing_like:
+        # တကယ်လို့ Like ထားပြီးသားဆိုရင် ပြန်ဖြုတ်မယ် (Toggle)
+        db.session.delete(existing_like)
+        db.session.commit()
+    else:
+        # အသစ် Like မယ်
+        new_like = Like(user_id=current_user.id, post_id=post_id, emoji=emoji)
+        db.session.add(new_like)
+        
+        # ပို့စ်ပိုင်ရှင် ကိုယ့်ဟာကိုယ် မဟုတ်ရင် Notification ပို့မယ်
+        if post.user_id != current_user.id:
+            notif_msg = f"{current_user.username} က သင့်ပို့စ်ကို {emoji} ပေးသွားပါတယ်။"
+            notif = Notification(message=notif_msg, user_id=post.user_id)
+            db.session.add(notif)
+            
+        db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/comment/<int:post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    content = request.form.get('content')
+    if content:
+        new_comment = Comment(content=content, user_id=current_user.id, post_id=post_id)
+        db.session.add(new_comment)
+        
+        # ပို့စ်ပိုင်ရှင် ကိုယ့်ဟာကိုယ် မဟုတ်ရင် Comment အတွက် Notification ပို့မယ်
+        if post.user_id != current_user.id:
+            notif_msg = f"{current_user.username} က သင့်ပို့စ်တွင် မန့်သွားသည်: '{content[:20]}...'"
+            notif = Notification(message=notif_msg, user_id=post.user_id)
+            db.session.add(notif)
+            
+        db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    user_notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.id.desc()).all()
+    return render_template('notifications.html', notifications=user_notifs)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
