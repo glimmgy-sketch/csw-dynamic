@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - {{ current_user.username }}</title>
+    <title>Chan - Profile ({{ current_user.username }})</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,11 +13,19 @@
         .story-avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid #06b6d4; object-fit: cover; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1e293b; border-top: 1px solid #334155; z-index: 1000; }
         .btn-glow { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; }
+        .app-title { font-weight: bold; font-size: 1.2rem; color: #06b6d4; }
     </style>
 </head>
 <body>
 
-    <div class="container mt-3" style="max-width: 600px;">
+    <!-- Top Header -->
+    <div class="container mt-2 mb-3 d-flex justify-content-between align-items-center" style="max-width: 600px;">
+        <span class="app-title"><i class="fa-solid fa-comments text-info"></i> Chan</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-right-from-bracket"></i> ထွက်မည်</a>
+    </div>
+
+    <div class="container" style="max-width: 600px;">
+        <!-- Profile Card -->
         <div class="card card-custom p-3 text-center">
             <div class="d-flex justify-content-center mb-2">
                 <div class="profile-avatar bg-secondary d-flex align-items-center justify-content-center fs-1">
@@ -25,16 +33,17 @@
                 </div>
             </div>
             <h4>{{ current_user.username }}</h4>
-            <p class="text-info small mb-2">{{ current_user.bio }}</p>
+            <p class="text-info small mb-2">{{ current_user.bio or 'Chan Member' }}</p>
 
-            <form action="{{ url_for('profile') }}" method="POST" class="mb-3">
+            <form action="{{ url_for('profile') }}" method="POST" class="mb-2">
                 <div class="input-group input-group-sm">
-                    <input type="text" name="bio" class="form-control bg-dark text-white border-secondary" placeholder="Bio အသစ် ပြင်ရန်..." value="{{ current_user.bio }}">
+                    <input type="text" name="bio" class="form-control bg-dark text-white border-secondary" placeholder="Bio အသစ် ပြင်ရန်..." value="{{ current_user.bio or '' }}">
                     <button class="btn btn-outline-info" type="submit">Bio ပြင်မည်</button>
                 </div>
             </form>
         </div>
 
+        <!-- Stories Section -->
         <div class="card card-custom p-3">
             <h6><i class="fa-solid fa-circle-play text-info"></i> ကျွန်ုပ်၏ Story များ</h6>
             <div class="d-flex overflow-auto py-2" style="gap: 10px;">
@@ -46,8 +55,9 @@
             </div>
         </div>
 
+        <!-- Post Create Section -->
         <div class="card card-custom p-3">
-            <h6><i class="fa-solid fa-pen text-info"></i> Post တင်ရန်</h6>
+            <h6><i class="fa-solid fa-pen text-info"></i> Chan မှာ Post တင်ရန်</h6>
             <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data">
                 <textarea class="form-control bg-dark text-white border-secondary mb-2" name="content" rows="2" placeholder="Profile မှာ Post တင်ရန်..."></textarea>
                 <div class="d-flex justify-content-between align-items-center">
@@ -57,24 +67,29 @@
             </form>
         </div>
 
+        <!-- User's Posts Section -->
         <h6 class="mt-3 mb-2"><i class="fa-solid fa-box-archive text-info"></i> ကျွန်ုပ်၏ Post များ</h6>
         {% for post in posts %}
-        <div class="card card-custom p-3">
-            <span class="fw-bold text-info"><i class="fa-solid fa-circle-user"></i> {{ post.author.username }}</span>
+        <div class="card card-custom p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-info"><i class="fa-solid fa-circle-user"></i> {{ post.author.username }}</span>
+                <small class="text-muted" style="font-size: 0.75rem;">{{ post.created_at.strftime('%Y-%m-%d %H:%M') if post.created_at else '' }}</small>
+            </div>
             {% if post.content %}<p class="my-2">{{ post.content }}</p>{% endif %}
             {% if post.media_file %}
-            {% if post.media_file.endswith(('.mp4', '.mov', '.avi')) %}
-            <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="w-100 rounded"></video>
-            {% else %}
-            <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" class="w-100 rounded">
-            {% endif %}
+                {% if post.media_file.endswith(('.mp4', '.mov', '.avi', '.webm')) %}
+                <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="w-100 rounded"></video>
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" class="w-100 rounded">
+                {% endif %}
             {% endif %}
         </div>
         {% else %}
-        <p class="text-muted text-center">Post မရှိသေးပါ</p>
+        <p class="text-muted text-center py-3">Post မရှိသေးပါ</p>
         {% endfor %}
     </div>
 
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav d-flex justify-content-around py-2">
         <a href="{{ url_for('index') }}" class="text-muted fs-4"><i class="fa-solid fa-house"></i></a>
         <a href="{{ url_for('profile') }}" class="text-info fs-4"><i class="fa-solid fa-user"></i></a>
