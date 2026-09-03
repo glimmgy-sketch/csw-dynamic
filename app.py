@@ -7,8 +7,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-# SQLite Database (Error လုံးဝမတက်ဘဲ ချက်ချင်းအလုပ်လုပ်သည်)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///csw.db'
+# Render ရဲ့ /tmp folder ကိုသုံးမှ Database Error မတက်ဘဲ အလုပ်လုပ်ပါမယ်
+db_path = os.path.join('/tmp', 'csw.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
