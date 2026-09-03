@@ -1,38 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications - Chan</title>
-    <style>
-        body { background-color: #f0f2f5; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
-        .chan-header { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 2px rgba(0,0,0,0.08); font-size: 20px; font-weight: bold; color: #1877f2; }
-        .container { max-width: 600px; margin: 0 auto; padding: 10px; }
-        .notif-card { background: #ffffff; padding: 12px 15px; border-radius: 8px; margin-top: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 14px; color: #050505; cursor: pointer; text-decoration: none; display: block; }
-        .notif-card:hover { background: #f9fafb; }
-        .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e4e6eb; padding: 6px 0; z-index: 1000; }
-        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #65676b; text-decoration: none; flex: 1; position: relative; }
-        .bottom-nav-item.active { color: #1877f2; }
-        .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
-        .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
-        .badge-count { position: absolute; top: -2px; right: 32%; background: #e41e3f; color: white; font-size: 10px; padding: 1px 5px; border-radius: 10px; font-weight: bold; }
-        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: auto; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div class="chan-header">Notifications</div>
-    <div class="container">
-        {% if notifications %}
-            {% for notif in notifications %}
-                <a href="{{ url_for('notif_bp.click_notification', notif_id=notif.id) }}" class="notif-card">
-                    🔔 {{ notif.message }}
-                </a>
-            {% endfor %}
-        {% else %}
-            <p style="text-align: center; color: #65676b; margin-top: 40px;">No notifications yet.</p>
-        {% endif %}
-    </div>
-
     <!-- Bottom Nav with Unread Badge Calculation -->
     {% set unread_count = current_user.notifications | selectattr('is_read', 'equalto', false) | list | length %}
     <div class="chan-bottom-nav">
@@ -61,5 +26,3 @@
             <span>Menu</span>
         </a>
     </div>
-</body>
-</html>
