@@ -1,87 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chan - Feed</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Chan - ပင်မစာမျက်နှာ</title>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; }
-        .navbar { background-color: #1e293b; border-bottom: 1px solid #334155; }
-        .card-custom { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; }
-        .user-link { color: #06b6d4; text-decoration: none; font-weight: bold; }
-        .user-link:hover { text-decoration: underline; }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        h1 { color: #38bdf8; margin-top: 0; }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        button {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover { background: #16a34a; }
+        .post-card {
+            background: #334155;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        a { color: #38bdf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand navbar-dark mb-4">
-        <div class="container d-flex justify-content-between">
-            <a class="navbar-brand text-info fw-bold" href="/"><i class="fa-solid fa-comments"></i> Chan</a>
-            
-            <div class="d-flex align-items-center gap-3">
-                <!-- Notification Bell -->
-                <div class="dropdown">
-                    <button class="btn btn-outline-info btn-sm position-relative" type="button" data-bs-toggle="dropdown">
-                        <i class="fa-solid fa-bell"></i>
-                        {% if notifications|length > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ notifications|length }}
-                        </span>
-                        {% endif %}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark p-2" style="width: 280px;">
-                        <li class="dropdown-header text-info">Notifications</li>
-                        {% for n in notifications %}
-                        <li class="small p-2 border-bottom">{{ n.message }}</li>
-                        {% else %}
-                        <li class="small p-2 text-muted text-center">အသိပေးချက် မရှိသေးပါ</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <a href="{{ url_for('view_profile', username=current_user.username) }}" class="btn btn-outline-light btn-sm">Profile</a>
-                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Logout</a>
+    <div class="container">
+        <div class="nav-links">
+            <h1>✨ Chan</h1>
+            <div>
+                <a href="{{ url_for('profile', username=current_user.username) }}">ကိုယ်ပိုင် Profile</a> | 
+                <a href="{{ url_for('logout') }}" style="color: #ef4444;">ထွက်ရန်</a>
             </div>
         </div>
-    </nav>
 
-    <div class="container" style="max-width: 600px;">
-        <!-- Create Post -->
-        <div class="card card-custom p-3 mb-4">
-            <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data">
-                <textarea name="content" class="form-control bg-dark text-white border-secondary mb-2" rows="2" placeholder="ဘာတွေဝေမျှချင်လဲ ညီလေး..."></textarea>
-                <div class="d-flex justify-content-between align-items-center">
-                    <input type="file" name="file" class="form-control form-control-sm bg-dark text-white border-secondary w-auto">
-                    <button type="submit" class="btn btn-info btn-sm text-white px-3">Post တင်မည်</button>
+        <p>မင်္ဂလာပါ, <strong>{{ current_user.username }}</strong> ရေ! 👋</p>
+
+        <!-- Post Form -->
+        <form action="{{ url_for('add_post') }}" method="POST">
+            <textarea name="content" rows="3" placeholder="ဘာတွေတွေးနေလဲ ပြောပြပါဦး..." required></textarea>
+            <button type="submit">တင်မည်</button>
+        </form>
+
+        <hr style="border: 0; border-top: 1px solid #475569; margin: 20px 0;">
+
+        <h3>📌 Feed များ</h3>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post-card">
+                    <p><a href="{{ url_for('profile', username=post.author.username) }}"><strong>@{{ post.author.username }}</strong></a></p>
+                    <p>{{ post.content }}</p>
                 </div>
-            </form>
-        </div>
-
-        <!-- Feed List -->
-        {% for post in posts %}
-        <div class="card card-custom p-3 mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <!-- User Profile Link -->
-                <a href="{{ url_for('view_profile', username=post.author.username) }}" class="user-link">
-                    <i class="fa-solid fa-circle-user"></i> {{ post.author.username }}
-                </a>
-                <small class="text-muted" style="font-size: 0.75rem;">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-            </div>
-            
-            {% if post.content %}<p class="mb-2">{{ post.content }}</p>{% endif %}
-
-            {% if post.media_url %}
-                {% if post.media_type == 'image' %}
-                    <img src="{{ post.media_url }}" class="img-fluid rounded mb-2">
-                {% elif post.media_type == 'video' %}
-                    <video controls class="w-100 rounded mb-2"><source src="{{ post.media_url }}"></video>
-                {% endif %}
-            {% endif %}
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p style="color: #94a3b8;">ပို့စ် မရှိသေးပါဘူး သားကြီး။ ပထမဆုံး ပို့စ်ကို စတင်တင်လိုက်ပါဦး!</p>
+        {% endif %}
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
