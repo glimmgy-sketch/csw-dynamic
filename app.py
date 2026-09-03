@@ -9,7 +9,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key-2026'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+# Database ဖိုင်အသစ်စက်စက်ဖြစ်အောင် database_v2.db သို့ ပြောင်းထားပါသည်
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v2.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
 
