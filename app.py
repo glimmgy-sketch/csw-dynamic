@@ -7,10 +7,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-# Supabase PostgreSQL Database Connection (Port 6543 - Transaction Pooler)
+# Supabase PostgreSQL Database Connection (Port 5432 - Direct)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 
-    'postgresql://postgres.kfkjchsjbdrcpueojojq:cKtMhL1EhJPEllBc@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres'
+    'postgresql://postgres:cKtMhL1EhJPEllBc@db.kfkjchsjbdrcpueojojq.supabase.co:5432/postgres'
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -21,7 +21,6 @@ login_manager.login_view = 'login'
 
 # --- DATABASE MODELS ---
 
-# Friendships Association Table
 friendships = db.Table('friendships',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('friend_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
@@ -34,15 +33,6 @@ class User(UserMixin, db.Model):
     
     posts = db.relationship('Post', backref='author', lazy=True)
     notifications = db.relationship('Notification', backref='recipient', lazy=True)
-    
-    # Self-referential many-to-many relationship for friends
-    friends = db.relationship(
-        'User',
-        secondary=friendships,
-        primaryjoin=(friendships.c.user_id == id),
-        secondaryjoin=(friendships.c.friend_id == id),
-        lazy='dynamic'
-    )
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,7 +48,6 @@ class Notification(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Create database tables automatically
 with app.app_context():
     db.create_all()
 
@@ -80,7 +69,7 @@ def login():
         if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('index'))
-        flash('Username သို့မဟုတ် Password မှားနေ습니다 သားကြီး!')
+        flash('Username သို့မဟုတ် Password မှားနေပါတယ် သားကြီး!')
     return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -94,7 +83,7 @@ def signup():
             flash('ဒီ Username က ရှိနှင့်ပြီးသားပါ ညီလေး!')
             return redirect(url_for('signup'))
             
-        hashed_password = generate_password_hash(password, method='scrypt')
+        hashed_password = generate_password_hash(password)
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
