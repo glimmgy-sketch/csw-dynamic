@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Post, Like, Comment, Notification
@@ -17,7 +18,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Blueprint ကို Register လုပ်သည်
 app.register_blueprint(notif_bp)
 
 @login_manager.user_loader
@@ -108,7 +108,6 @@ def like_post(post_id):
         new_like = Like(user_id=current_user.id, post_id=post_id, emoji=emoji)
         db.session.add(new_like)
         if post.user_id != current_user.id:
-            # English လို Notification စာသားသစ်
             notif_msg = f"{current_user.username} reacted {emoji} to your post."
             notif = Notification(message=notif_msg, user_id=post.user_id, post_id=post.id)
             db.session.add(notif)
@@ -125,7 +124,6 @@ def add_comment(post_id):
         new_comment = Comment(content=content, user_id=current_user.id, post_id=post_id)
         db.session.add(new_comment)
         if post.user_id != current_user.id:
-            # English လို Notification စာသားသစ်
             notif_msg = f"{current_user.username} commented on your post: '{content[:15]}...'"
             notif = Notification(message=notif_msg, user_id=post.user_id, post_id=post.id)
             db.session.add(notif)
@@ -134,3 +132,4 @@ def add_comment(post_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+
