@@ -52,13 +52,21 @@
             border: 1px solid #475569;
         }
         
+        /* Stats Bar (Like, Comment, Share counts) */
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #94a3b8;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #475569;
+            margin-bottom: 4px;
+        }
+
         /* Action Buttons Bar */
         .post-actions {
             display: flex;
             justify-content: space-around;
-            margin-top: 12px;
-            padding-top: 8px;
-            border-top: 1px solid #475569;
             position: relative;
         }
         .action-btn {
@@ -67,36 +75,47 @@
             color: #cbd5e1;
             font-size: 14px;
             cursor: pointer;
-            padding: 6px 12px;
+            padding: 8px 12px;
             border-radius: 6px;
             font-weight: 600;
+            flex: 1;
+            text-align: center;
         }
         .action-btn:hover {
             background: #475569;
             color: #fff;
         }
 
-        /* Reaction Popup Box */
+        /* Facebook Style Pop-up Reaction Bar with Animation */
         .reaction-popup {
             display: none;
             position: absolute;
-            bottom: 40px;
+            bottom: 45px;
             left: 0;
             background: #1e293b;
             border: 1px solid #475569;
-            border-radius: 30px;
-            padding: 5px 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            gap: 8px;
-            z-index: 10;
+            border-radius: 35px;
+            padding: 8px 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            gap: 12px;
+            z-index: 100;
+            animation: popUpAnim 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform-origin: bottom left;
         }
+
+        @keyframes popUpAnim {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .reaction-popup span {
-            font-size: 22px;
+            font-size: 26px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.15s ease;
+            user-select: none;
         }
-        .reaction-popup span:hover {
-            transform: scale(1.3);
+        .reaction-popup span:hover, .reaction-popup span.active-hover {
+            transform: scale(1.4) translateY(-5px);
         }
 
         /* Comment Section Styling */
@@ -132,6 +151,8 @@
             background: #1e293b;
             padding: 8px;
             border-radius: 6px;
+            max-height: 120px;
+            overflow-y: auto;
         }
 
         .nav-links {
@@ -171,26 +192,37 @@
                     <p><a href="{{ url_for('profile', username=post.author.username) }}"><strong>@{{ post.author.username }}</strong></a></p>
                     <p>{{ post.content }}</p>
                     
+                    <!-- Counts Display Bar -->
+                    <div class="post-stats">
+                        <span id="like-count-text-{{ post.id }}">0 likes</span>
+                        <div>
+                            <span id="comment-count-text-{{ post.id }}">0 comments</span> • 
+                            <span id="share-count-text-{{ post.id }}">0 shares</span>
+                        </div>
+                    </div>
+
                     <!-- Like, Comment, Share Buttons Bar -->
                     <div class="post-actions" style="position: relative;">
-                        <!-- Reaction Box -->
+                        <!-- Reaction Box with Swiping Support -->
                         <div class="reaction-popup" id="reactions-{{ post.id }}">
-                            <span onclick="setReaction({{ post.id }}, '👍')">👍</span>
-                            <span onclick="setReaction({{ post.id }}, '❤️')">❤️</span>
-                            <span onclick="setReaction({{ post.id }}, '😆')">😆</span>
-                            <span onclick="setReaction({{ post.id }}, '😮')">😮</span>
-                            <span onclick="setReaction({{ post.id }}, '😢')">😢</span>
+                            <span data-emoji="👍" onclick="setReaction({{ post.id }}, '👍')">👍</span>
+                            <span data-emoji="❤️" onclick="setReaction({{ post.id }}, '❤️')">❤️</span>
+                            <span data-emoji="😆" onclick="setReaction({{ post.id }}, '😆')">😆</span>
+                            <span data-emoji="😮" onclick="setReaction({{ post.id }}, '😮')">😮</span>
+                            <span data-emoji="😢" onclick="setReaction({{ post.id }}, '😢')">😢</span>
                         </div>
 
                         <button class="action-btn" id="like-btn-{{ post.id }}" 
                                 onclick="likeClick({{ post.id }})" 
-                                onmousedown="startLongPress({{ post.id }})" 
-                                ontouchstart="startLongPress({{ post.id }})"
+                                onmousedown="startLongPress(event, {{ post.id }})" 
+                                ontouchstart="startLongPress(event, {{ post.id }})"
                                 onmouseup="cancelLongPress()" 
-                                ontouchend="cancelLongPress()">Like</button>
+                                ontouchend="cancelLongPress()"
+                                onmousemove="handleMove(event, {{ post.id }})"
+                                ontouchmove="handleTouchMove(event, {{ post.id }})">Like</button>
                         
                         <button class="action-btn" onclick="toggleComment({{ post.id }})">Comment</button>
-                        <button class="action-btn" onclick="sharePost()">Share</button>
+                        <button class="action-btn" onclick="sharePost({{ post.id }})">Share</button>
                     </div>
 
                     <!-- Comment Dropdown Section -->
@@ -212,48 +244,110 @@
 
     <script>
         let pressTimer;
+        let isLongPressActive = false;
+        let counts = {};
 
-        function startLongPress(postId) {
+        function initPostData(postId) {
+            if (!counts[postId]) {
+                counts[postId] = { likes: 0, comments: 0, shares: 0, userLiked: false };
+            }
+        }
+
+        function startLongPress(event, postId) {
+            initPostData(postId);
+            isLongPressActive = false;
             pressTimer = setTimeout(() => {
+                isLongPressActive = true;
                 const popup = document.getElementById('reactions-' + postId);
                 popup.style.display = 'flex';
-            }, 600);
+            }, 500); // 0.5 စက္ကန့် ဖိထားလျှင် ပေါ်မည်
         }
 
         function cancelLongPress() {
             clearTimeout(pressTimer);
         }
 
+        // Mouse ဆွဲပွတ်လိုက်စဉ် Reaction ရွေးချယ်နိုင်ခြင်း (Drag to select)
+        function handleMove(event, postId) {
+            if (!isLongPressActive) return;
+            const popup = document.getElementById('reactions-' + postId);
+            const icons = popup.querySelectorAll('span');
+            icons.forEach(icon => {
+                const rect = icon.getBoundingClientRect();
+                if (event.clientX >= rect.left && event.clientX <= rect.right &&
+                    event.clientY >= rect.top && event.clientY <= rect.bottom) {
+                    icon.classList.add('active-hover');
+                } else {
+                    icon.classList.remove('active-hover');
+                }
+            });
+        }
+
+        // ဖုန်း Screen တွင် လက်ညှိုးဖြင့် ပွတ်ဆွဲစဉ် Reaction ရွေးချယ်နိုင်ခြင်း (Touch swipe select)
+        function handleTouchMove(event, postId) {
+            if (!isLongPressActive) return;
+            const touch = event.touches[0];
+            const popup = document.getElementById('reactions-' + postId);
+            const icons = popup.querySelectorAll('span');
+            icons.forEach(icon => {
+                const rect = icon.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                    icon.classList.add('active-hover');
+                } else {
+                    icon.classList.remove('active-hover');
+                }
+            });
+        }
+
         function setReaction(postId, emoji) {
+            initPostData(postId);
             const btn = document.getElementById('like-btn-' + postId);
             btn.innerHTML = emoji + ' Liked';
+            if (!counts[postId].userLiked) {
+                counts[postId].likes += 1;
+                counts[postId].userLiked = true;
+            }
+            updateStats(postId);
             document.getElementById('reactions-' + postId).style.display = 'none';
+            isLongPressActive = false;
         }
 
         function likeClick(postId) {
+            if (isLongPressActive) return; // Long press လုပ်နေစဉ် တစ်ချက်နှိပ်ခြင်းကို ရှောင်ရန်
+            initPostData(postId);
             const popup = document.getElementById('reactions-' + postId);
             if (popup.style.display === 'flex') {
                 popup.style.display = 'none';
                 return;
             }
             const btn = document.getElementById('like-btn-' + postId);
-            if (btn.innerHTML.includes('Liked')) {
+            if (counts[postId].userLiked) {
+                counts[postId].likes -= 1;
+                counts[postId].userLiked = false;
                 btn.innerHTML = 'Like';
             } else {
+                counts[postId].likes += 1;
+                counts[postId].userLiked = true;
                 btn.innerHTML = '👍 Liked';
             }
+            updateStats(postId);
+        }
+
+        function updateStats(postId) {
+            document.getElementById('like-count-text-' + postId).innerText = counts[postId].likes + (counts[postId].likes === 1 ? ' like' : ' likes');
+            document.getElementById('comment-count-text-' + postId).innerText = counts[postId].comments + (counts[postId].comments === 1 ? ' comment' : ' comments');
+            document.getElementById('share-count-text-' + postId).innerText = counts[postId].shares + (counts[postId].shares === 1 ? ' share' : ' shares');
         }
 
         function toggleComment(postId) {
+            initPostData(postId);
             const section = document.getElementById('comment-section-' + postId);
-            if (section.style.display === 'block') {
-                section.style.display = 'none';
-            } else {
-                section.style.display = 'block';
-            }
+            section.style.display = (section.style.display === 'block') ? 'none' : 'block';
         }
 
         function addComment(postId) {
+            initPostData(postId);
             const input = document.getElementById('comment-input-' + postId);
             const list = document.getElementById('comment-list-' + postId);
             if (input.value.trim() !== '') {
@@ -265,12 +359,18 @@
                 commentDiv.innerHTML = `<strong>{{ current_user.username }}:</strong> ${input.value}`;
                 list.appendChild(commentDiv);
                 input.value = '';
+                
+                counts[postId].comments += 1;
+                updateStats(postId);
             }
         }
 
-        function sharePost() {
+        function sharePost(postId) {
+            initPostData(postId);
             navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
+            counts[postId].shares += 1;
+            updateStats(postId);
+            alert('Post link copied to clipboard!');
         }
 
         window.onclick = function(event) {
