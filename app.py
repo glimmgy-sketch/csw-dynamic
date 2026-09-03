@@ -9,7 +9,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key-2026'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v4.db')
+# Database နာမည်အသစ် database_v5.db သို့ ပြောင်းလဲထားပါသည်
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database_v5.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
 
@@ -33,8 +34,8 @@ class Post(db.Model):
     media_file = db.Column(db.String(300), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
-    comments = db.relationship('Comment', backref='post', lazy=True)
-    reactions = db.relationship('Reaction', backref='post', lazy=True)
+    comments = db.relationship('Comment', backref='post', lazy=True, cascade="all, delete-orphan")
+    reactions = db.relationship('Reaction', backref='post', lazy=True, cascade="all, delete-orphan")
 
 class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,28 +73,35 @@ def index():
 @app.route('/create_post', methods=['POST'])
 @login_required
 def create_post():
-    content = request.form.get('content')
-    file = request.files.get('media_file')
-    filename = None
-    if file and file.filename != '':
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    if content or filename:
-        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
-        db.session.add(new_post)
-        db.session.commit()
+    try:
+        content = request.form.get('content')
+        file = request.files.get('media_file')
+        filename = None
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if content or filename:
+            new_post = Post(content=content, media_file=filename, user_id=current_user.id)
+            db.session.add(new_post)
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print("Error creating post:", e)
     return redirect(request.referrer or url_for('index'))
 
 @app.route('/add_story', methods=['POST'])
 @login_required
 def add_story():
-    file = request.files.get('story_file')
-    if file and file.filename != '':
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        new_story = Story(media_file=filename, user_id=current_user.id)
-        db.session.add(new_story)
-        db.session.commit()
+    try:
+        file = request.files.get('story_file')
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            new_story = Story(media_file=filename, user_id=current_user.id)
+            db.session.add(new_story)
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
     return redirect(request.referrer or url_for('index'))
 
 @app.route('/react/<int:post_id>', methods=['POST'])
