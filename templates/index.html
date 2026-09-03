@@ -6,50 +6,73 @@
     <title>Chan</title>
     <style>
         body {
-            background-color: #18191a;
-            color: #e4e6eb;
+            background-color: #f0f2f5;
+            color: #050505;
             font-family: sans-serif;
             margin: 0;
-            padding: 0;
+            padding-bottom: 60px; /* Space for bottom nav */
         }
 
-        /* Top Facebook Navbar */
-        .fb-header {
+        /* Top Header Bar */
+        .chan-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #242526;
+            background: #ffffff;
             padding: 10px 15px;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
-        .fb-logo {
-            color: #2e89ff;
-            font-size: 26px;
-            font-weight: bold;
-            letter-spacing: -1px;
-        }
-        .fb-nav-icons {
+        .chan-logo-area {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1877f2;
         }
-        .nav-icon-btn {
-            background: #3a3b3c;
+        .chan-top-icons {
+            display: flex;
+            gap: 8px;
+        }
+        .top-icon-btn {
+            background: #e4e6eb;
             border: none;
-            color: #e4e6eb;
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
             text-decoration: none;
+            color: #050505;
         }
-        .nav-icon-btn:hover { background: #4e4f50; }
+
+        /* Top Sub-Tab Navigation Bar */
+        .chan-sub-nav {
+            display: flex;
+            justify-content: space-around;
+            background: #ffffff;
+            border-bottom: 1px solid #e4e6eb;
+            padding: 0 10px;
+        }
+        .sub-nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 20px;
+            color: #65676b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .sub-nav-item.active {
+            color: #1877f2;
+            border-bottom: 3px solid #1877f2;
+        }
 
         .container {
             max-width: 600px;
@@ -57,77 +80,76 @@
             padding: 10px;
         }
 
-        /* Stories Section (Circular style) */
+        /* Stories Row (Circular story design) */
         .stories-container {
             display: flex;
             gap: 8px;
             overflow-x: auto;
             padding: 10px 0;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
         .stories-container::-webkit-scrollbar { display: none; }
         
         .story-card {
-            min-width: 100px;
-            height: 160px;
-            background: #242526;
+            min-width: 110px;
+            height: 180px;
+            background: #ffffff;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
             cursor: pointer;
-            border: 1px solid #3a3b3c;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 8px;
+            padding: 10px;
+            border: 1px solid #e4e6eb;
         }
         .story-card.create-story {
             justify-content: center;
             align-items: center;
-            background: #242526;
+            background: #ffffff;
         }
         .create-story-icon {
-            width: 36px;
-            height: 36px;
-            background: #2e89ff;
+            width: 40px;
+            height: 40px;
+            background: #1877f2;
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 25px;
-            border: 3px solid #242526;
+            margin-bottom: 30px;
+            border: 4px solid #ffffff;
         }
         .create-story-text {
             position: absolute;
-            bottom: 10px;
-            font-size: 12px;
+            bottom: 12px;
+            font-size: 13px;
             font-weight: bold;
             text-align: center;
             width: 100%;
+            color: #050505;
         }
-        .story-avatar {
+        .story-avatar-ring {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 34px;
-            height: 34px;
-            background: #2e89ff;
+            top: 10px;
+            left: 10px;
+            width: 36px;
+            height: 36px;
+            border: 3px solid #1877f2;
             border-radius: 50%;
-            border: 3px solid #2e89ff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: white;
+            background: #ffffff;
         }
         .story-name {
             color: white;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             z-index: 2;
             text-shadow: 0 1px 3px rgba(0,0,0,0.8);
@@ -135,11 +157,11 @@
 
         /* Post Creation Box */
         .post-create-box {
-            background: #242526;
+            background: #ffffff;
             padding: 12px 15px;
             border-radius: 10px;
             margin-top: 10px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .post-create-input {
             display: flex;
@@ -150,7 +172,7 @@
         .user-avatar-sm {
             width: 40px;
             height: 40px;
-            background: #2e89ff;
+            background: #1877f2;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -162,8 +184,8 @@
         textarea {
             width: 100%;
             padding: 10px 15px;
-            background: #3a3b3c;
-            color: #e4e6eb;
+            background: #f0f2f5;
+            color: #050505;
             border: none;
             border-radius: 20px;
             resize: none;
@@ -171,9 +193,9 @@
             outline: none;
             font-size: 15px;
         }
-        textarea::placeholder { color: #b0b3b8; }
+        textarea::placeholder { color: #65676b; }
         .post-submit-btn {
-            background: #2e89ff;
+            background: #1877f2;
             color: white;
             border: none;
             padding: 8px;
@@ -182,15 +204,14 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .post-submit-btn:hover { background: #1b74e4; }
 
         /* Post Card Styling */
         .post-card {
-            background: #242526;
+            background: #ffffff;
             padding: 12px 15px;
             border-radius: 10px;
             margin-top: 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .post-header {
             display: flex;
@@ -209,9 +230,9 @@
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            color: #b0b3b8;
+            color: #65676b;
             padding: 8px 0;
-            border-bottom: 1px solid #3a3b3c;
+            border-bottom: 1px solid #e4e6eb;
             margin-bottom: 4px;
         }
 
@@ -224,7 +245,7 @@
         .action-btn {
             background: transparent;
             border: none;
-            color: #b0b3b8;
+            color: #65676b;
             font-size: 14px;
             cursor: pointer;
             padding: 8px 12px;
@@ -233,7 +254,7 @@
             flex: 1;
             text-align: center;
         }
-        .action-btn:hover { background: #3a3b3c; color: #e4e6eb; }
+        .action-btn:hover { background: #f0f2f5; color: #050505; }
 
         /* Reaction Popup Box */
         .reaction-popup {
@@ -241,11 +262,11 @@
             position: absolute;
             bottom: 45px;
             left: 0;
-            background: #242526;
-            border: 1px solid #3a3b3c;
+            background: #ffffff;
+            border: 1px solid #e4e6eb;
             border-radius: 35px;
             padding: 8px 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             gap: 12px;
             z-index: 100;
             animation: popUpAnim 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -272,7 +293,7 @@
             display: none;
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px dashed #3a3b3c;
+            border-top: 1px dashed #e4e6eb;
         }
         .comment-input-box {
             display: flex;
@@ -282,15 +303,15 @@
         .comment-input-box input {
             flex: 1;
             padding: 8px 12px;
-            background: #3a3b3c;
+            background: #f0f2f5;
             border: none;
-            color: #e4e6eb;
+            color: #050505;
             border-radius: 20px;
             font-size: 13px;
             outline: none;
         }
         .comment-input-box button {
-            background: #2e89ff;
+            background: #1877f2;
             color: white;
             border: none;
             padding: 6px 14px;
@@ -302,45 +323,87 @@
         .comment-list {
             margin-top: 8px;
             font-size: 13px;
-            color: #b0b3b8;
-            background: #18191a;
+            color: #65676b;
+            background: #f0f2f5;
             padding: 8px 12px;
             border-radius: 8px;
             max-height: 120px;
             overflow-y: auto;
         }
 
-        a { color: #2e89ff; text-decoration: none; }
+        /* Bottom Fixed Navigation Bar */
+        .chan-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #e4e6eb;
+            padding: 6px 0;
+            z-index: 1000;
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 22px;
+            color: #65676b;
+            text-decoration: none;
+            flex: 1;
+        }
+        .bottom-nav-item.active {
+            color: #1877f2;
+        }
+        .bottom-nav-item span {
+            font-size: 10px;
+            margin-top: 2px;
+            font-weight: bold;
+        }
+
+        a { color: #1877f2; text-decoration: none; }
         a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <!-- Top Facebook Header Bar -->
-    <div class="fb-header">
-        <div class="fb-logo">facebook</div>
-        <div class="fb-nav-icons">
-            <a href="{{ url_for('profile', username=current_user.username) }}" class="nav-icon-btn" title="Profile">👤</a>
-            <a href="{{ url_for('logout') }}" class="nav-icon-btn" title="Logout" style="color: #ff4d4d;">⏻</a>
+    <!-- Top Header Bar -->
+    <div class="chan-header">
+        <div class="chan-logo-area">
+            <span style="background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; padding: 2px 8px; border-radius: 50%; font-size: 18px;">✨</span> Chan
+        </div>
+        <div class="chan-top-icons">
+            <button class="top-icon-btn" onclick="alert('Search feature coming soon!')">🔍</button>
+            <a href="https://m.me" target="_blank" class="top-icon-btn">💬</a>
         </div>
     </div>
 
+    <!-- Top Sub-Tab Navigation Bar -->
+    <div class="chan-sub-nav">
+        <div class="sub-nav-item active">🏠</div>
+        <div class="sub-nav-item" onclick="alert('Friends tab coming soon!')">👥</div>
+        <div class="sub-nav-item" onclick="alert('Watch tab coming soon!')">▶️</div>
+        <div class="sub-nav-item" onclick="alert('Notifications coming soon!')">🔔</div>
+        <div class="sub-nav-item"><a href="{{ url_for('profile', username=current_user.username) }}" style="color: inherit;">👤</a></div>
+    </div>
+
     <div class="container">
-        <!-- Stories Row (Circular story design) -->
+        <!-- Stories Row -->
         <div class="stories-container">
             <div class="story-card create-story" onclick="alert('Create story feature coming soon!')">
                 <div class="create-story-icon">+</div>
                 <div class="create-story-text">Create story</div>
             </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #6366f1, #a855f7);">
-                <div class="story-avatar">{{ current_user.username[0] | upper }}</div>
+            <div class="story-card" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                <div class="story-avatar-ring"><div style="width:28px;height:28px;background:#1877f2;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">{{ current_user.username[0] | upper }}</div></div>
                 <div class="story-name">Min Naung Chan</div>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
-                <div class="story-avatar">C</div>
+                <div class="story-avatar-ring"><div style="width:28px;height:28px;background:#e11d48;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">C</div></div>
                 <div class="story-name">Chan Store</div>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
-                <div class="story-avatar">D</div>
+                <div class="story-avatar-ring"><div style="width:28px;height:28px;background:#059669;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;">D</div></div>
                 <div class="story-name">Dynamic Studio</div>
             </div>
         </div>
@@ -364,8 +427,8 @@
                         <div class="post-author-info">
                             <div class="user-avatar-sm">{{ post.author.username[0] | upper }}</div>
                             <div>
-                                <a href="{{ url_for('profile', username=post.author.username) }}" style="font-weight: bold; color: #e4e6eb;">@{{ post.author.username }}</a>
-                                <div style="font-size: 11px; color: #b0b3b8;">Just now</div>
+                                <a href="{{ url_for('profile', username=post.author.username) }}" style="font-weight: bold; color: #050505;">@{{ post.author.username }}</a>
+                                <div style="font-size: 11px; color: #65676b;">Just now</div>
                             </div>
                         </div>
                     </div>
@@ -417,8 +480,17 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p style="color: #b0b3b8; text-align: center; margin-top: 30px;">No posts yet. Create your first post above!</p>
+            <p style="color: #65676b; text-align: center; margin-top: 30px;">No posts yet. Create your first post above!</p>
         {% endif %}
+    </div>
+
+    <!-- Bottom Fixed Navigation Bar -->
+    <div class="chan-bottom-nav">
+        <a href="{{ url_for('index') }}" class="bottom-nav-item active">🏠<span>Home</span></a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Friends tab coming soon!')">👥<span>Friends</span></a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Create tab coming soon!')">➕<span>Create</span></a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Notifications coming soon!')">🔔<span>Notifications</span></a>
+        <a href="{{ url_for('profile', username=current_user.username) }}" class="bottom-nav-item">☰<span>Menu</span></a>
     </div>
 
     <script>
