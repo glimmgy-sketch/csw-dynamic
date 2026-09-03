@@ -42,12 +42,64 @@
             margin-top: 10px;
         }
         button:hover { background: #16a34a; }
+        
+        /* Post Card Styling */
         .post-card {
             background: #334155;
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
+            border: 1px solid #475569;
         }
+        
+        /* Action Buttons Bar */
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #475569;
+            position: relative;
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .action-btn:hover {
+            background: #475569;
+            color: #fff;
+        }
+
+        /* Reaction Popup Box */
+        .reaction-popup {
+            display: none;
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 30px;
+            padding: 5px 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        .reaction-popup span {
+            font-size: 22px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reaction-popup span:hover {
+            transform: scale(1.3);
+        }
+
         .nav-links {
             margin-bottom: 20px;
             display: flex;
@@ -61,14 +113,14 @@
 <body>
     <div class="container">
         <div class="nav-links">
-            <h1>✨ Chan</h1>
+            <h1>Chan</h1>
             <div>
                 <a href="{{ url_for('profile', username=current_user.username) }}">Profile</a> | 
                 <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
             </div>
         </div>
 
-        <p>Welcome, <strong>{{ current_user.username }}</strong>! 👋</p>
+        <p>Welcome, <strong>{{ current_user.username }}</strong>!</p>
 
         <!-- Post Form -->
         <form action="{{ url_for('add_post') }}" method="POST">
@@ -78,17 +130,84 @@
 
         <hr style="border: 0; border-top: 1px solid #475569; margin: 20px 0;">
 
-        <h3>📌 Feeds</h3>
+        <h3>Feeds</h3>
         {% if posts %}
             {% for post in posts %}
                 <div class="post-card">
                     <p><a href="{{ url_for('profile', username=post.author.username) }}"><strong>@{{ post.author.username }}</strong></a></p>
                     <p>{{ post.content }}</p>
+                    
+                    <!-- Like, Comment, Share Buttons Bar -->
+                    <div class="post-actions" style="position: relative;">
+                        <!-- Reaction Box (Hidden by default, shows on long press) -->
+                        <div class="reaction-popup" id="reactions-{{ post.id }}" style="display: none;">
+                            <span onclick="setReaction({{ post.id }}, '👍')">👍</span>
+                            <span onclick="setReaction({{ post.id }}, '❤️')">❤️</span>
+                            <span onclick="setReaction({{ post.id }}, '😆')">😆</span>
+                            <span onclick="setReaction({{ post.id }}, '😮')">😮</span>
+                            <span onclick="setReaction({{ post.id }}, '😢')">😢</span>
+                        </div>
+
+                        <button class="action-btn" id="like-btn-{{ post.id }}" 
+                                onclick="likeClick({{ post.id }})" 
+                                onmousedown="startLongPress({{ post.id }})" 
+                                ontouchstart="startLongPress({{ post.id }})"
+                                onmouseup="cancelLongPress()" 
+                                ontouchend="cancelLongPress()">Like</button>
+                        
+                        <button class="action-btn" onclick="alert('Comment section coming soon!')">Comment</button>
+                        <button class="action-btn" onclick="alert('Post link copied!')">Share</button>
+                    </div>
                 </div>
             {% endfor %}
         {% else %}
             <p style="color: #94a3b8;">No posts yet. Create your first post above!</p>
         {% endif %}
     </div>
+
+    <script>
+        let pressTimer;
+
+        function startLongPress(postId) {
+            pressTimer = setTimeout(() => {
+                const popup = document.getElementById('reactions-' + postId);
+                popup.style.display = 'flex';
+            }, 600); // 0.6 စက္ကန့် ဖိထားမှ ပေါ်လာမည်
+        }
+
+        function cancelLongPress() {
+            clearTimeout(pressTimer);
+        }
+
+        function setReaction(postId, emoji) {
+            const btn = document.getElementById('like-btn-' + postId);
+            btn.innerHTML = emoji + ' Liked';
+            document.getElementById('reactions-' + postId).style.display = 'none';
+        }
+
+        function likeClick(postId) {
+            // ပုံမှန်တစ်ချက်နှိပ်လျှင် Like ဖြစ်သွားရန်
+            const popup = document.getElementById('reactions-' + postId);
+            if (popup.style.display === 'flex') {
+                popup.style.display = 'none';
+                return;
+            }
+            const btn = document.getElementById('like-btn-' + postId);
+            if (btn.innerHTML.includes('👍 Liked')) {
+                btn.innerHTML = 'Like';
+            } else {
+                btn.innerHTML = '👍 Liked';
+            }
+        }
+
+        // Screen အပြင်ဘက် နှိပ်လိုက်ပါက Reaction Box ပျောက်သွားရန်
+        window.onclick = function(event) {
+            if (!event.target.matches('.action-btn')) {
+                document.querySelectorAll('.reaction-popup').forEach(el => {
+                    el.style.display = 'none';
+                });
+            }
+        }
+    </script>
 </body>
 </html>
