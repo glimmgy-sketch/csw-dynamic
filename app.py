@@ -6,12 +6,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'dynamic-studio-secret-key-2026'
+app.config['SECRET_KEY'] = 'csw-dynamic-secret-key-2026'
 
-db_path = os.path.join(os.getcwd(), 'database.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+# Path များကို Render ပေါ်တွင် လမ်းကြောင်းမလွဲစေရန် ပြင်ဆင်ခြင်း
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static/uploads')
 
+# Upload ဖိုဒါ မရှိသေးပါက အလိုအလျောက် ဆောက်ပေးမည်
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 db = SQLAlchemy(app)
@@ -19,11 +22,12 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# Database Models
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    bio = db.Column(db.Text, nullable=True, default="Dynamic Studio (မကွေးမြို့) - 📍 လေ့ကျင့်ခန်းနှင့် ကြံ့ခိုင်ရေး")
+    bio = db.Column(db.Text, nullable=True, default="CSW Dynamic Studio - ✨ အလှအပနှင့် ဝန်ဆောင်မှုများ")
     followers_count = db.Column(db.Integer, default=120)
 
 class Post(db.Model):
@@ -51,6 +55,7 @@ class Comment(db.Model):
 def load_user(user_id):
     return db.session.get(User, int(user_id))
 
+# App မစမီ Database Table များ ဆောက်ပေးမည်
 with app.app_context():
     db.create_all()
 
@@ -87,10 +92,12 @@ def add_story():
 @app.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    post.likes += 1
-    db.session.commit()
-    return jsonify({'likes': post.likes})
+    post = db.session.get(Post, post_id)
+    if post:
+        post.likes += 1
+        db.session.commit()
+        return jsonify({'likes': post.likes})
+    return jsonify({'error': 'Post not found'}), 404
 
 @app.route('/comment/<int:post_id>', methods=['POST'])
 @login_required
@@ -105,6 +112,70 @@ def add_comment(post_id):
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == 'POST':
+        new_bio = request.form.get('bio')
+        if new_bio is not None and new_bio.strip() != '':
+            current_user.bio = new_bio
+            db.session.commit()
+            return redirect(url_for('profile'))
+        content = request.form.get('content')
+        file = request.files.get('media_file')
+        filename = None
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if content or filename:
+            new_post = Post(content=content, media_file=filename, user_id=current_user.id)
+            db.session.add(new_post)
+            db.session.commit()
+        return redirect(url_for('profile'))
+    user_posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.id.desc()).all()
+    return render_template('profile.html', posts=user_posts)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if not username or not password:
+            return redirect(url_for('signup'))
+        if User.query.filter_by(username=username).first():
+            return redirect(url_for('signup'))
+        
+        # Werkzeug ရဲ့ Password Method ကို စနစ်တကျ သုံးထားသည်
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, password=hashed_password)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            print("Signup Error:", e)
+            return redirect(url_for('signup'))
+            
+    return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('index'))
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
     if request.method == 'POST':
         new_bio = request.form.get('bio')
         if new_bio is not None and new_bio.strip() != '':
