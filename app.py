@@ -10,7 +10,7 @@ from notifications import notif_bp
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-# 🔴 SQLite ကိုပဲ တိုက်ရိုက်သုံးမယ် (VPN လုံးဝ လိုတော့ပါဘူး၊ မြန်မာပြည်ကနေ တိုက်ရိုက်သုံးလို့ရပါပြီ)
+# SQLite database ချိတ်ဆက်ရန်
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///csw.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -36,6 +36,14 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
     
+    # Database ထဲမှာ media_file column မရှိသေးရင် အလိုအလျောက် ထည့်ပေးမယ့် Safe Migration Code
+    try:
+        with db.engine.connect() as connection:
+            connection.execute(db.text('ALTER TABLE post ADD COLUMN IF NOT EXISTS media_file VARCHAR(200);'))
+            connection.commit()
+    except Exception as e:
+        print("Migration note:", e)
+
     if not User.query.filter_by(username='MinNaungChan').first():
         default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
         db.session.add(default_user)
@@ -92,6 +100,12 @@ def logout():
 def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('profile.html', user=user)
+
+# 🔴 အသစ်ထည့်လိုက်သည့် Menu Route
+@app.route('/menu')
+@login_required
+def menu():
+    return render_template('menu.html')
 
 @app.route('/add_post', methods=['POST'])
 @login_required
