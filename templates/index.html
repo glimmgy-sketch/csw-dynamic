@@ -118,7 +118,6 @@
             <div class="post-modal-container">
                 <button class="close-modal-btn" onclick="closePostModal()">✕</button>
                 
-                <!-- Fixed url_for('add_post') to match app.py -->
                 <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header-section">
                         <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
@@ -141,16 +140,19 @@
                     <div class="modal-content-box">
                         <textarea name="content" placeholder="What's on your mind?" rows="4" required></textarea>
                         
-                        <div style="margin-top: 10px;">
-                            <label style="font-size: 13px; color: #a855f7; cursor: pointer;">
-                                📎 Attach Image/Video: 
-                                <input type="file" name="media" accept="image/*,video/*" style="margin-top: 5px; color: #fff;">
-                            </label>
+                        <!-- Hidden file input triggered by Gallery card -->
+                        <input type="file" name="media" id="mediaInput" accept="image/*,video/*" style="display: none;" onchange="previewFile(event)">
+
+                        <!-- Image / Video Preview Box -->
+                        <div id="previewContainer" style="margin-top: 12px; display: none; position: relative;">
+                            <img id="imagePreview" src="" alt="Preview" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 10px; display: none;">
+                            <video id="videoPreview" controls style="width: 100%; max-height: 250px; border-radius: 10px; display: none;"></video>
+                            <button type="button" onclick="removeMedia()" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-weight: bold;">✕</button>
                         </div>
                     </div>
 
                     <div class="modal-media-grid">
-                        <div class="media-card" onclick="document.querySelector('input[type=file]').click()">🖼️ Gallery</div>
+                        <div class="media-card" onclick="document.getElementById('mediaInput').click()">🖼️ Gallery</div>
                         <div class="media-card" onclick="alert('GIF feature coming soon!')">🎬 GIF</div>
                         <div class="media-card" onclick="alert('Live feature coming soon!')">🔴 Live</div>
                         <div class="media-card" onclick="alert('Music feature coming soon!')">🎵 Music</div>
@@ -293,6 +295,38 @@
     <script>
         function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
         function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
+
+        // Preview File Functionality
+        function previewFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const previewContainer = document.getElementById('previewContainer');
+                const imagePreview = document.getElementById('imagePreview');
+                const videoPreview = document.getElementById('videoPreview');
+                
+                previewContainer.style.display = 'block';
+                const fileURL = URL.createObjectURL(file);
+
+                if (file.type.startsWith('image/')) {
+                    imagePreview.src = fileURL;
+                    imagePreview.style.display = 'block';
+                    videoPreview.style.display = 'none';
+                } else if (file.type.startsWith('video/')) {
+                    videoPreview.src = fileURL;
+                    videoPreview.style.display = 'block';
+                    imagePreview.style.display = 'none';
+                }
+            }
+        }
+
+        function removeMedia() {
+            const mediaInput = document.getElementById('mediaInput');
+            const previewContainer = document.getElementById('previewContainer');
+            mediaInput.value = '';
+            previewContainer.style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('videoPreview').src = '';
+        }
 
         let pressTimer;
         let isLongPressActive = false;
