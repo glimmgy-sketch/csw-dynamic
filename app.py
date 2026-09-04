@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from models import db, User, Post, Like, Comment, Notification
 from notifications import notif_bp
 
@@ -15,6 +16,14 @@ if db_url and db_url.startswith("postgres://"):
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///csw.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# ပုံဖိုင်တွေ သိမ်းမယ့် နေရာ (Upload folder) နဲ့ ခွင့်ပြုထားတဲ့ Extension တွေ
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 db.init_app(app)
 login_manager = LoginManager()
@@ -57,7 +66,7 @@ def login():
 def signup():
     if request.method == 'POST':
         username = request.form.get('username')
-        name = request.form.get('name') # နာမည်အမှန် (Display Name) ကို ယူရန်
+        name = request.form.get('name')
         password = request.form.get('password')
         
         user_exists = User.query.filter_by(username=username).first()
@@ -66,7 +75,6 @@ def signup():
             return redirect(url_for('signup'))
             
         hashed_password = generate_password_hash(password)
-        # new_user ဆောက်တဲ့နေရာမှာ name=name ထည့်ပေးရန်
         new_user = User(username=username, name=name, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -91,10 +99,19 @@ def profile(username):
 @login_required
 def add_post():
     content = request.form.get('content')
-    if content:
-        new_post = Post(content=content, user_id=current_user.id)
+    media_file = request.files.get('media')
+    
+    filename = None
+    if media_file and media_file.filename != '' and allowed_file(media_file.filename):
+        filename = secure_filename(media_file.filename)
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        media_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    
+    if content or filename:
+        new_post = Post(content=content, media_file=filename, user_id=current_user.id)
         db.session.add(new_post)
         db.session.commit()
+        
     return redirect(url_for('index'))
 
 @app.route('/like/<int:post_id>', methods=['POST'])
@@ -137,4 +154,3 @@ def add_comment(post_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-
