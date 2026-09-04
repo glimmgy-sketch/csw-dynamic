@@ -16,12 +16,47 @@
         .post-create-box { background: #ffffff; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .user-avatar-sm { width: 40px; height: 40px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: white; flex-shrink: 0; }
         .fake-input { flex: 1; padding: 10px 15px; background: #f0f2f5; color: #65676b; border-radius: 20px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Modal Overlay & Container */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: #ffffff; width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: relative; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e4e6eb; padding-bottom: 10px; font-weight: bold; font-size: 18px; }
-        .close-modal { background: #e4e6eb; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .modal-content textarea { width: 100%; padding: 12px; background: #f0f2f5; color: #050505; border: none; border-radius: 8px; resize: vertical; box-sizing: border-box; margin-top: 15px; font-size: 15px; outline: none; min-height: 100px; }
-        .modal-submit-btn { background: #1877f2; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; font-size: 16px; }
+        .post-modal-container {
+            background: #242526;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 20px;
+            color: #fff;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .close-modal-btn { position: absolute; top: 15px; right: 15px; background: #3a3b3c; border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        .modal-header-section { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .modal-profile-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #a855f7; object-fit: cover; }
+        .modal-user-info h4 { margin: 0; font-size: 16px; color: #fff; }
+        .privacy-select { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 4px 10px; border-radius: 10px; font-size: 12px; margin-top: 4px; }
+
+        .modal-action-tags { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .action-tag-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 6px 12px; border-radius: 15px; font-size: 13px; cursor: pointer; }
+
+        .modal-content-box textarea { width: 100%; background: transparent; border: none; color: #fff; font-size: 18px; resize: none; outline: none; box-sizing: border-box; }
+        .modal-content-box textarea::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+        .bg-picker-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .color-circles { display: flex; gap: 8px; }
+        .c-circle { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .c-circle.default { background: rgba(255, 255, 255, 0.2); }
+        .c-circle.active { border-color: #fff; }
+
+        .modal-media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; margin-bottom: 15px; }
+        .media-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; text-align: center; border-radius: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; color: #fff; }
+        .media-card:hover { background: rgba(255, 255, 255, 0.12); }
+
+        .modal-submit-btn { background: #1877f2; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
+
         .stories-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0 10px 0; scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-card { min-width: 110px; height: 190px; background: #ffffff; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
@@ -31,6 +66,7 @@
         .create-story-text { font-size: 13px; font-weight: bold; text-align: center; color: #050505; margin-top: 45px; }
         .story-mini-avatar { position: absolute; top: 10px; left: 10px; width: 34px; height: 34px; border: 3px solid #1877f2; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #1877f2; z-index: 2; }
         .story-name { color: white; font-size: 12px; font-weight: bold; z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.9); position: relative; }
+        
         .post-card { background: #ffffff; padding: 12px 15px; border-radius: 10px; margin-top: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .post-author-info { display: flex; align-items: center; gap: 10px; }
@@ -39,7 +75,7 @@
         .action-btn { background: transparent; border: none; color: #65676b; font-size: 14px; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-weight: 600; flex: 1; text-align: center; }
         .action-btn:hover { background: #f0f2f5; color: #050505; }
         
-        /* Reaction Popup Box with Drag/Hover Support */
+        /* Reaction Popup Box */
         .reaction-popup { display: none; position: absolute; bottom: 45px; left: 0; background: #ffffff; border: 1px solid #e4e6eb; border-radius: 35px; padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); gap: 12px; z-index: 100; animation: popUpAnim 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform-origin: bottom left; }
         @keyframes popUpAnim { 0% { transform: scale(0.4) translateY(10px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
         .reaction-popup span { font-size: 26px; cursor: pointer; transition: transform 0.15s ease; user-select: none; display: inline-block; }
@@ -50,6 +86,7 @@
         .comment-input-box input { flex: 1; padding: 8px 12px; background: #f0f2f5; border: none; color: #050505; border-radius: 20px; font-size: 13px; outline: none; }
         .comment-input-box button { background: #1877f2; color: white; border: none; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; font-weight: bold; }
         .comment-list { margin-top: 8px; font-size: 13px; color: #65676b; background: #f0f2f5; padding: 8px 12px; border-radius: 8px; max-height: 150px; overflow-y: auto; }
+        
         .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e4e6eb; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.05); }
         .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #65676b; text-decoration: none; flex: 1; }
         .bottom-nav-item.active { color: #1877f2; }
@@ -57,132 +94,6 @@
         .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
         .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
         a { color: #1877f2; text-decoration: none; }
-        .post-modal-container {
-    background: rgba(20, 20, 35, 0.75);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 20px;
-    color: #fff;
-    max-width: 500px;
-    margin: 20px auto;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-}
-
-.modal-header-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.modal-profile-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid #a855f7;
-    object-fit: cover;
-}
-
-.modal-user-info h4 {
-    margin: 0;
-    font-size: 16px;
-    color: #fff;
-}
-
-.privacy-select {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 10px;
-    font-size: 12px;
-    margin-top: 4px;
-}
-
-.modal-action-tags {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-.action-tag-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.modal-content-box textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 18px;
-    resize: none;
-    outline: none;
-}
-
-.modal-content-box textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.bg-picker-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.color-circles {
-    display: flex;
-    gap: 8px;
-}
-
-.c-circle {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.c-circle.default {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.c-circle.active {
-    border-color: #fff;
-}
-
-.modal-media-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.media-card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px;
-    text-align: center;
-    border-radius: 12px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.media-card:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
     </style>
 </head>
 <body>
@@ -207,52 +118,51 @@
             </div>
         </div>
 
-        <!-- Post Creation Modal / Box အသစ် -->
-<div class="post-modal-container">
-    <!-- Header: Profile & Privacy -->
-    <div class="modal-header-section">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="Profile" class="modal-profile-img">
-        <div class="modal-user-info">
-            <h4>Min Naung Myint Soe</h4>
-            <select class="privacy-select">
-                <option value="public">🌐 Public</option>
-                <option value="friends">👥 Friends</option>
-                <option value="only_me">🔒 Only me</option>
-            </select>
-        </div>
-    </div>
+        <div class="modal-overlay" id="postModal">
+            <div class="post-modal-container">
+                <button class="close-modal-btn" onclick="closePostModal()">✕</button>
+                
+                <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header-section">
+                        <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
+                        <div class="modal-user-info">
+                            <h4>{{ current_user.username }}</h4>
+                            <select class="privacy-select" name="privacy">
+                                <option value="public">🌐 Public</option>
+                                <option value="friends">👥 Friends</option>
+                                <option value="only_me">🔒 Only me</option>
+                            </select>
+                        </div>
+                    </div>
 
-    <!-- Action Tags (Tag, Location, Feeling) -->
-    <div class="modal-action-tags">
-        <button class="action-tag-btn">👤 Tag/Collaborate</button>
-        <button class="action-tag-btn">📍 Location</button>
-        <button class="action-tag-btn">😊 Feeling/Activity</button>
-    </div>
+                    <div class="modal-action-tags">
+                        <button type="button" class="action-tag-btn">👤 Tag/Collaborate</button>
+                        <button type="button" class="action-tag-btn">📍 Location</button>
+                        <button type="button" class="action-tag-btn">😊 Feeling/Activity</button>
+                    </div>
 
-    <!-- Text Input & Background Picker -->
-    <div class="modal-content-box">
-        <textarea placeholder="What's on your mind?" rows="4"></textarea>
-        <div class="bg-picker-bar">
-            <span class="bg-label">🎨 Background</span>
-            <div class="color-circles">
-                <span class="c-circle default active"></span>
-                <span class="c-circle purple" style="background: linear-gradient(135deg, #a855f7, #6366f1);"></span>
-                <span class="c-circle blue" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);"></span>
-                <span class="c-circle sunset" style="background: linear-gradient(135deg, #f43f5e, #fb923c);"></span>
+                    <div class="modal-content-box">
+                        <textarea name="content" placeholder="What's on your mind?" rows="4" required></textarea>
+                        
+                        <div style="margin-top: 10px;">
+                            <label style="font-size: 13px; color: #a855f7; cursor: pointer;">
+                                📎 Attach Image/Video: 
+                                <input type="file" name="media" accept="image/*,video/*" style="margin-top: 5px; color: #fff;">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-media-grid">
+                        <div class="media-card" onclick="document.querySelector('input[type=file]').click()">🖼️ Gallery</div>
+                        <div class="media-card" onclick="alert('GIF feature coming soon!')">🎬 GIF</div>
+                        <div class="media-card" onclick="alert('Live feature coming soon!')">🔴 Live</div>
+                        <div class="media-card" onclick="alert('Music feature coming soon!')">🎵 Music</div>
+                    </div>
+
+                    <button type="submit" class="modal-submit-btn">Post</button>
+                </form>
             </div>
         </div>
-    </div>
-
-    <!-- Media Buttons (Gallery, GIF, Live, Music, Background) -->
-    <div class="modal-media-grid">
-        <div class="media-card">🖼️ Gallery</div>
-        <div class="media-card">🎬 GIF</div>
-        <div class="media-card">🔴 Live</div>
-        <div class="media-card">🎵 Music</div>
-        <div class="media-card">🎨 Background</div>
-    </div>
-</div>
-
 
         <div class="stories-container">
             <div class="story-card create-story" onclick="alert('Create story feature coming soon!')">
@@ -262,7 +172,7 @@
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #6366f1, #a855f7);">
                 <div class="story-mini-avatar">{{ current_user.username[0] | upper }}</div>
-                <div class="story-name">Min Naung Chan</div>
+                <div class="story-name">{{ current_user.username }}</div>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
                 <div class="story-mini-avatar">C</div>
@@ -276,7 +186,7 @@
 
         {% if posts %}
             {% for post in posts %}
-                <div class="post-card">
+                <div class="post-card" id="post-{{ post.id }}">
                     <div class="post-header">
                         <div class="post-author-info">
                             <div class="user-avatar-sm">{{ post.author.username[0] | upper }}</div>
@@ -288,6 +198,12 @@
                     </div>
                     <p style="margin: 8px 0; word-break: break-word;">{{ post.content }}</p>
                     
+                    {% if post.media_file %}
+                        <div style="margin-top: 8px;">
+                            <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" style="max-width: 100%; border-radius: 8px;" alt="Post media">
+                        </div>
+                    {% endif %}
+
                     <div class="post-stats">
                         <span>{{ post.likes|length }} likes</span>
                         <div>
@@ -297,12 +213,10 @@
                     </div>
 
                     <div class="post-actions" style="position: relative;">
-                        <!-- Hidden form to submit selected reaction via JS -->
                         <form id="like-form-{{ post.id }}" action="{{ url_for('like_post', post_id=post.id) }}#post-{{ post.id }}" method="POST" style="display:none;">
                             <input type="hidden" name="emoji" id="like-emoji-input-{{ post.id }}" value="👍">
                         </form>
 
-                        <!-- Reaction Popup Box -->
                         <div class="reaction-popup" id="reactions-{{ post.id }}">
                             <span data-emoji="👍" onclick="submitReaction({{ post.id }}, '👍')">👍</span>
                             <span data-emoji="❤️" onclick="submitReaction({{ post.id }}, '❤️')">❤️</span>
@@ -465,6 +379,10 @@
         }
 
         window.onclick = function(event) {
+            const modal = document.getElementById('postModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
             if (!event.target.matches('.action-btn')) {
                 document.querySelectorAll('.reaction-popup').forEach(el => {
                     el.style.display = 'none';
