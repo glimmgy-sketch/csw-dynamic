@@ -22,9 +22,15 @@
         .create-story-btn { width: 35px; height: 35px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; position: absolute; top: 95px; left: 37px; border: 3px solid #242526; }
 
         /* Post Creation Box */
-        .post-box { background: #242526; padding: 12px 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .post-box { background: #242526; padding: 12px 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .post-box-avatar { width: 40px; height: 40px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
-        .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; outline: none; }
+        .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; pointer-events: none; }
+
+        /* Popup Modal for Post Creation */
+        #postModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #242526; width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #3a3b3c; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3a3b3c; padding-bottom: 10px; margin-bottom: 15px; font-weight: bold; font-size: 18px; }
+        .close-btn { background: none; border: none; color: #b0b3b8; font-size: 22px; cursor: pointer; }
 
         /* Feed Post Card */
         .post-card { background: #242526; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; overflow: hidden; border: 1px solid #3a3b3c; }
@@ -55,7 +61,7 @@
     </style>
 </head>
 <body>
-    <!-- Top Nav (Chan Branding & Icons) -->
+    <!-- Top Nav -->
     <div class="top-nav">
         <h1>Chan</h1>
         <div class="top-nav-icons">
@@ -69,21 +75,27 @@
     </div>
 
     <div class="container">
-        <!-- Post Creation Trigger Box -->
-        <div class="post-box">
+        <!-- Post Creation Trigger Box (Facebook Style) -->
+        <div class="post-box" onclick="openModal()">
             <div class="post-box-avatar">{{ current_user.username[0] | upper }}</div>
-            <input type="text" class="post-box-input" placeholder="What's on your mind, {{ current_user.username }}?" onclick="document.getElementById('post-form-card').style.display='block';">
+            <div class="post-box-input">What's on your mind, {{ current_user.username }}?</div>
         </div>
 
-        <!-- Expanded Post Form (Hidden by default, shown when clicked) -->
-        <div id="post-form-card" class="post-card" style="display: none; padding: 15px;">
-            <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
-                <textarea name="content" rows="3" class="post-box-input" style="width: 100%; border-radius: 8px; resize: none; margin-bottom: 10px;" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <input type="file" name="media" accept="image/*,video/*" style="font-size: 12px; color: #b0b3b8;">
-                    <button type="submit" style="background: #2d88ff; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">Post</button>
+        <!-- Popup Modal for Creating Post -->
+        <div id="postModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Create Post</span>
+                    <button class="close-btn" onclick="closeModal()">&times;</button>
                 </div>
-            </form>
+                <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
+                    <textarea name="content" rows="4" style="width: 100%; background: #3a3b3c; border: none; border-radius: 8px; color: white; padding: 10px; font-size: 15px; resize: none; outline: none; margin-bottom: 12px;" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #3a3b3c; padding-top: 10px;">
+                        <input type="file" name="media" accept="image/*,video/*" style="font-size: 12px; color: #b0b3b8;">
+                        <button type="submit" style="background: #2d88ff; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Post</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Stories Section -->
@@ -166,7 +178,7 @@
             <span>Friends</span>
         </a>
         <div style="flex: 1; text-align: center;">
-            <div class="create-circle-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); document.getElementById('post-form-card').style.display='block';">
+            <div class="create-circle-btn" onclick="openModal()">
                 <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
             </div>
         </div>
@@ -174,11 +186,19 @@
             <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
             <span>Notifications</span>
         </a>
-        <!-- 🔴 Menu Icon -->
         <a href="{{ url_for('menu') }}" class="bottom-nav-item">
             <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             <span>Menu</span>
         </a>
     </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('postModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('postModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
