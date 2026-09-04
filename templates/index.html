@@ -45,12 +45,6 @@
         .modal-content-box textarea { width: 100%; background: transparent; border: none; color: #fff; font-size: 18px; resize: none; outline: none; box-sizing: border-box; }
         .modal-content-box textarea::placeholder { color: rgba(255, 255, 255, 0.5); }
 
-        .bg-picker-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        .color-circles { display: flex; gap: 8px; }
-        .c-circle { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-        .c-circle.default { background: rgba(255, 255, 255, 0.2); }
-        .c-circle.active { border-color: #fff; }
-
         .modal-media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; margin-bottom: 15px; }
         .media-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; text-align: center; border-radius: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; color: #fff; }
         .media-card:hover { background: rgba(255, 255, 255, 0.12); }
@@ -110,6 +104,7 @@
     </div>
 
     <div class="container">
+        <!-- Feed Top Post Box -->
         <div class="post-create-box" onclick="openPostModal()">
             <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
             <div class="fake-input">
@@ -118,11 +113,13 @@
             </div>
         </div>
 
+        <!-- Post Creation Modal Overlay (Initially Hidden) -->
         <div class="modal-overlay" id="postModal">
             <div class="post-modal-container">
                 <button class="close-modal-btn" onclick="closePostModal()">✕</button>
                 
-                <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data">
+                <!-- Fixed url_for('add_post') to match app.py -->
+                <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header-section">
                         <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
                         <div class="modal-user-info">
