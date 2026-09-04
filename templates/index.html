@@ -57,6 +57,132 @@
         .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
         .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
         a { color: #1877f2; text-decoration: none; }
+        .post-modal-container {
+    background: rgba(20, 20, 35, 0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 20px;
+    color: #fff;
+    max-width: 500px;
+    margin: 20px auto;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.modal-header-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.modal-profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #a855f7;
+    object-fit: cover;
+}
+
+.modal-user-info h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+.privacy-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.modal-action-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.action-tag-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.modal-content-box textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    resize: none;
+    outline: none;
+}
+
+.modal-content-box textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.bg-picker-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.color-circles {
+    display: flex;
+    gap: 8px;
+}
+
+.c-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.c-circle.default {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.c-circle.active {
+    border-color: #fff;
+}
+
+.modal-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.media-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.media-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
     </style>
 </head>
 <body>
@@ -81,18 +207,52 @@
             </div>
         </div>
 
-        <div class="modal-overlay" id="postModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span>Create Post</span>
-                    <button class="close-modal" onclick="closePostModal()">✕</button>
-                </div>
-                <form action="{{ url_for('add_post') }}" method="POST">
-                    <textarea name="content" placeholder="What's on your mind, {{ current_user.username }}?" required></textarea>
-                    <button type="submit" class="modal-submit-btn">Post</button>
-                </form>
+        <!-- Post Creation Modal / Box အသစ် -->
+<div class="post-modal-container">
+    <!-- Header: Profile & Privacy -->
+    <div class="modal-header-section">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="Profile" class="modal-profile-img">
+        <div class="modal-user-info">
+            <h4>Min Naung Myint Soe</h4>
+            <select class="privacy-select">
+                <option value="public">🌐 Public</option>
+                <option value="friends">👥 Friends</option>
+                <option value="only_me">🔒 Only me</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Action Tags (Tag, Location, Feeling) -->
+    <div class="modal-action-tags">
+        <button class="action-tag-btn">👤 Tag/Collaborate</button>
+        <button class="action-tag-btn">📍 Location</button>
+        <button class="action-tag-btn">😊 Feeling/Activity</button>
+    </div>
+
+    <!-- Text Input & Background Picker -->
+    <div class="modal-content-box">
+        <textarea placeholder="What's on your mind?" rows="4"></textarea>
+        <div class="bg-picker-bar">
+            <span class="bg-label">🎨 Background</span>
+            <div class="color-circles">
+                <span class="c-circle default active"></span>
+                <span class="c-circle purple" style="background: linear-gradient(135deg, #a855f7, #6366f1);"></span>
+                <span class="c-circle blue" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);"></span>
+                <span class="c-circle sunset" style="background: linear-gradient(135deg, #f43f5e, #fb923c);"></span>
             </div>
         </div>
+    </div>
+
+    <!-- Media Buttons (Gallery, GIF, Live, Music, Background) -->
+    <div class="modal-media-grid">
+        <div class="media-card">🖼️ Gallery</div>
+        <div class="media-card">🎬 GIF</div>
+        <div class="media-card">🔴 Live</div>
+        <div class="media-card">🎵 Music</div>
+        <div class="media-card">🎨 Background</div>
+    </div>
+</div>
+
 
         <div class="stories-container">
             <div class="story-card create-story" onclick="alert('Create story feature coming soon!')">
