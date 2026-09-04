@@ -9,8 +9,11 @@ from notifications import notif_bp
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-db_path = os.path.join('/tmp', 'csw.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+db_url = os.environ.get('DATABASE_URL')
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///csw.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
