@@ -3,282 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chan</title>
+    <title>CSW Social - Home</title>
     <style>
         body { background-color: #f0f2f5; color: #050505; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
-        .chan-header { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-        .chan-logo-area { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: bold; color: #1877f2; letter-spacing: -0.5px; }
-        .chan-custom-logo { width: 36px; height: 36px; background: linear-gradient(135deg, #a855f7, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold; box-shadow: 0 2px 6px rgba(168, 85, 247, 0.4); }
-        .chan-top-icons { display: flex; gap: 8px; }
-        .top-icon-btn { background: #e4e6eb; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; color: #050505; position: relative; }
-        .top-icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        .top-nav { background: #ffffff; padding: 12px 15px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; color: #1877f2; }
         .container { max-width: 600px; margin: 0 auto; padding: 10px; }
-        .post-create-box { background: #ffffff; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .user-avatar-sm { width: 40px; height: 40px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: white; flex-shrink: 0; }
-        .fake-input { flex: 1; padding: 10px 15px; background: #f0f2f5; color: #65676b; border-radius: 20px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Modal Overlay & Container */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .post-modal-container {
-            background: #242526;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 20px;
-            color: #fff;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            position: relative;
-        }
-        .close-modal-btn { position: absolute; top: 15px; right: 15px; background: #3a3b3c; border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* Post Box */
+        .post-box { background: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .post-box textarea { width: 100%; border: none; outline: none; resize: none; font-size: 16px; font-family: sans-serif; }
+        .post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid #f0f2f5; padding-top: 10px; }
+        .post-btn { background: #1877f2; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .modal-header-section { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .modal-profile-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #a855f7; object-fit: cover; }
-        .modal-user-info h4 { margin: 0; font-size: 16px; color: #fff; }
-        .privacy-select { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 4px 10px; border-radius: 10px; font-size: 12px; margin-top: 4px; }
-
-        .modal-action-tags { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .action-tag-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 6px 12px; border-radius: 15px; font-size: 13px; cursor: pointer; }
-
-        .modal-content-box textarea { width: 100%; background: transparent; border: none; color: #fff; font-size: 18px; resize: none; outline: none; box-sizing: border-box; }
-        .modal-content-box textarea::placeholder { color: rgba(255, 255, 255, 0.5); }
-
-        .modal-media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; margin-bottom: 15px; }
-        .media-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; text-align: center; border-radius: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; color: #fff; }
-        .media-card:hover { background: rgba(255, 255, 255, 0.12); }
-
-        .modal-submit-btn { background: #1877f2; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
-
-        .stories-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0 10px 0; scrollbar-width: none; }
-        .stories-container::-webkit-scrollbar { display: none; }
-        .story-card { min-width: 110px; height: 190px; background: #ffffff; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
-        .story-card.create-story { justify-content: flex-end; align-items: center; background: #ffffff; border: 1px solid #e4e6eb; padding-bottom: 15px; }
-        .create-story-avatar { width: 100%; height: 125px; background: #f0f2f5; position: absolute; top: 0; left: 0; }
-        .create-story-icon-wrapper { position: absolute; top: 110px; width: 36px; height: 36px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 4px solid #ffffff; z-index: 2; }
-        .create-story-text { font-size: 13px; font-weight: bold; text-align: center; color: #050505; margin-top: 45px; }
-        .story-mini-avatar { position: absolute; top: 10px; left: 10px; width: 34px; height: 34px; border: 3px solid #1877f2; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #1877f2; z-index: 2; }
-        .story-name { color: white; font-size: 12px; font-weight: bold; z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.9); position: relative; }
+        /* Feed Post Card */
+        .post-card { background: #ffffff; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; overflow: hidden; }
+        .post-header { padding: 12px 15px; display: flex; align-items: center; gap: 10px; }
+        .post-avatar { width: 40px; height: 40px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .post-user-info h4 { margin: 0; font-size: 15px; }
+        .post-user-info span { font-size: 12px; color: #65676b; }
+        .post-content { padding: 0 15px 12px 15px; font-size: 15px; line-height: 1.4; }
+        .post-media { width: 100%; max-height: 400px; object-fit: cover; background: #000; }
         
-        .post-card { background: #ffffff; padding: 12px 15px; border-radius: 10px; margin-top: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .post-author-info { display: flex; align-items: center; gap: 10px; }
-        .post-stats { display: flex; justify-content: space-between; font-size: 13px; color: #65676b; padding: 8px 0; border-bottom: 1px solid #e4e6eb; margin-bottom: 4px; }
-        .post-actions { display: flex; justify-content: space-around; position: relative; }
-        .action-btn { background: transparent; border: none; color: #65676b; font-size: 14px; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-weight: 600; flex: 1; text-align: center; }
-        .action-btn:hover { background: #f0f2f5; color: #050505; }
-        
-        /* Reaction Popup Box */
-        .reaction-popup { display: none; position: absolute; bottom: 45px; left: 0; background: #ffffff; border: 1px solid #e4e6eb; border-radius: 35px; padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); gap: 12px; z-index: 100; animation: popUpAnim 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform-origin: bottom left; }
-        @keyframes popUpAnim { 0% { transform: scale(0.4) translateY(10px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
-        .reaction-popup span { font-size: 26px; cursor: pointer; transition: transform 0.15s ease; user-select: none; display: inline-block; }
-        .reaction-popup span.active-hover { transform: scale(1.5) translateY(-8px); }
+        /* Action buttons */
+        .post-footer-actions { display: flex; border-top: 1px solid #f0f2f5; border-bottom: 1px solid #f0f2f5; }
+        .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #65676b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .action-btn:hover { background: #f4f5f7; }
 
-        .comment-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e4e6eb; }
-        .comment-input-box { display: flex; gap: 8px; margin-top: 8px; }
-        .comment-input-box input { flex: 1; padding: 8px 12px; background: #f0f2f5; border: none; color: #050505; border-radius: 20px; font-size: 13px; outline: none; }
-        .comment-input-box button { background: #1877f2; color: white; border: none; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; font-weight: bold; }
-        .comment-list { margin-top: 8px; font-size: 13px; color: #65676b; background: #f0f2f5; padding: 8px 12px; border-radius: 8px; max-height: 150px; overflow-y: auto; }
-        
+        /* Comments section */
+        .comments-section { padding: 10px 15px; background: #f9fafb; font-size: 14px; }
+        .comment-item { margin-bottom: 6px; }
+        .comment-form { display: flex; gap: 8px; padding: 10px 15px; background: #fff; }
+        .comment-form input { flex: 1; padding: 8px 12px; border: 1px solid #ccd0d5; border-radius: 20px; outline: none; }
+        .comment-form button { background: #1877f2; color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        /* Bottom Nav */
         .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e4e6eb; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.05); }
         .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #65676b; text-decoration: none; flex: 1; }
         .bottom-nav-item.active { color: #1877f2; }
         .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
         .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
         .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
-        a { color: #1877f2; text-decoration: none; }
     </style>
 </head>
 <body>
-    <div class="chan-header">
-        <div class="chan-logo-area"><div class="chan-custom-logo">C</div> Chan</div>
-        <div class="chan-top-icons">
-            <button class="top-icon-btn" onclick="alert('Search feature coming soon!')">
-                <svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
-            </button>
-            <a href="https://m.me" target="_blank" class="top-icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.91 1.442 5.503 3.69 7.185V22l3.447-1.89c.895.25 1.848.388 2.863.388 5.523 0 10-4.145 10-9.243S17.523 2 12 2zm1.045 12.565l-2.58-2.75-5.02 2.75 5.52-5.865 2.58 2.75 5.02-2.75-5.52 5.865z"/></svg>
-            </a>
-        </div>
+    <div class="top-nav">
+        <span>CSW Social</span>
+        <a href="{{ url_for('profile', username=current_user.username) }}" style="text-decoration: none; color: inherit; font-size: 14px; background: #e4e6eb; padding: 6px 12px; border-radius: 20px;">{{ current_user.username }}</a>
     </div>
 
     <div class="container">
-        <!-- Feed Top Post Box -->
-        <div class="post-create-box" onclick="openPostModal()">
-            <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
-            <div class="fake-input">
-                <span>What's on your mind, {{ current_user.username }}?</span>
-                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: #65676b;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-            </div>
+        <!-- Post Create Box -->
+        <div class="post-box">
+            <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
+                <textarea name="content" rows="3" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
+                <div class="post-actions">
+                    <input type="file" name="media" accept="image/*,video/*" style="font-size: 13px;">
+                    <button type="submit" class="post-btn">Post</button>
+                </div>
+            </form>
         </div>
 
-        <!-- Post Creation Modal Overlay (Initially Hidden) -->
-        <div class="modal-overlay" id="postModal">
-            <div class="post-modal-container">
-                <button class="close-modal-btn" onclick="closePostModal()">✕</button>
-                
-                <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header-section">
-                        <div class="user-avatar-sm">{{ current_user.username[0] | upper }}</div>
-                        <div class="modal-user-info">
-                            <h4>{{ current_user.username }}</h4>
-                            <select class="privacy-select" name="privacy">
-                                <option value="public">🌐 Public</option>
-                                <option value="friends">👥 Friends</option>
-                                <option value="only_me">🔒 Only me</option>
-                            </select>
-                        </div>
-                    </div>
+        <!-- Feed Posts List -->
+        {% for post in posts %}
+        <div class="post-card">
+            <div class="post-header">
+                <div class="post-avatar">{{ post.author.username[0] | upper }}</div>
+                <div class="post-user-info">
+                    <h4><a href="{{ url_for('profile', username=post.author.username) }}" style="text-decoration: none; color: inherit;">{{ post.author.name or post.author.username }}</a></h4>
+                    <span>Post ID: #{{ post.id }}</span>
+                </div>
+            </div>
+            
+            {% if post.content %}
+            <div class="post-content">{{ post.content }}</div>
+            {% endif %}
 
-                    <div class="modal-action-tags">
-                        <button type="button" class="action-tag-btn">👤 Tag/Collaborate</button>
-                        <button type="button" class="action-tag-btn">📍 Location</button>
-                        <button type="button" class="action-tag-btn">😊 Feeling/Activity</button>
-                    </div>
+            {% if post.media_file %}
+                {% if post.media_file.lower().endswith(('mp4', 'mov')) %}
+                <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="post-media"></video>
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" alt="Post Media" class="post-media">
+                {% endif %}
+            {% endif %}
 
-                    <div class="modal-content-box">
-                        <textarea name="content" placeholder="What's on your mind?" rows="4" required></textarea>
-                        
-                        <!-- Hidden file input triggered by Gallery card -->
-                        <input type="file" name="media" id="mediaInput" accept="image/*,video/*" style="display: none;" onchange="previewFile(event)">
+            <!-- Like & Reactions -->
+            <div class="post-footer-actions">
+                <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="flex: 1; display: flex;">
+                    <button type="submit" class="action-btn" style="width: 100%;">
+                        👍 Like ({{ post.likes | length }})
+                    </button>
+                </form>
+                <button class="action-btn" onclick="document.getElementById('comment-box-{{ post.id }}').style.display = document.getElementById('comment-box-{{ post.id }}').style.display === 'none' ? 'block' : 'none';">
+                    💬 Comment ({{ post.comments | length }})
+                </button>
+            </div>
 
-                        <!-- Image / Video Preview Box -->
-                        <div id="previewContainer" style="margin-top: 12px; display: none; position: relative;">
-                            <img id="imagePreview" src="" alt="Preview" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 10px; display: none;">
-                            <video id="videoPreview" controls style="width: 100%; max-height: 250px; border-radius: 10px; display: none;"></video>
-                            <button type="button" onclick="removeMedia()" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-weight: bold;">✕</button>
-                        </div>
-                    </div>
-
-                    <div class="modal-media-grid">
-                        <div class="media-card" onclick="document.getElementById('mediaInput').click()">🖼️ Gallery</div>
-                        <div class="media-card" onclick="alert('GIF feature coming soon!')">🎬 GIF</div>
-                        <div class="media-card" onclick="alert('Live feature coming soon!')">🔴 Live</div>
-                        <div class="media-card" onclick="alert('Music feature coming soon!')">🎵 Music</div>
-                    </div>
-
-                    <button type="submit" class="modal-submit-btn">Post</button>
+            <!-- Comments List -->
+            <div id="comment-box-{{ post.id }}" class="comments-section" style="display: none;">
+                {% for comment in post.comments %}
+                <div class="comment-item">
+                    <strong>{{ comment.author.username }}:</strong> {{ comment.content }}
+                </div>
+                {% endfor %}
+                <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="comment-form" style="margin-top: 8px;">
+                    <input type="text" name="content" placeholder="Write a comment..." required>
+                    <button type="submit">Send</button>
                 </form>
             </div>
         </div>
-
-        <div class="stories-container">
-            <div class="story-card create-story" onclick="alert('Create story feature coming soon!')">
-                <div class="create-story-avatar"></div>
-                <div class="create-story-icon-wrapper">+</div>
-                <div class="create-story-text">Create story</div>
-            </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #6366f1, #a855f7);">
-                <div class="story-mini-avatar">{{ current_user.username[0] | upper }}</div>
-                <div class="story-name">{{ current_user.username }}</div>
-            </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
-                <div class="story-mini-avatar">C</div>
-                <div class="story-name">Chan Store</div>
-            </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
-                <div class="story-mini-avatar">D</div>
-                <div class="story-name">Dynamic Studio</div>
-            </div>
-        </div>
-
-        {% if posts %}
-            {% for post in posts %}
-                <div class="post-card" id="post-{{ post.id }}">
-                    <div class="post-header">
-                        <div class="post-author-info">
-                            <div class="user-avatar-sm">{{ post.author.username[0] | upper }}</div>
-                            <div>
-                                <a href="{{ url_for('profile', username=post.author.username) }}" style="font-weight: bold; color: #050505;">@{{ post.author.username }}</a>
-                                <div style="font-size: 11px; color: #65676b;">Just now</div>
-                            </div>
-                        </div>
-                    </div>
-                    <p style="margin: 8px 0; word-break: break-word;">{{ post.content }}</p>
-                    
-                    {% if post.media_file %}
-                        <div style="margin-top: 8px;">
-                            <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" style="max-width: 100%; border-radius: 8px;" alt="Post media">
-                        </div>
-                    {% endif %}
-
-                    <div class="post-stats">
-                        <span>{{ post.likes|length }} likes</span>
-                        <div>
-                            <span>{{ post.comments|length }} comments</span> • 
-                            <span>0 shares</span>
-                        </div>
-                    </div>
-
-                    <div class="post-actions" style="position: relative;">
-                        <form id="like-form-{{ post.id }}" action="{{ url_for('like_post', post_id=post.id) }}#post-{{ post.id }}" method="POST" style="display:none;">
-                            <input type="hidden" name="emoji" id="like-emoji-input-{{ post.id }}" value="👍">
-                        </form>
-
-                        <div class="reaction-popup" id="reactions-{{ post.id }}">
-                            <span data-emoji="👍" onclick="submitReaction({{ post.id }}, '👍')">👍</span>
-                            <span data-emoji="❤️" onclick="submitReaction({{ post.id }}, '❤️')">❤️</span>
-                            <span data-emoji="😆" onclick="submitReaction({{ post.id }}, '😆')">😆</span>
-                            <span data-emoji="😮" onclick="submitReaction({{ post.id }}, '😮')">😮</span>
-                            <span data-emoji="😢" onclick="submitReaction({{ post.id }}, '😢')">😢</span>
-                        </div>
-
-                        {% set user_liked = post.likes | selectattr('user_id', 'equalto', current_user.id) | list %}
-                        <button class="action-btn" id="like-btn-{{ post.id }}" 
-                                onclick="likeClick({{ post.id }})" 
-                                onmousedown="startLongPress(event, {{ post.id }})" 
-                                ontouchstart="startLongPress(event, {{ post.id }})"
-                                onmouseup="endLongPress({{ post.id }})" 
-                                ontouchend="endLongPress({{ post.id }})"
-                                onmousemove="handleMove(event, {{ post.id }})"
-                                ontouchmove="handleTouchMove(event, {{ post.id }})">
-                            {% if user_liked %}
-                                {{ user_liked[0].emoji }} Liked
-                            {% else %}
-                                Like
-                            {% endif %}
-                        </button>
-                        
-                        <button class="action-btn" onclick="toggleComment({{ post.id }})">Comment</button>
-                        <button class="action-btn" onclick="alert('Post link copied!')">Share</button>
-                    </div>
-
-                    <div class="comment-section" id="comment-section-{{ post.id }}">
-                        <div class="comment-list">
-                            {% if post.comments %}
-                                {% for comment in post.comments %}
-                                    <div style="margin-top: 4px;">
-                                        <strong>@{{ comment.author.username }}:</strong> {{ comment.content }}
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                No comments yet. Be the first to comment!
-                            {% endif %}
-                        </div>
-                        <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="comment-input-box">
-                            <input type="text" name="content" placeholder="Write a comment..." required>
-                            <button type="submit">Send</button>
-                        </form>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p style="color: #65676b; text-align: center; margin-top: 30px;">No posts yet. Create your first post above!</p>
-        {% endif %}
+        {% endfor %}
     </div>
 
+    <!-- Bottom Navigation Bar -->
     <div class="chan-bottom-nav">
         <a href="{{ url_for('index') }}" class="bottom-nav-item active">
             <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
             <span>Home</span>
         </a>
         <a href="#" class="bottom-nav-item" onclick="alert('Friends tab coming soon!')">
-            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
             <span>Friends</span>
         </a>
         <div style="flex: 1; text-align: center;">
-            <div class="create-circle-btn" onclick="openPostModal()">
+            <div class="create-circle-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
                 <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
             </div>
         </div>
@@ -286,140 +133,11 @@
             <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
             <span>Notifications</span>
         </a>
-        <a href="{{ url_for('profile', username=current_user.username) }}" class="bottom-nav-item">
+        <!-- 🔴 Menu Icon က အခု Menu Page ဆီ သေချာချိတ်သွားပါပြီ -->
+        <a href="{{ url_for('menu') }}" class="bottom-nav-item">
             <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             <span>Menu</span>
         </a>
     </div>
-
-    <script>
-        function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
-        function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
-
-        // Preview File Functionality
-        function previewFile(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const previewContainer = document.getElementById('previewContainer');
-                const imagePreview = document.getElementById('imagePreview');
-                const videoPreview = document.getElementById('videoPreview');
-                
-                previewContainer.style.display = 'block';
-                const fileURL = URL.createObjectURL(file);
-
-                if (file.type.startsWith('image/')) {
-                    imagePreview.src = fileURL;
-                    imagePreview.style.display = 'block';
-                    videoPreview.style.display = 'none';
-                } else if (file.type.startsWith('video/')) {
-                    videoPreview.src = fileURL;
-                    videoPreview.style.display = 'block';
-                    imagePreview.style.display = 'none';
-                }
-            }
-        }
-
-        function removeMedia() {
-            const mediaInput = document.getElementById('mediaInput');
-            const previewContainer = document.getElementById('previewContainer');
-            mediaInput.value = '';
-            previewContainer.style.display = 'none';
-            document.getElementById('imagePreview').src = '';
-            document.getElementById('videoPreview').src = '';
-        }
-
-        let pressTimer;
-        let isLongPressActive = false;
-        let activeHoverEmoji = null;
-
-        function startLongPress(event, postId) {
-            isLongPressActive = false;
-            activeHoverEmoji = null;
-            pressTimer = setTimeout(() => {
-                isLongPressActive = true;
-                const popup = document.getElementById('reactions-' + postId);
-                popup.style.display = 'flex';
-            }, 400);
-        }
-
-        function endLongPress(postId) {
-            clearTimeout(pressTimer);
-            if (isLongPressActive) {
-                if (activeHoverEmoji) {
-                    submitReaction(postId, activeHoverEmoji);
-                } else {
-                    document.getElementById('reactions-' + postId).style.display = 'none';
-                    isLongPressActive = false;
-                }
-            }
-        }
-
-        function handleMove(event, postId) {
-            if (!isLongPressActive) return;
-            const popup = document.getElementById('reactions-' + postId);
-            const icons = popup.querySelectorAll('span');
-            activeHoverEmoji = null;
-            icons.forEach(icon => {
-                const rect = icon.getBoundingClientRect();
-                if (event.clientX >= rect.left && event.clientX <= rect.right &&
-                    event.clientY >= rect.top && event.clientY <= rect.bottom) {
-                    icon.classList.add('active-hover');
-                    activeHoverEmoji = icon.getAttribute('data-emoji');
-                } else {
-                    icon.classList.remove('active-hover');
-                }
-            });
-        }
-
-        function handleTouchMove(event, postId) {
-            if (!isLongPressActive) return;
-            const touch = event.touches[0];
-            const popup = document.getElementById('reactions-' + postId);
-            const icons = popup.querySelectorAll('span');
-            activeHoverEmoji = null;
-            icons.forEach(icon => {
-                const rect = icon.getBoundingClientRect();
-                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
-                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-                    icon.classList.add('active-hover');
-                    activeHoverEmoji = icon.getAttribute('data-emoji');
-                } else {
-                    icon.classList.remove('active-hover');
-                }
-            });
-        }
-
-        function submitReaction(postId, emoji) {
-            document.getElementById('like-emoji-input-' + postId).value = emoji;
-            document.getElementById('like-form-' + postId).submit();
-        }
-
-        function likeClick(postId) {
-            if (isLongPressActive) return;
-            const popup = document.getElementById('reactions-' + postId);
-            if (popup.style.display === 'flex') {
-                popup.style.display = 'none';
-                return;
-            }
-            submitReaction(postId, '👍');
-        }
-
-        function toggleComment(postId) {
-            const section = document.getElementById('comment-section-' + postId);
-            section.style.display = (section.style.display === 'block') ? 'none' : 'block';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('postModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-            if (!event.target.matches('.action-btn')) {
-                document.querySelectorAll('.reaction-popup').forEach(el => {
-                    el.style.display = 'none';
-                });
-            }
-        }
-    </script>
 </body>
 </html>
