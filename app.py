@@ -38,6 +38,13 @@ def load_user(user_id):
 
 with app.app_context():
     db.create_all()
+    
+    # 🔴 Database ထဲမှာ media_file column မရှိသေးရင် အလိုအလျောက် ထည့်ပေးမယ့် Auto-Migration 
+    try:
+        db.engine.execute('ALTER TABLE post ADD COLUMN media_file VARCHAR(200);')
+    except Exception as e:
+        print("Column already exists or added:", e)
+
     if not User.query.filter_by(username='MinNaungChan').first():
         default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
         db.session.add(default_user)
