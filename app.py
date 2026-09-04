@@ -10,11 +10,8 @@ from notifications import notif_bp
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-db_url = os.environ.get('DATABASE_URL')
-if db_url and db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql://", 1)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///csw.db'
+# 🔴 SQLite ကိုပဲ တိုက်ရိုက်သုံးမယ် (VPN လုံးဝ လိုတော့ပါဘူး၊ မြန်မာပြည်ကနေ တိုက်ရိုက်သုံးလို့ရပါပြီ)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///csw.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # ပုံဖိုင်တွေ သိမ်းမယ့် နေရာ (Upload folder) နဲ့ ခွင့်ပြုထားတဲ့ Extension တွေ
@@ -39,14 +36,6 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
     
-    # 🔴 SQLAlchemy ဗားရှင်းအသစ်နဲ့ ကိုက်ညီတဲ့ Safe Auto-Migration Code
-    try:
-        with db.engine.connect() as connection:
-            connection.execute(db.text('ALTER TABLE post ADD COLUMN IF NOT EXISTS media_file VARCHAR(200);'))
-            connection.commit()
-    except Exception as e:
-        print("Migration note:", e)
-
     if not User.query.filter_by(username='MinNaungChan').first():
         default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
         db.session.add(default_user)
@@ -163,4 +152,3 @@ def add_comment(post_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-
