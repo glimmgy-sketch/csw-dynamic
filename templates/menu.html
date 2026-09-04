@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Chan</title>
+    <style>
+        body { background-color: #f0f2f5; color: #050505; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
+        .menu-header { background: #ffffff; padding: 15px; font-size: 24px; font-weight: bold; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 600px; margin: 0 auto; padding: 10px; }
+        
+        /* Profile Card on Top of Menu */
+        .menu-profile-card { background: #ffffff; padding: 12px 15px; border-radius: 10px; display: flex; align-items: center; gap: 12px; margin-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); text-decoration: none; color: inherit; }
+        .user-avatar { width: 45px; height: 45px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: white; }
+        .menu-profile-card h3 { margin: 0; font-size: 16px; }
+        .menu-profile-card p { margin: 2px 0 0 0; font-size: 13px; color: #65676b; }
+
+        .section-title { font-size: 16px; font-weight: bold; color: #65676b; margin: 15px 5px 8px 5px; }
+        
+        /* Menu Grid */
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .menu-card { background: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); cursor: pointer; display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: inherit; transition: 0.2s; }
+        .menu-card:hover { background: #f4f5f7; }
+        .menu-card svg { width: 28px; height: 28px; fill: #1877f2; }
+        .menu-card span { font-weight: bold; font-size: 14px; }
+
+        /* List style options */
+        .menu-list-group { background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .menu-list-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; color: inherit; border-bottom: 1px solid #f0f2f5; font-weight: 500; font-size: 15px; }
+        .menu-list-item:last-child { border-bottom: none; }
+        .menu-list-item svg { width: 22px; height: 22px; fill: #65676b; }
+
+        /* Bottom Nav */
+        .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e4e6eb; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.05); }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #65676b; text-decoration: none; flex: 1; }
+        .bottom-nav-item.active { color: #1877f2; }
+        .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+        .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
+        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
+    </style>
+</head>
+<body>
+    <div class="menu-header">
+        Menu
+    </div>
+
+    <div class="container">
+        <!-- Profile Shortcut inside Menu -->
+        <a href="{{ url_for('profile', username=current_user.username) }}" class="menu-profile-card">
+            <div class="user-avatar">{{ current_user.username[0] | upper }}</div>
+            <div>
+                <h3>{{ current_user.name or current_user.username }}</h3>
+                <p>See your profile</p>
+            </div>
+        </a>
+
+        <div class="section-title">Your Shortcuts</div>
+        <div class="menu-grid">
+            <a href="#" class="menu-card" onclick="alert('Friends feature coming soon!')">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span>Friends</span>
+            </a>
+            <a href="#" class="menu-card" onclick="alert('Groups feature coming soon!')">
+                <svg viewBox="0 0 24 24"><path d="M12 12.75c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 1.5c-2.33 0-7 1.17-7 3.5V19h14v-1.25c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span>Groups</span>
+            </a>
+            <a href="#" class="menu-card" onclick="alert('Saved feature coming soon!')">
+                <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                <span>Saved</span>
+            </a>
+            <a href="#" class="menu-card" onclick="alert('Memories feature coming soon!')">
+                <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 9.74C4.46 10.97 4 12.43 4 14c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                <span>Memories</span>
+            </a>
+        </div>
+
+        <div class="section-title">Help & Settings</div>
+        <div class="menu-list-group">
+            <a href="#" class="menu-list-item" onclick="alert('Settings feature coming soon!')">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.04.64.09.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                <span>Settings & Privacy</span>
+            </a>
+            <a href="{{ url_for('logout') }}" class="menu-list-item" style="color: #e41e3f;">
+                <svg viewBox="0 0 24 24" style="fill: #e41e3f;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                <span>Log Out</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="chan-bottom-nav">
+        <a href="{{ url_for('index') }}" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="alert('Friends tab coming soon!')">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <span>Friends</span>
+        </a>
+        <div style="flex: 1; text-align: center;">
+            <div class="create-circle-btn" onclick="openPostModal()">
+                <svg viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </div>
+        </div>
+        <a href="{{ url_for('notif_bp.notifications') }}" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+            <span>Notifications</span>
+        </a>
+        <a href="{{ url_for('menu') }}" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            <span>Menu</span>
+        </a>
+    </div>
+</body>
+</html>
