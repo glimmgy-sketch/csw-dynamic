@@ -39,11 +39,13 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
     
-    # 🔴 Database ထဲမှာ media_file column မရှိသေးရင် အလိုအလျောက် ထည့်ပေးမယ့် Auto-Migration 
+    # 🔴 SQLAlchemy ဗားရှင်းအသစ်နဲ့ ကိုက်ညီတဲ့ Safe Auto-Migration Code
     try:
-        db.engine.execute('ALTER TABLE post ADD COLUMN media_file VARCHAR(200);')
+        with db.engine.connect() as connection:
+            connection.execute(db.text('ALTER TABLE post ADD COLUMN IF NOT EXISTS media_file VARCHAR(200);'))
+            connection.commit()
     except Exception as e:
-        print("Column already exists or added:", e)
+        print("Migration note:", e)
 
     if not User.query.filter_by(username='MinNaungChan').first():
         default_user = User(username='MinNaungChan', password=generate_password_hash('123456'))
@@ -161,3 +163,4 @@ def add_comment(post_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+
