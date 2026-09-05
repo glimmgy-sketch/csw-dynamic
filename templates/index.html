@@ -21,16 +21,79 @@
         .story-avatar { width: 35px; height: 35px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 3px solid #2d88ff; position: absolute; top: 10px; left: 10px; font-size: 14px; }
         .create-story-btn { width: 35px; height: 35px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; position: absolute; top: 95px; left: 37px; border: 3px solid #242526; }
 
-        /* Post Creation Box */
+        /* Post Creation Trigger Box */
         .post-box { background: #242526; padding: 12px 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .post-box-avatar { width: 40px; height: 40px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
         .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; pointer-events: none; }
 
-        /* Popup Modal for Post Creation */
-        #postModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-content { background: #242526; width: 92%; max-width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); border: 1px solid #3a3b3c; box-sizing: border-box; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3a3b3c; padding-bottom: 12px; margin-bottom: 15px; font-weight: bold; font-size: 18px; color: white; }
-        .close-btn { background: none; border: none; color: #b0b3b8; font-size: 24px; cursor: pointer; }
+        /* Facebook Style Create Post Modal UI */
+        #postModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
+        
+        .modal-content { 
+            background: #242526; 
+            width: 100%; 
+            max-width: 520px; 
+            height: 100%;
+            max-height: 650px;
+            border-radius: 12px; 
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.7); 
+            border: 1px solid #3a3b3c; 
+            box-sizing: border-box; 
+            overflow: hidden;
+        }
+
+        .modal-header-fb { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #3a3b3c; 
+            position: relative;
+        }
+        
+        .modal-header-fb h3 { margin: 0; font-size: 20px; color: #e4e6eb; font-weight: bold; flex: 1; text-align: center; }
+        .close-modal-btn { background: #3a3b3c; border: none; color: #b0b3b8; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
+        
+        .post-form-body { padding: 15px 20px; overflow-y: auto; flex: 1; }
+        
+        .modal-user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .modal-avatar { width: 45px; height: 45px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
+        .modal-user-details h4 { margin: 0; font-size: 16px; color: #e4e6eb; }
+        .privacy-badge { background: #3a3b3c; color: #e4e6eb; font-size: 12px; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; font-weight: bold; }
+
+        .modal-textarea { 
+            width: 100%; 
+            background: transparent; 
+            border: none; 
+            color: #e4e6eb; 
+            font-size: 16px; 
+            resize: none; 
+            outline: none; 
+            min-height: 100px; 
+            box-sizing: border-box; 
+            font-family: sans-serif;
+        }
+
+        .add-to-post-box { 
+            border: 1px solid #3a3b3c; 
+            border-radius: 10px; 
+            padding: 10px 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 15px;
+            background: #242526;
+        }
+        .add-to-post-text { font-size: 14px; font-weight: bold; color: #e4e6eb; }
+        .add-to-icons { display: flex; gap: 12px; }
+        .tool-icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 4px; border-radius: 50%; transition: background 0.2s; }
+        .tool-icon-btn:hover { background: #3a3b3c; }
+
+        .modal-footer-fb { padding: 15px 20px; border-top: 1px solid #3a3b3c; background: #242526; }
+        .post-submit-btn { width: 100%; background: #2d88ff; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .post-submit-btn:hover { background: #1b74e4; }
 
         /* Feed Post Card */
         .post-card { background: #242526; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; overflow: hidden; border: 1px solid #3a3b3c; }
@@ -57,7 +120,7 @@
             border: none; 
             border-radius: 0; 
             padding: 2px; 
-            gap: 8px; /* Emoji တွေကြား အကွာအဝေးကို သေးသွယ်စေခြင်း */
+            gap: 8px; 
             box-shadow: none; 
             z-index: 999; 
             touch-action: none;
@@ -74,7 +137,7 @@
         .reaction-icon { 
             background: none; 
             border: none; 
-            font-size: 24px; /* Emoji အရွယ်အစားကို သေးသွယ်ပြေပြစ်အောင် ပြင်ထားသည် */
+            font-size: 24px; 
             cursor: pointer; 
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; 
             padding: 0; 
@@ -123,18 +186,45 @@
             <div class="post-box-input">What's on your mind, {{ current_user.username }}?</div>
         </div>
 
-        <!-- Popup Modal for Creating Post -->
+        <!-- Popup Modal for Creating Post (Facebook Style UI) -->
         <div id="postModal">
             <div class="modal-content">
-                <div class="modal-header">
-                    <span>Create Post</span>
-                    <button class="close-btn" onclick="closeModal()">&times;</button>
+                <div class="modal-header-fb">
+                    <button class="close-modal-btn" onclick="closeModal()">&times;</button>
+                    <h3>Create Post</h3>
+                    <div style="width: 36px;"></div>
                 </div>
-                <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
-                    <textarea name="content" rows="4" style="width: 100%; background: #3a3b3c; border: none; border-radius: 8px; color: white; padding: 12px; font-size: 15px; resize: none; outline: none; margin-bottom: 12px; box-sizing: border-box;" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #3a3b3c; padding-top: 12px;">
-                        <input type="file" name="media" accept="image/*,video/*" style="font-size: 12px; color: #b0b3b8;">
-                        <button type="submit" style="background: #2d88ff; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Post</button>
+                
+                <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+                    <div class="post-form-body">
+                        <div class="modal-user-info">
+                            <div class="modal-avatar">{{ current_user.username[0] | upper }}</div>
+                            <div class="modal-user-details">
+                                <h4>{{ current_user.name or current_user.username }}</h4>
+                                <div class="privacy-badge">🌐 Public</div>
+                            </div>
+                        </div>
+
+                        <textarea name="content" class="modal-textarea" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
+
+                        <div style="margin-top: 15px;">
+                            <label style="font-size: 13px; color: #b0b3b8; display: block; margin-bottom: 5px;">Attach Photo / Video:</label>
+                            <input type="file" name="media" accept="image/*,video/*" style="font-size: 13px; color: #e4e6eb; background: #3a3b3c; padding: 8px; border-radius: 6px; width: 100%; box-sizing: border-box;">
+                        </div>
+
+                        <div class="add-to-post-box">
+                            <span class="add-to-post-text">Add to your post</span>
+                            <div class="add-to-icons">
+                                <button type="button" class="tool-icon-btn" title="Photo/Video">📷</button>
+                                <button type="button" class="tool-icon-btn" title="Tag People">🏷️</button>
+                                <button type="button" class="tool-icon-btn" title="Feeling/Activity">😊</button>
+                                <button type="button" class="tool-icon-btn" title="Location">📍</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer-fb">
+                        <button type="submit" class="post-submit-btn">Post</button>
                     </div>
                 </form>
             </div>
