@@ -181,3 +181,11 @@ def add_comment(post_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+@app.route('/search')
+def search():
+    query = request.args.get('q', '')
+    if query:
+        posts = Post.query.filter(Post.content.like(f'%{query}%')).order_by(Post.id.desc()).all()
+    else:
+        posts = []
+    return render_template('index.html', posts=posts, search_query=query)
