@@ -25,7 +25,7 @@
         .post-box-avatar { width: 40px; height: 40px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
         .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; pointer-events: none; }
 
-        /* Facebook Style Create Post Modal UI */
+        /* Popup Modal for Creating Post */
         #postModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
         
         .modal-content { 
@@ -130,7 +130,7 @@
         .post-content { padding: 0 15px 12px 15px; font-size: 15px; line-height: 1.4; color: #e4e6eb; }
         .post-media { width: 100%; max-height: 400px; object-fit: cover; background: #000; }
         
-        /* Post Stats Bar (Like & Comment Counts Clickable) */
+        /* Post Stats Bar */
         .post-stats-bar { display: flex; justify-content: space-between; padding: 8px 15px; font-size: 13px; color: #b0b3b8; border-bottom: 1px solid #3a3b3c; }
         .stats-link { cursor: pointer; display: flex; align-items: center; gap: 4px; }
         .stats-link:hover { text-decoration: underline; color: #2d88ff; }
@@ -193,7 +193,7 @@
         .search-header { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
         .search-input { flex: 1; background: #3a3b3c; border: none; padding: 12px 15px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
 
-        /* Details Modal (Who liked/commented) */
+        /* Details Modal */
         .details-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
         .details-content { background: #242526; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; border: 1px solid #3a3b3c; max-height: 400px; overflow-y: auto; }
 
@@ -378,7 +378,8 @@
                 {% endif %}
             {% endif %}
 
-            <!-- Post Stats Bar (Clickable counts for Likes and Comments) -->
+            <!-- Post Stats Bar -->
+            {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
             <div class="post-stats-bar">
                 <div class="stats-link" onclick="openLikesModal('likes-modal-{{ post.id }}')">
                     <span>{{ user_like.emoji if user_like else '👍' }}</span>
@@ -408,8 +409,7 @@
                 </div>
             </div>
 
-            <!-- Facebook Style Footer Actions with SVG Icons & Share -->
-            {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
+            <!-- Post Footer Actions -->
             <div class="post-footer-actions">
                 <div class="action-wrapper">
                     <button type="button" class="action-btn" style="color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};" 
