@@ -190,8 +190,8 @@
 
     <div class="container">
         <div class="post-box" onclick="openModal()">
-            <div class="post-box-avatar">{{ current_user.username[0] | upper }}</div>
-            <div class="post-box-input">What's on your mind, {{ current_user.username }}?</div>
+            <div class="post-box-avatar">{% if current_user.is_authenticated %}{{ current_user.username[0] | upper }}{% else %}?{% endif %}</div>
+            <div class="post-box-input">What's on your mind, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}?</div>
         </div>
 
         <div id="postModal">
@@ -205,14 +205,14 @@
                 <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
                     <div class="post-form-body">
                         <div class="modal-user-info">
-                            <div class="modal-avatar">{{ current_user.username[0] | upper }}</div>
+                            <div class="modal-avatar">{% if current_user.is_authenticated %}{{ current_user.username[0] | upper }}{% else %}?{% endif %}</div>
                             <div class="modal-user-details">
-                                <h4>{{ current_user.name or current_user.username }}</h4>
+                                <h4>{% if current_user.is_authenticated %}{{ current_user.name or current_user.username }}{% else %}Guest{% endif %}</h4>
                                 <div class="privacy-badge">Public ▼</div>
                             </div>
                         </div>
 
-                        <textarea name="content" class="modal-textarea" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
+                        <textarea name="content" class="modal-textarea" placeholder="What's on your mind, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}?"></textarea>
 
                         <input type="file" id="mediaInput" name="media" accept="image/*,video/*" style="display: none;" onchange="updateFileLabel(this)">
                         <div id="fileStatusText" style="font-size: 13px; color: #a855f7; margin-bottom: 8px; font-weight: bold;"></div>
@@ -244,8 +244,8 @@
                 <span style="text-align: center;">Create story</span>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #a855f7, #ec4899);">
-                <div class="story-avatar">{{ current_user.username[0] | upper }}</div>
-                <span>{{ current_user.username }}</span>
+                <div class="story-avatar">{% if current_user.is_authenticated %}{{ current_user.username[0] | upper }}{% else %}?{% endif %}</div>
+                <span>{% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}</span>
             </div>
         </div>
 
@@ -271,7 +271,7 @@
                 {% endif %}
             {% endif %}
 
-            {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
+            {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first if current_user.is_authenticated else none %}
             <div class="post-stats-bar">
                 <div class="stats-link" onclick="openLikesModal('likes-modal-{{ post.id }}')">
                     <span>{{ user_like.emoji if user_like else '👍' }}</span>
