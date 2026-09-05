@@ -34,7 +34,7 @@
             width: 100%; 
             max-width: 520px; 
             height: 100%;
-            max-height: 620px;
+            max-height: 720px;
             border-radius: 12px; 
             display: flex;
             flex-direction: column;
@@ -61,7 +61,10 @@
         .modal-user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
         .modal-avatar { width: 45px; height: 45px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
         .modal-user-details h4 { margin: 0; font-size: 16px; color: #e4e6eb; }
-        .privacy-badge { background: #3a3b3c; color: #e4e6eb; font-size: 12px; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; font-weight: bold; }
+        
+        /* SVG Public Badge */
+        .privacy-badge { background: #3a3b3c; color: #e4e6eb; font-size: 12px; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-weight: bold; cursor: pointer; }
+        .privacy-badge svg { width: 14px; height: 14px; fill: currentColor; }
 
         .modal-textarea { 
             width: 100%; 
@@ -71,25 +74,52 @@
             font-size: 16px; 
             resize: none; 
             outline: none; 
-            min-height: 120px; 
+            min-height: 100px; 
             box-sizing: border-box; 
             font-family: sans-serif;
         }
 
-        .add-to-post-box { 
-            border: 1px solid #3a3b3c; 
-            border-radius: 10px; 
-            padding: 12px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-top: 20px;
-            background: #242526;
+        /* Facebook Action Grid Cards (Photo, Tag, Location, Feeling) */
+        .action-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
         }
-        .add-to-post-text { font-size: 14px; font-weight: bold; color: #e4e6eb; }
-        .add-to-icons { display: flex; gap: 15px; align-items: center; }
-        .tool-icon-btn { background: none; border: none; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-        .tool-icon-btn:hover { background: #3a3b3c; }
+        .action-card-item {
+            background: #242526;
+            border: 1px solid #3a3b3c;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .action-card-item:hover { background: #3a3b3c; }
+        .action-card-text { font-size: 14px; font-weight: bold; color: #e4e6eb; }
+
+        /* Options List Below (Background color, Live video, GIF, Poll, More options) */
+        .options-list-box {
+            background: #242526;
+            border: 1px solid #3a3b3c;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .option-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #3a3b3c;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-row:last-child { border-bottom: none; }
+        .option-row:hover { background: #3a3b3c; }
+        .option-row-left { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: bold; color: #e4e6eb; }
 
         .modal-footer-fb { padding: 15px 20px; border-top: 1px solid #3a3b3c; background: #242526; }
         .post-submit-btn { width: 100%; background: #2d88ff; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
@@ -109,7 +139,6 @@
         .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; user-select: none; }
         .action-btn:hover { background: #3a3b3c; }
 
-        /* Facebook Style Slide Reaction Box (နောက်ခံ Box မပါဘဲ သေသေသပ်သပ်လေး) */
         .action-wrapper { flex: 1; position: relative; display: flex; }
         .reaction-box { 
             display: none; 
@@ -201,31 +230,77 @@
                             <div class="modal-avatar">{{ current_user.username[0] | upper }}</div>
                             <div class="modal-user-details">
                                 <h4>{{ current_user.name or current_user.username }}</h4>
-                                <div class="privacy-badge">🌐 Public</div>
+                                <div class="privacy-badge">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                    Public ▼
+                                </div>
                             </div>
                         </div>
 
                         <textarea name="content" class="modal-textarea" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
 
-                        <!-- Hidden File Input for uploading images/videos -->
+                        <!-- Hidden File Input -->
                         <input type="file" id="mediaInput" name="media" accept="image/*,video/*" style="display: none;" onchange="updateFileLabel(this)">
+                        
+                        <!-- File selected status text -->
+                        <div id="fileStatusText" style="font-size: 13px; color: #2d88ff; margin-bottom: 8px; font-weight: bold;"></div>
 
-                        <!-- Facebook Style 'Add to your post' Box with SVG Graphics Icons -->
-                        <div class="add-to-post-box">
-                            <span class="add-to-post-text" id="fileStatusText">Add to your post</span>
-                            <div class="add-to-icons">
-                                <button type="button" class="tool-icon-btn" onclick="document.getElementById('mediaInput').click()" title="Photo/Video">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="#45bd62"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
-                                </button>
-                                <button type="button" class="tool-icon-btn" title="Tag People">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="#1877f2"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                                </button>
-                                <button type="button" class="tool-icon-btn" title="Feeling/Activity">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="#f7b125"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
-                                </button>
-                                <button type="button" class="tool-icon-btn" title="Location">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="#f02849"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                                </button>
+                        <!-- Facebook Action Grid Cards (Photo/Video, Tag people, Location, Feeling/Activity) -->
+                        <div class="action-cards-grid">
+                            <div class="action-card-item" onclick="document.getElementById('mediaInput').click()">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#45bd62"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
+                                <span class="action-card-text">Photo/Video</span>
+                            </div>
+                            <div class="action-card-item" onclick="alert('Tag people feature coming soon!')">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#1877f2"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                <span class="action-card-text">Tag people</span>
+                            </div>
+                            <div class="action-card-item" onclick="alert('Location feature coming soon!')">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#f02849"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                <span class="action-card-text">Location</span>
+                            </div>
+                            <div class="action-card-item" onclick="alert('Feeling/Activity feature coming soon!')">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#f7b125"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                                <span class="action-card-text">Feeling/Activity</span>
+                            </div>
+                        </div>
+
+                        <!-- Options List Box (Background color, Live video, GIF, Poll, More options) -->
+                        <div class="options-list-box">
+                            <div class="option-row" onclick="alert('Background color feature coming soon!')">
+                                <div class="option-row-left">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#2d88ff"><path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 m0-2C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm0 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                                    Background color
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('Live video feature coming soon!')">
+                                <div class="option-row-left">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#f02849"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45-1-1v-3.5l4 4v-11l-4 4z"/></svg>
+                                    Live video
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('GIF feature coming soon!')">
+                                <div class="option-row-left">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#2bac76"><path d="M11.5 9H13v6h-1.5zM9 9H6c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-2h-1.5v1.5h-2v-3h2V12H9v-2zm9.5 0H15v6h1.5v-2.5h2c.55 0 1-.45 1-1v-1.5c0-.55-.45-1-1-1zm0 2.5h-2v-1h2v1z"/></svg>
+                                    GIF
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('Poll feature coming soon!')">
+                                <div class="option-row-left">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1877f2"><path d="M5 9.2h3V19H5zM10.5 5h3v14h-3zM16 13h3v6h-3z"/></svg>
+                                    Poll
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('More options coming soon!')">
+                                <div class="option-row-left">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#b0b3b8"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                                    More options
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
                             </div>
                         </div>
                     </div>
@@ -289,7 +364,7 @@
                         {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else ('Like' if not user_like else user_like.emoji) }} ({{ post.likes | length }})
                     </button>
                     
-                    <!-- Slide Reaction Bar (သေသေသပ်သပ်လေးနဲ့ Box မပါ) -->
+                    <!-- Slide Reaction Bar -->
                     <div id="reaction-box-{{ post.id }}" class="reaction-box" data-post-id="{{ post.id }}">
                         <span class="reaction-icon" data-emoji="👍">👍</span>
                         <span class="reaction-icon" data-emoji="❤️">❤️</span>
@@ -356,11 +431,9 @@
         function updateFileLabel(input) {
             let statusText = document.getElementById('fileStatusText');
             if (input.files && input.files[0]) {
-                statusText.innerText = "📎 " + input.files[0].name;
-                statusText.style.color = "#2d88ff";
+                statusText.innerText = "📎 Selected File: " + input.files[0].name;
             } else {
-                statusText.innerText = "Add to your post";
-                statusText.style.color = "#e4e6eb";
+                statusText.innerText = "";
             }
         }
 
