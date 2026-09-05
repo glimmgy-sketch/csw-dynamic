@@ -189,3 +189,4 @@ def search():
     else:
         posts = []
     return render_template('index.html', posts=posts, search_query=query)
+    
