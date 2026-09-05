@@ -7,7 +7,6 @@
     <style>
         body { background-color: #18191a; color: #e4e6eb; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
         .top-nav { background: #242526; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .top-nav h1 { color: #2d88ff; margin: 0; font-size: 24px; font-weight: bold; }
         .top-nav-icons { display: flex; gap: 10px; }
         .icon-btn { width: 36px; height: 36px; background: #3a3b3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e4e6eb; text-decoration: none; cursor: pointer; }
         .icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
@@ -79,7 +78,7 @@
             font-family: sans-serif;
         }
 
-        /* Facebook Action Grid Cards (Photo, Tag, Location, Feeling) */
+        /* Facebook Action Grid Cards (Photo/Video, Tag people, Location, Feeling/Activity) */
         .action-cards-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -100,7 +99,7 @@
         .action-card-item:hover { background: #3a3b3c; }
         .action-card-text { font-size: 14px; font-weight: bold; color: #e4e6eb; }
 
-        /* Options List Below (Background color, Live video, GIF, Poll, More options) */
+        /* Options List Box (Background color, Live video, GIF, Poll, More options) */
         .options-list-box {
             background: #242526;
             border: 1px solid #3a3b3c;
@@ -195,9 +194,12 @@
     </style>
 </head>
 <body>
-    <!-- Top Nav -->
+    <!-- Top Nav with CSS Chan Logo -->
     <div class="top-nav">
-        <h1>Chan</h1>
+        <div style="display: flex; align-items: center; gap: 8px; cursor: pointer;" onclick="location.reload();">
+            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #a855f7, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; box-shadow: 0 2px 6px rgba(168,85,247,0.4);">C</div>
+            <h1 style="background: linear-gradient(135deg, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 24px; font-weight: bold; margin: 0;">Chan</h1>
+        </div>
         <div class="top-nav-icons">
             <a href="#" class="icon-btn" onclick="alert('Search feature coming soon!')">
                 <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
