@@ -164,7 +164,7 @@
 <body>
     <div class="top-nav">
         <div style="display: flex; align-items: center; gap: 8px; cursor: pointer;" onclick="location.href='{{ url_for('index') }}';">
-            <img src="{{ url_for('static', filename='chan.png') }}" alt="Chan Logo" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #a855f7;">
+            <img src="{{ url_for('static', filename='chan.png') }}" alt="Chan Logo" style="width: 34px; height: 34px; border-radius: 50%; object-fit: contain; background: #242526; border: 2px solid #a855f7;">
             <h1 style="background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 24px; font-weight: bold; margin: 0;">Chan</h1>
         </div>
         <div class="top-nav-icons">
@@ -236,7 +236,6 @@
             </div>
         </div>
 
-        <!-- Stories Section -->
         <div class="stories-container">
             <div class="story-card" style="background: #242526; justify-content: center; align-items: center;">
                 <div class="create-story-btn" style="position: static; margin-bottom: 8px;">
@@ -250,7 +249,6 @@
             </div>
         </div>
 
-        <!-- Feed Posts List -->
         {% for post in posts %}
         <div class="post-card">
             <div class="post-header">
@@ -300,7 +298,6 @@
                 </div>
             </div>
 
-            <!-- Post Footer Actions (Like, Comment, Share with full touch/slide support) -->
             <div class="post-footer-actions">
                 <div class="action-wrapper">
                     <button type="button" class="action-btn" style="color: {% if user_like %}#a855f7{% else %}#b0b3b8{% endif %};" 
@@ -345,7 +342,6 @@
         {% endfor %}
     </div>
 
-    <!-- Bottom Navigation Bar -->
     <div class="chan-bottom-nav">
         <a href="{{ url_for('index') }}" class="bottom-nav-item active">
             <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
