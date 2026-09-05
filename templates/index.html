@@ -46,21 +46,19 @@
         .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; user-select: none; }
         .action-btn:hover { background: #3a3b3c; }
 
-        /* Facebook Style Slide Reaction Box */
+        /* Facebook Style Slide Reaction Box (နောက်ခံ Box မပါဘဲ သေသေသပ်သပ်လေး) */
         .action-wrapper { flex: 1; position: relative; display: flex; }
         .reaction-box { 
             display: none; 
             position: absolute; 
-            bottom: 50px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(36, 37, 38, 0.98); 
-            backdrop-filter: blur(12px);
-            border: 1px solid #3a3b3c; 
-            border-radius: 40px; 
-            padding: 8px 14px; 
-            gap: 12px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+            bottom: 45px; 
+            left: 5px; 
+            background: transparent; 
+            border: none; 
+            border-radius: 0; 
+            padding: 2px; 
+            gap: 8px; /* Emoji တွေကြား အကွာအဝေးကို သေးသွယ်စေခြင်း */
+            box-shadow: none; 
             z-index: 999; 
             touch-action: none;
             animation: fadeInScale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -69,24 +67,24 @@
         .reaction-box.show { display: flex; }
 
         @keyframes fadeInScale {
-            0% { opacity: 0; transform: translateX(-50%) scale(0.7) translateY(10px); }
-            100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+            0% { opacity: 0; transform: scale(0.7) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .reaction-icon { 
             background: none; 
             border: none; 
-            font-size: 28px; 
+            font-size: 24px; /* Emoji အရွယ်အစားကို သေးသွယ်ပြေပြစ်အောင် ပြင်ထားသည် */
             cursor: pointer; 
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; 
             padding: 0; 
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
             user-select: none;
         }
         
         .reaction-icon.active-zoom { 
-            transform: scale(1.6) translateY(-12px); 
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
+            transform: scale(1.5) translateY(-10px); 
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.7));
         }
 
         .comments-section { padding: 10px 15px; background: #18191a; font-size: 14px; }
@@ -194,7 +192,7 @@
                         {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else ('Like' if not user_like else user_like.emoji) }} ({{ post.likes | length }})
                     </button>
                     
-                    <!-- Slide Reaction Bar -->
+                    <!-- Slide Reaction Bar (သေသေသပ်သပ်လေးနဲ့ Box မပါ) -->
                     <div id="reaction-box-{{ post.id }}" class="reaction-box" data-post-id="{{ post.id }}">
                         <span class="reaction-icon" data-emoji="👍">👍</span>
                         <span class="reaction-icon" data-emoji="❤️">❤️</span>
@@ -267,7 +265,7 @@
                 document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
                 box.classList.add('show');
                 activeReactionBox = box;
-            }, 350);
+            }, 300);
         }
 
         window.addEventListener('mouseup', cancelLongPress);
