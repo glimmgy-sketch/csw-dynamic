@@ -17,12 +17,12 @@
         .stories-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
         .story-card { min-width: 110px; height: 180px; background: #242526; border-radius: 10px; overflow: hidden; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0; border: 1px solid #3a3b3c; }
         .story-card span { color: white; font-size: 12px; font-weight: bold; position: relative; z-index: 2; }
-        .story-avatar { width: 35px; height: 35px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 3px solid #2d88ff; position: absolute; top: 10px; left: 10px; font-size: 14px; }
-        .create-story-btn { width: 35px; height: 35px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; position: absolute; top: 95px; left: 37px; border: 3px solid #242526; }
+        .story-avatar { width: 35px; height: 35px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 3px solid #a855f7; position: absolute; top: 10px; left: 10px; font-size: 14px; }
+        .create-story-btn { width: 35px; height: 35px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; position: absolute; top: 95px; left: 37px; border: 3px solid #242526; }
 
         /* Post Creation Trigger Box */
         .post-box { background: #242526; padding: 12px 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .post-box-avatar { width: 40px; height: 40px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
+        .post-box-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
         .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; pointer-events: none; }
 
         /* Popup Modal for Creating Post */
@@ -43,180 +43,90 @@
             overflow: hidden;
         }
 
-        .modal-header-fb { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 20px; 
-            border-bottom: 1px solid #3a3b3c; 
-            position: relative;
-        }
-        
+        .modal-header-fb { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #3a3b3c; }
         .modal-header-fb h3 { margin: 0; font-size: 20px; color: #e4e6eb; font-weight: bold; flex: 1; text-align: center; }
         .close-modal-btn { background: #3a3b3c; border: none; color: #b0b3b8; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
         
         .post-form-body { padding: 15px 20px; overflow-y: auto; flex: 1; }
         
         .modal-user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .modal-avatar { width: 45px; height: 45px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
+        .modal-avatar { width: 45px; height: 45px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
         .modal-user-details h4 { margin: 0; font-size: 16px; color: #e4e6eb; }
         
         .privacy-badge { background: #3a3b3c; color: #e4e6eb; font-size: 12px; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-weight: bold; cursor: pointer; }
         .privacy-badge svg { width: 14px; height: 14px; fill: currentColor; }
 
-        .modal-textarea { 
-            width: 100%; 
-            background: transparent; 
-            border: none; 
-            color: #e4e6eb; 
-            font-size: 16px; 
-            resize: none; 
-            outline: none; 
-            min-height: 100px; 
-            box-sizing: border-box; 
-            font-family: sans-serif;
-        }
+        .modal-textarea { width: 100%; background: transparent; border: none; color: #e4e6eb; font-size: 16px; resize: none; outline: none; min-height: 100px; box-sizing: border-box; font-family: sans-serif; }
 
-        .action-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .action-card-item {
-            background: #242526;
-            border: 1px solid #3a3b3c;
-            border-radius: 10px;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .action-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .action-card-item { background: #242526; border: 1px solid #3a3b3c; border-radius: 10px; padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; }
         .action-card-item:hover { background: #3a3b3c; }
         .action-card-text { font-size: 14px; font-weight: bold; color: #e4e6eb; }
 
-        .options-list-box {
-            background: #242526;
-            border: 1px solid #3a3b3c;
-            border-radius: 10px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-        .option-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            border-bottom: 1px solid #3a3b3c;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .options-list-box { background: #242526; border: 1px solid #3a3b3c; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .option-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #3a3b3c; cursor: pointer; transition: background 0.2s; }
         .option-row:last-child { border-bottom: none; }
         .option-row:hover { background: #3a3b3c; }
         .option-row-left { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: bold; color: #e4e6eb; }
 
         .modal-footer-fb { padding: 15px 20px; border-top: 1px solid #3a3b3c; background: #242526; }
-        .post-submit-btn { width: 100%; background: #2d88ff; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .post-submit-btn:hover { background: #1b74e4; }
+        .post-submit-btn { width: 100%; background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3); }
+        .post-submit-btn:hover { opacity: 0.9; }
 
         /* Feed Post Card */
         .post-card { background: #242526; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; overflow: hidden; border: 1px solid #3a3b3c; }
         .post-header { padding: 12px 15px; display: flex; align-items: center; gap: 10px; }
-        .post-avatar { width: 40px; height: 40px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .post-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
         .post-user-info h4 { margin: 0; font-size: 15px; color: #e4e6eb; }
         .post-user-info span { font-size: 12px; color: #b0b3b8; }
         .post-content { padding: 0 15px 12px 15px; font-size: 15px; line-height: 1.4; color: #e4e6eb; }
         .post-media { width: 100%; max-height: 400px; object-fit: cover; background: #000; }
         
-        /* Post Stats Bar */
         .post-stats-bar { display: flex; justify-content: space-between; padding: 8px 15px; font-size: 13px; color: #b0b3b8; border-bottom: 1px solid #3a3b3c; }
         .stats-link { cursor: pointer; display: flex; align-items: center; gap: 4px; }
-        .stats-link:hover { text-decoration: underline; color: #2d88ff; }
+        .stats-link:hover { text-decoration: underline; color: #a855f7; }
 
-        /* Post Footer SVG Buttons */
         .post-footer-actions { display: flex; border-bottom: 1px solid #3a3b3c; position: relative; }
         .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; user-select: none; }
         .action-btn:hover { background: #3a3b3c; }
         .action-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
-        /* Facebook Style Floating Animated Reaction Box */
         .action-wrapper { flex: 1; position: relative; display: flex; }
-        .reaction-box { 
-            display: none; 
-            position: absolute; 
-            bottom: 45px; 
-            left: 0; 
-            background: #242526; 
-            border: 1px solid #3a3b3c;
-            border-radius: 30px; 
-            padding: 6px 10px; 
-            gap: 10px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5); 
-            z-index: 999; 
-            touch-action: none;
-            animation: fadeInScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
+        .reaction-box { display: none; position: absolute; bottom: 45px; left: 0; background: #242526; border: 1px solid #3a3b3c; border-radius: 30px; padding: 6px 10px; gap: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 999; touch-action: none; animation: fadeInScale 0.25s forwards; }
         .reaction-box.show { display: flex; }
+        @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.6) translateY(15px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        @keyframes fadeInScale {
-            0% { opacity: 0; transform: scale(0.6) translateY(15px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .reaction-icon { 
-            background: none; 
-            border: none; 
-            width: 38px;
-            height: 38px;
-            font-size: 24px; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            padding: 0; 
-            user-select: none;
-        }
-        
-        .reaction-icon.active-zoom { 
-            transform: scale(1.4) translateY(-12px); 
-        }
+        .reaction-icon { background: none; border: none; width: 38px; height: 38px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: transform 0.25s; padding: 0; user-select: none; }
+        .reaction-icon.active-zoom { transform: scale(1.4) translateY(-12px); }
 
         .comments-section { padding: 10px 15px; background: #18191a; font-size: 14px; }
         .comment-item { margin-bottom: 8px; color: #e4e6eb; }
         .comment-form { display: flex; gap: 8px; padding: 10px 15px; background: #242526; }
         .comment-form input { flex: 1; padding: 8px 12px; background: #3a3b3c; border: none; border-radius: 20px; color: white; outline: none; }
-        .comment-form button { background: #2d88ff; color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .comment-form button { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-        /* Search Modal */
         #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; padding: 15px; box-sizing: border-box; }
         .search-container { max-width: 600px; margin: 0 auto; }
         .search-header { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
         .search-input { flex: 1; background: #3a3b3c; border: none; padding: 12px 15px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
 
-        /* Details Modal */
         .details-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
         .details-content { background: #242526; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; border: 1px solid #3a3b3c; max-height: 400px; overflow-y: auto; }
 
         /* Bottom Nav */
         .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #242526; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3a3b3c; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.3); }
         .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #b0b3b8; text-decoration: none; flex: 1; }
-        .bottom-nav-item.active { color: #2d88ff; }
+        .bottom-nav-item.active { color: #a855f7; }
         .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
         .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
-        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
+        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
     </style>
 </head>
 <body>
-    <!-- Top Nav with Search Trigger -->
     <div class="top-nav">
         <div style="display: flex; align-items: center; gap: 8px; cursor: pointer;" onclick="location.href='{{ url_for('index') }}';">
-            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #a855f7, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px;">C</div>
-            <h1 style="background: linear-gradient(135deg, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 24px; font-weight: bold; margin: 0;">Chan</h1>
+            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px;">C</div>
+            <h1 style="background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 24px; font-weight: bold; margin: 0;">Chan</h1>
         </div>
         <div class="top-nav-icons">
             <button class="icon-btn" onclick="openSearchModal()">
@@ -228,7 +138,6 @@
         </div>
     </div>
 
-    <!-- Search Modal Box -->
     <div id="searchModal">
         <div class="search-container">
             <div class="search-header">
@@ -237,20 +146,15 @@
                     <input type="text" name="q" class="search-input" placeholder="Search posts on Chan..." value="{{ search_query if search_query else '' }}" autofocus>
                 </form>
             </div>
-            {% if search_query is defined and search_query != '' %}
-            <div style="color: #b0b3b8; font-size: 14px; margin-bottom: 10px;">Search results for "{{ search_query }}":</div>
-            {% endif %}
         </div>
     </div>
 
     <div class="container">
-        <!-- Post Creation Trigger Box -->
         <div class="post-box" onclick="openModal()">
             <div class="post-box-avatar">{{ current_user.username[0] | upper }}</div>
             <div class="post-box-input">What's on your mind, {{ current_user.username }}?</div>
         </div>
 
-        <!-- Popup Modal for Creating Post -->
         <div id="postModal">
             <div class="modal-content">
                 <div class="modal-header-fb">
@@ -265,72 +169,19 @@
                             <div class="modal-avatar">{{ current_user.username[0] | upper }}</div>
                             <div class="modal-user-details">
                                 <h4>{{ current_user.name or current_user.username }}</h4>
-                                <div class="privacy-badge">
-                                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                                    Public ▼
-                                </div>
+                                <div class="privacy-badge">Public ▼</div>
                             </div>
                         </div>
 
                         <textarea name="content" class="modal-textarea" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
 
                         <input type="file" id="mediaInput" name="media" accept="image/*,video/*" style="display: none;" onchange="updateFileLabel(this)">
-                        <div id="fileStatusText" style="font-size: 13px; color: #2d88ff; margin-bottom: 8px; font-weight: bold;"></div>
+                        <div id="fileStatusText" style="font-size: 13px; color: #a855f7; margin-bottom: 8px; font-weight: bold;"></div>
 
                         <div class="action-cards-grid">
                             <div class="action-card-item" onclick="document.getElementById('mediaInput').click()">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#45bd62"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#ec4899"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
                                 <span class="action-card-text">Photo/Video</span>
-                            </div>
-                            <div class="action-card-item" onclick="alert('Tag people feature coming soon!')">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#1877f2"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                                <span class="action-card-text">Tag people</span>
-                            </div>
-                            <div class="action-card-item" onclick="alert('Location feature coming soon!')">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#f02849"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                                <span class="action-card-text">Location</span>
-                            </div>
-                            <div class="action-card-item" onclick="alert('Feeling/Activity feature coming soon!')">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#f7b125"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
-                                <span class="action-card-text">Feeling/Activity</span>
-                            </div>
-                        </div>
-
-                        <div class="options-list-box">
-                            <div class="option-row" onclick="alert('Background color feature coming soon!')">
-                                <div class="option-row-left">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#2d88ff"><path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 m0-2C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm0 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
-                                    Background color
-                                </div>
-                                <span style="color: #b0b3b8;">›</span>
-                            </div>
-                            <div class="option-row" onclick="alert('Live video feature coming soon!')">
-                                <div class="option-row-left">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#f02849"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45-1-1v-3.5l4 4v-11l-4 4z"/></svg>
-                                    Live video
-                                </div>
-                                <span style="color: #b0b3b8;">›</span>
-                            </div>
-                            <div class="option-row" onclick="alert('GIF feature coming soon!')">
-                                <div class="option-row-left">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#2bac76"><path d="M11.5 9H13v6h-1.5zM9 9H6c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-2h-1.5v1.5h-2v-3h2V12H9v-2zm9.5 0H15v6h1.5v-2.5h2c.55 0 1-.45 1-1v-1.5c0-.55-.45-1-1-1zm0 2.5h-2v-1h2v1z"/></svg>
-                                    GIF
-                                </div>
-                                <span style="color: #b0b3b8;">›</span>
-                            </div>
-                            <div class="option-row" onclick="alert('Poll feature coming soon!')">
-                                <div class="option-row-left">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1877f2"><path d="M5 9.2h3V19H5zM10.5 5h3v14h-3zM16 13h3v6h-3z"/></svg>
-                                    Poll
-                                </div>
-                                <span style="color: #b0b3b8;">›</span>
-                            </div>
-                            <div class="option-row" onclick="alert('More options coming soon!')">
-                                <div class="option-row-left">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#b0b3b8"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                                    More options
-                                </div>
-                                <span style="color: #b0b3b8;">›</span>
                             </div>
                         </div>
                     </div>
@@ -342,7 +193,6 @@
             </div>
         </div>
 
-        <!-- Stories Section -->
         <div class="stories-container">
             <div class="story-card" style="background: #242526; justify-content: center; align-items: center;">
                 <div class="create-story-btn" style="position: static; margin-bottom: 8px;">
@@ -350,17 +200,12 @@
                 </div>
                 <span style="text-align: center;">Create story</span>
             </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+            <div class="story-card" style="background: linear-gradient(135deg, #a855f7, #ec4899);">
                 <div class="story-avatar">{{ current_user.username[0] | upper }}</div>
                 <span>{{ current_user.username }}</span>
             </div>
-            <div class="story-card" style="background: linear-gradient(135deg, #7c2d12, #dc2626);">
-                <div class="story-avatar" style="background: #dc2626; border-color: #dc2626;">C</div>
-                <span>Chan Store</span>
-            </div>
         </div>
 
-        <!-- Feed Posts List -->
         {% for post in posts %}
         <div class="post-card">
             <div class="post-header">
@@ -383,21 +228,10 @@
                 {% endif %}
             {% endif %}
 
-            <!-- Post Stats Bar -->
             {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
             <div class="post-stats-bar">
                 <div class="stats-link" onclick="openLikesModal('likes-modal-{{ post.id }}')">
-                    <span>
-                        {% if user_like %}
-                            {% if user_like.emoji == '👍' %}👍
-                            {% elif user_like.emoji == '❤️' %}❤️
-                            {% elif user_like.emoji == '😆' %}😆
-                            {% elif user_like.emoji == '😮' %}😮
-                            {% elif user_like.emoji == '😢' %}😢
-                            {% elif user_like.emoji == '😡' %}😡
-                            {% else %}👍{% endif %}
-                        {% else %}👍{% endif %}
-                    </span>
+                    <span>👍</span>
                     <span>{{ post.likes | length }}</span>
                 </div>
                 <div class="stats-link" onclick="document.getElementById('comment-box-{{ post.id }}').style.display = 'block';">
@@ -405,7 +239,6 @@
                 </div>
             </div>
 
-            <!-- Likes Details Modal Box -->
             <div id="likes-modal-{{ post.id }}" class="details-modal">
                 <div class="details-content">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #3a3b3c; padding-bottom: 8px;">
@@ -414,43 +247,31 @@
                     </div>
                     {% for like in post.likes %}
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <div style="width: 30px; height: 30px; background: #2d88ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: white;">{{ like.user.username[0] | upper }}</div>
+                        <div style="width: 30px; height: 30px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: white;">{{ like.user.username[0] | upper }}</div>
                         <span style="font-weight: bold; font-size: 14px;">{{ like.user.username }}</span>
                         <span style="margin-left: auto; font-size: 18px;">{{ like.emoji }}</span>
                     </div>
-                    {% else %}
-                    <div style="color: #b0b3b8; text-align: center; padding: 10px;">No reactions yet.</div>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- Post Footer Actions -->
             <div class="post-footer-actions">
                 <div class="action-wrapper">
-                    <button type="button" class="action-btn" style="color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};" 
+                    <button type="button" class="action-btn" style="color: {% if user_like %}#a855f7{% else %}#b0b3b8{% endif %};" 
                         ontouchstart="startLongPress(event, 'reaction-box-{{ post.id }}')" 
                         onmousedown="startLongPress(event, 'reaction-box-{{ post.id }}')"
                         onclick="handleLikeClick(event, '{{ url_for('like_post', post_id=post.id) }}', '👍')">
                         <svg viewBox="0 0 24 24" width="18" height="18" style="fill: currentColor;"><path d="M16.48 2h-3.16c-.41 0-.77.24-.93.65l-1.64 4.03C10.45 7.15 10.12 7.3 9.77 7.3H5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h11.75c1.02 0 1.9-.67 2.15-1.66l2.12-8.49c.28-1.12-.56-2.15-1.71-2.15h-4.08l.75-3.56c.11-.53-.1-1.07-.5-1.42-.39-.36-.92-.51-1.45-.36zM5 19V9h4.77l-1.92 4.72c-.22.54-.04 1.16.42 1.51.46.35 1.1.34 1.55-.03l3.68-3.02V19H5zm14.73-9.58l-2.12 8.49c-.08.31-.38.52-.71.52H12v-6.31l3.54-2.91c.24-.2.35-.52.28-.82-.07-.3-.31-.53-.62-.57H9.27l1.24-3h2.72l1.5 7h5.22c.22 0 .4.18.4.4 0 .09-.03.18-.08.25z"/></svg>
-                        
-                        {% if user_like %}
-                            {% if user_like.emoji == '👍' %} Like
-                            {% elif user_like.emoji == '❤️' %} Love
-                            {% elif user_like.emoji == '😆' %} Haha
-                            {% elif user_like.emoji == '😮' %} Wow
-                            {% elif user_like.emoji == '😢' %} Sad
-                            {% elif user_like.emoji == '😡' %} Angry
-                            {% else %} Like {% endif %}
-                        {% else %} Like {% endif %}
+                        Like
                     </button>
                     
                     <div id="reaction-box-{{ post.id }}" class="reaction-box" data-post-id="{{ post.id }}">
-                        <span class="reaction-icon" data-emoji="👍" title="Like">👍</span>
-                        <span class="reaction-icon" data-emoji="❤️" title="Love">❤️</span>
-                        <span class="reaction-icon" data-emoji="😆" title="Haha">😆</span>
-                        <span class="reaction-icon" data-emoji="😮" title="Wow">😮</span>
-                        <span class="reaction-icon" data-emoji="😢" title="Sad">😢</span>
-                        <span class="reaction-icon" data-emoji="😡" title="Angry">😡</span>
+                        <span class="reaction-icon" data-emoji="👍">👍</span>
+                        <span class="reaction-icon" data-emoji="❤️">❤️</span>
+                        <span class="reaction-icon" data-emoji="😆">😆</span>
+                        <span class="reaction-icon" data-emoji="😮">😮</span>
+                        <span class="reaction-icon" data-emoji="😢">😢</span>
+                        <span class="reaction-icon" data-emoji="😡">😡</span>
                     </div>
                 </div>
 
@@ -458,19 +279,11 @@
                     <svg viewBox="0 0 24 24"><path d="M21 6h-18c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h3l4 4 4-4h7c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 13h-7.5l-2.5 2.5-2.5-2.5h-7.5V8h18v11z"/></svg>
                     Comment
                 </button>
-
-                <button class="action-btn" onclick="alert('Post link copied to clipboard!')">
-                    <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-                    Share
-                </button>
             </div>
 
-            <!-- Comments List -->
             <div id="comment-box-{{ post.id }}" class="comments-section" style="display: none;">
                 {% for comment in post.comments %}
-                <div class="comment-item">
-                    <strong>{{ comment.author.username }}:</strong> {{ comment.content }}
-                </div>
+                <div class="comment-item"><strong>{{ comment.author.username }}:</strong> {{ comment.content }}</div>
                 {% endfor %}
                 <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="comment-form" style="margin-top: 8px;">
                     <input type="text" name="content" placeholder="Write a comment..." required>
@@ -481,7 +294,6 @@
         {% endfor %}
     </div>
 
-    <!-- Bottom Navigation Bar -->
     <div class="chan-bottom-nav">
         <a href="{{ url_for('index') }}" class="bottom-nav-item active">
             <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
@@ -507,40 +319,18 @@
     </div>
 
     <script>
-        function openModal() {
-            document.getElementById('postModal').style.display = 'flex';
-        }
-        function closeModal() {
-            document.getElementById('postModal').style.display = 'none';
-        }
-
-        function openSearchModal() {
-            document.getElementById('searchModal').style.display = 'block';
-        }
-        function closeSearchModal() {
-            document.getElementById('searchModal').style.display = 'none';
-        }
-
-        function openLikesModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-        function closeLikesModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
+        function openModal() { document.getElementById('postModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('postModal').style.display = 'none'; }
+        function openSearchModal() { document.getElementById('searchModal').style.display = 'block'; }
+        function closeSearchModal() { document.getElementById('searchModal').style.display = 'none'; }
+        function openLikesModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeLikesModal(id) { document.getElementById(id).style.display = 'none'; }
         function updateFileLabel(input) {
-            let statusText = document.getElementById('fileStatusText');
-            if (input.files && input.files[0]) {
-                statusText.innerText = "📎 Selected File: " + input.files[0].name;
-            } else {
-                statusText.innerText = "";
-            }
+            let t = document.getElementById('fileStatusText');
+            t.innerText = input.files && input.files[0] ? "📎 Selected File: " + input.files[0].name : "";
         }
-
-        let pressTimer;
-        let activeReactionBox = null;
-
-        function startLongPress(event, boxId) {
+        let pressTimer, activeReactionBox = null;
+        function startLongPress(e, boxId) {
             pressTimer = setTimeout(() => {
                 let box = document.getElementById(boxId);
                 document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
@@ -548,95 +338,31 @@
                 activeReactionBox = box;
             }, 300);
         }
-
-        window.addEventListener('mouseup', cancelLongPress);
-        window.addEventListener('touchend', handleTouchEnd);
-        window.addEventListener('touchmove', handleTouchMove, {passive: false});
-
-        function cancelLongPress() {
-            clearTimeout(pressTimer);
-        }
-
-        function handleLikeClick(event, actionUrl, defaultEmoji) {
-            if (activeReactionBox && activeReactionBox.classList.contains('show')) {
-                return;
-            }
-            submitReaction(actionUrl, defaultEmoji);
-        }
-
-        function handleTouchMove(event) {
-            if (!activeReactionBox || !activeReactionBox.classList.contains('show')) return;
-            event.preventDefault();
-
-            let touch = event.touches[0];
-            let icons = activeReactionBox.querySelectorAll('.reaction-icon');
-            
-            icons.forEach(icon => {
-                let rect = icon.getBoundingClientRect();
-                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
-                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-                    icon.classList.add('active-zoom');
-                } else {
-                    icon.classList.remove('active-zoom');
-                }
-            });
-        }
-
-        function handleTouchEnd(event) {
+        window.addEventListener('mouseup', () => clearTimeout(pressTimer));
+        window.addEventListener('touchend', (e) => {
             clearTimeout(pressTimer);
             if (!activeReactionBox || !activeReactionBox.classList.contains('show')) return;
-
-            let touch = event.changedTouches[0];
+            let touch = e.changedTouches[0];
             let icons = activeReactionBox.querySelectorAll('.reaction-icon');
             let selectedEmoji = null;
-
             icons.forEach(icon => {
                 let rect = icon.getBoundingClientRect();
-                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
-                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
                     selectedEmoji = icon.getAttribute('data-emoji');
                 }
                 icon.classList.remove('active-zoom');
             });
-
             if (selectedEmoji) {
                 let postId = activeReactionBox.getAttribute('data-post-id');
-                let actionUrl = `/like/${postId}`;
-                submitReaction(actionUrl, selectedEmoji);
+                let form = document.createElement('form');
+                form.method = 'POST'; form.action = `/like/${postId}`;
+                let input = document.createElement('input');
+                input.type = 'hidden'; input.name = 'emoji'; input.value = selectedEmoji;
+                form.appendChild(input); document.body.appendChild(form); form.submit();
             }
-
             activeReactionBox.classList.remove('show');
             activeReactionBox = null;
-        }
-
-        function submitReaction(url, emoji) {
-            let form = document.createElement('form');
-            form.method = 'POST';
-            form.action = url;
-
-            let input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'emoji';
-            input.value = emoji;
-
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-        }
-
-        window.onclick = function(event) {
-            let modal = document.getElementById('postModal');
-            let searchModal = document.getElementById('searchModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-            if (event.target == searchModal) {
-                searchModal.style.display = "none";
-            }
-            if (!event.target.closest('.action-wrapper')) {
-                document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
-            }
-        }
+        });
     </script>
 </body>
 </html>
