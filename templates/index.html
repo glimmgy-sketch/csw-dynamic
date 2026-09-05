@@ -27,10 +27,10 @@
         .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; pointer-events: none; }
 
         /* Popup Modal for Post Creation */
-        #postModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: #242526; width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #3a3b3c; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3a3b3c; padding-bottom: 10px; margin-bottom: 15px; font-weight: bold; font-size: 18px; color: white; }
-        .close-btn { background: none; border: none; color: #b0b3b8; font-size: 22px; cursor: pointer; }
+        #postModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-content { background: #242526; width: 92%; max-width: 500px; border-radius: 12px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); border: 1px solid #3a3b3c; box-sizing: border-box; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3a3b3c; padding-bottom: 12px; margin-bottom: 15px; font-weight: bold; font-size: 18px; color: white; }
+        .close-btn { background: none; border: none; color: #b0b3b8; font-size: 24px; cursor: pointer; }
 
         /* Feed Post Card */
         .post-card { background: #242526; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; overflow: hidden; border: 1px solid #3a3b3c; }
@@ -41,17 +41,49 @@
         .post-content { padding: 0 15px 12px 15px; font-size: 15px; line-height: 1.4; color: #e4e6eb; }
         .post-media { width: 100%; max-height: 400px; object-fit: cover; background: #000; }
         
-        /* Action buttons & Reactions */
+        /* Action buttons & 3D Reactions */
         .post-footer-actions { display: flex; border-top: 1px solid #3a3b3c; border-bottom: 1px solid #3a3b3c; position: relative; }
         .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; }
         .action-btn:hover { background: #3a3b3c; }
 
-        /* Facebook Style Reaction Popup on Hover/Touch */
+        /* Facebook Style 3D Reaction Popup */
         .action-wrapper { flex: 1; position: relative; display: flex; }
-        .reaction-box { display: none; position: absolute; bottom: 45px; left: 0; background: #242526; border: 1px solid #3a3b3c; border-radius: 30px; padding: 6px 10px; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; }
+        .reaction-box { 
+            display: none; 
+            position: absolute; 
+            bottom: 50px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(36, 37, 38, 0.95); 
+            backdrop-filter: blur(10px);
+            border: 1px solid #3a3b3c; 
+            border-radius: 40px; 
+            padding: 8px 14px; 
+            gap: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6); 
+            z-index: 100; 
+            animation: fadeInScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
         .action-wrapper:hover .reaction-box { display: flex; }
-        .reaction-icon { background: none; border: none; font-size: 22px; cursor: pointer; transition: transform 0.2s; padding: 0; }
-        .reaction-icon:hover { transform: scale(1.3); }
+        
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.7) translateY(10px); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+        }
+
+        .reaction-icon { 
+            background: none; 
+            border: none; 
+            font-size: 28px; 
+            cursor: pointer; 
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; 
+            padding: 0; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        .reaction-icon:hover { 
+            transform: scale(1.5) translateY(-8px); 
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.5));
+        }
 
         .comments-section { padding: 10px 15px; background: #18191a; font-size: 14px; }
         .comment-item { margin-bottom: 8px; color: #e4e6eb; }
@@ -97,8 +129,8 @@
                     <button class="close-btn" onclick="closeModal()">&times;</button>
                 </div>
                 <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data">
-                    <textarea name="content" rows="4" style="width: 100%; background: #3a3b3c; border: none; border-radius: 8px; color: white; padding: 10px; font-size: 15px; resize: none; outline: none; margin-bottom: 12px;" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #3a3b3c; padding-top: 10px;">
+                    <textarea name="content" rows="4" style="width: 100%; background: #3a3b3c; border: none; border-radius: 8px; color: white; padding: 12px; font-size: 15px; resize: none; outline: none; margin-bottom: 12px; box-sizing: border-box;" placeholder="What's on your mind, {{ current_user.username }}?"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #3a3b3c; padding-top: 12px;">
                         <input type="file" name="media" accept="image/*,video/*" style="font-size: 12px; color: #b0b3b8;">
                         <button type="submit" style="background: #2d88ff; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Post</button>
                     </div>
@@ -147,34 +179,35 @@
                 {% endif %}
             {% endif %}
 
-            <!-- Like & Reactions Popup Feature -->
+            <!-- Dynamic Reaction & Like System -->
+            {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
             <div class="post-footer-actions">
                 <div class="action-wrapper">
                     <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="flex: 1; display: flex;">
-                        <input type="hidden" name="emoji" value="👍">
-                        <button type="submit" class="action-btn" style="width: 100%;">
-                            👍 Like ({{ post.likes | length }})
+                        <input type="hidden" name="emoji" value="{{ user_like.emoji if user_like else '👍' }}">
+                        <button type="submit" class="action-btn" style="width: 100%; color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};">
+                            {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else 'Like' }} ({{ post.likes | length }})
                         </button>
                     </form>
-                    <!-- Facebook style hover/touch reaction popup -->
+                    <!-- 3D Floating Reaction Box -->
                     <div class="reaction-box">
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="👍"><button type="submit" class="reaction-icon">👍</button>
+                            <input type="hidden" name="emoji" value="👍"><button type="submit" class="reaction-icon" title="Like">👍</button>
                         </form>
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="❤️"><button type="submit" class="reaction-icon">❤️</button>
+                            <input type="hidden" name="emoji" value="❤️"><button type="submit" class="reaction-icon" title="Love">❤️</button>
                         </form>
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😆"><button type="submit" class="reaction-icon">😆</button>
+                            <input type="hidden" name="emoji" value="😆"><button type="submit" class="reaction-icon" title="Haha">😆</button>
                         </form>
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😮"><button type="submit" class="reaction-icon">😮</button>
+                            <input type="hidden" name="emoji" value="😮"><button type="submit" class="reaction-icon" title="Wow">😮</button>
                         </form>
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😢"><button type="submit" class="reaction-icon">😢</button>
+                            <input type="hidden" name="emoji" value="😢"><button type="submit" class="reaction-icon" title="Sad">😢</button>
                         </form>
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😡"><button type="submit" class="reaction-icon">😡</button>
+                            <input type="hidden" name="emoji" value="😡"><button type="submit" class="reaction-icon" title="Angry">😡</button>
                         </form>
                     </div>
                 </div>
@@ -230,6 +263,12 @@
         }
         function closeModal() {
             document.getElementById('postModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            let modal = document.getElementById('postModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     </script>
 </body>
