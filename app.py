@@ -113,6 +113,7 @@ def profile(username):
     return render_template('profile.html', user=user)
 
 @app.route('/menu')
+@login_required
 def menu():
     return render_template('menu.html')
 
