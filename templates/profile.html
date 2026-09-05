@@ -3,73 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.username }}'s Profile</title>
+    <title>{{ user.name or user.username }} - Profile</title>
     <style>
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #18191a;
+            color: #e4e6eb;
             font-family: sans-serif;
             margin: 0;
-            padding: 20px;
-            padding-bottom: 80px; /* Bottom Nav နဲ့ စာတွေ မထပ်အောင် အောက်မှာ space ချန်ထားခြင်း */
+            padding-bottom: 80px;
         }
+        .top-nav { 
+            background: #242526; 
+            padding: 12px 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2); 
+        }
+        .top-nav h2 { margin: 0; font-size: 18px; color: #e4e6eb; }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        h1 { color: #38bdf8; margin-top: 0; }
+
+        /* Profile Header & Cover Photo with Purple-Pink Gradient */
+        .profile-header { background: #242526; margin-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .cover-photo { width: 100%; height: 180px; background: linear-gradient(135deg, #a855f7, #ec4899); position: relative; }
+        
+        .profile-info-section { padding: 0 15px 15px 15px; position: relative; }
+        .profile-avatar-container { 
+            position: relative; 
+            width: 130px; 
+            height: 130px; 
+            margin-top: -65px; 
+            margin-bottom: 10px; 
+            border-radius: 50%; 
+            border: 4px solid #242526; 
+            background: linear-gradient(135deg, #a855f7, #ec4899); 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 45px; 
+            font-weight: bold; 
+            color: white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .profile-name { font-size: 22px; font-weight: bold; color: #e4e6eb; margin: 0; }
+        .profile-username { font-size: 14px; color: #b0b3b8; margin-top: 2px; }
+        .profile-bio { font-size: 14px; margin: 8px 0; color: #e4e6eb; }
+
+        /* Purple-Pink Gradient Action Buttons */
+        .profile-action-btns { display: flex; gap: 10px; margin: 15px 0; }
+        .btn-gradient { flex: 1; background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3); }
+        .btn-gradient:hover { opacity: 0.9; }
+
+        /* Profile Tabs */
+        .profile-tabs { display: flex; border-top: 1px solid #3a3b3c; padding: 0 15px; }
+        .tab-item { padding: 12px 15px; font-weight: bold; color: #b0b3b8; cursor: pointer; border-bottom: 3px solid transparent; text-decoration: none; font-size: 14px; }
+        .tab-item.active { color: #a855f7; border-bottom-color: #a855f7; }
+
+        /* Post Card Styles */
         .post-card {
-            background: #334155;
+            background: #242526;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 15px;
+            margin: 15px;
+            border: 1px solid #3a3b3c;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
-        .nav-links {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        a { color: #38bdf8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .post-avatar { width: 35px; height: 35px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px; }
+        .post-user-info h4 { margin: 0; font-size: 14px; color: #e4e6eb; }
+        .post-user-info span { font-size: 11px; color: #b0b3b8; }
+        .post-content { color: #e4e6eb; font-size: 14px; line-height: 1.4; }
+        .post-media { width: 100%; max-height: 350px; object-fit: cover; border-radius: 6px; margin-top: 10px; background: #000; }
 
         /* Bottom Nav Styles */
-        .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #334155; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.2); }
-        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #94a3b8; text-decoration: none; flex: 1; }
-        .bottom-nav-item.active { color: #38bdf8; }
+        .chan-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #242526; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #3a3b3c; padding: 6px 0; z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.3); }
+        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: #b0b3b8; text-decoration: none; flex: 1; }
+        .bottom-nav-item.active { color: #a855f7; }
         .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
         .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
         .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
     </style>
 </head>
 <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+        <a href="{{ url_for('index') }}" style="color: #e4e6eb; text-decoration: none; font-size: 20px;">‹</a>
+        <h2>{{ user.name or user.username }}</h2>
+    </div>
+
     <div class="container">
-        <div class="nav-links">
-            <h1>👤 Profile</h1>
-            <div>
-                <a href="{{ url_for('index') }}">Home</a> | 
-                <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="cover-photo"></div>
+            <div class="profile-info-section">
+                <div class="profile-avatar-container">
+                    {{ user.username[0] | upper }}
+                </div>
+                <h1 class="profile-name">{{ user.name or user.username }}</h1>
+                <div class="profile-username">@{{ user.username }}</div>
+                <div class="profile-bio" style="color: #b0b3b8;">Member Profile</div>
+
+                <div class="profile-action-btns">
+                    <a href="{{ url_for('index') }}" class="btn-gradient">🏠 Go to Home</a>
+                    <a href="{{ url_for('logout') }}" class="btn-gradient" style="background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);">🚪 Logout</a>
+                </div>
+            </div>
+
+            <!-- Profile Tabs -->
+            <div class="profile-tabs">
+                <a href="#" class="tab-item active">Posts</a>
+                <a href="#" class="tab-item">About</a>
+                <a href="#" class="tab-item">Photos</a>
             </div>
         </div>
 
-        <h2>@{{ user.username }}</h2>
-        <p style="color: #94a3b8;">Member Profile</p>
-
-        <hr style="border: 0; border-top: 1px solid #475569; margin: 20px 0;">
-
-        <h3>📌 Posts by {{ user.username }}</h3>
+        <h3 style="padding: 0 15px; margin-bottom: 5px; font-size: 16px; color: #e4e6eb;">📌 Posts by {{ user.username }}</h3>
+        
         {% if user.posts %}
-            {% for post in user.posts %}
+            {% for post in user.posts | reverse %}
                 <div class="post-card">
-                    <p>{{ post.content }}</p>
+                    <div class="post-header">
+                        <div class="post-avatar">{{ user.username[0] | upper }}</div>
+                        <div class="post-user-info">
+                            <h4>{{ user.name or user.username }}</h4>
+                            <span>Just now</span>
+                        </div>
+                    </div>
+                    {% if post.content %}
+                    <div class="post-content">{{ post.content }}</div>
+                    {% endif %}
+                    
+                    {% if post.media_file %}
+                        {% if post.media_file.lower().endswith(('mp4', 'mov')) %}
+                        <video src="{{ url_for('static', filename='uploads/' + post.media_file) }}" controls class="post-media"></video>
+                        {% else %}
+                        <img src="{{ url_for('static', filename='uploads/' + post.media_file) }}" alt="Post Media" class="post-media">
+                        {% endif %}
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}
-            <p style="color: #94a3b8;">This user hasn't posted anything yet.</p>
+            <p style="color: #b0b3b8; text-align: center; padding: 30px;">This user hasn't posted anything yet.</p>
         {% endif %}
     </div>
 
@@ -92,7 +175,6 @@
             <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
             <span>Notifications</span>
         </a>
-        <!-- 🔴 Menu Icon -->
         <a href="{{ url_for('menu') }}" class="bottom-nav-item">
             <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             <span>Menu</span>
