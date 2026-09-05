@@ -26,6 +26,9 @@ class Like(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     emoji = db.Column(db.String(10), default='👍')
+    
+    # 👈 ဒီနေရာမှာ user relationship လေး ထည့်ပေးလိုက်ပါပြီ (Error ရှင်းရန်)
+    user = db.relationship('User', backref='user_likes')
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
