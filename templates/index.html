@@ -17,12 +17,11 @@
         .stories-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
         .story-card { min-width: 110px; height: 180px; background: #242526; border-radius: 10px; overflow: hidden; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0; border: 1px solid #3a3b3c; }
         .story-card span { color: white; font-size: 12px; font-weight: bold; position: relative; z-index: 2; }
-        .story-avatar { width: 35px; height: 35px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 3px solid #a855f7; position: absolute; top: 10px; left: 10px; font-size: 14px; }
-        .create-story-btn { width: 35px; height: 35px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; position: absolute; top: 95px; left: 37px; border: 3px solid #242526; }
+        .story-avatar { width: 35px; height: 35px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 3px solid #a855f7; position: absolute; top: 10px; left: 10px; font-size: 14px; overflow: hidden; }
 
         /* Post Creation Trigger Box */
         .post-box { background: #242526; padding: 12px 15px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .post-box-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
+        .post-box-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; overflow: hidden; }
         .post-box-input { flex: 1; background: #3a3b3c; border: none; padding: 10px 15px; border-radius: 20px; color: #e4e6eb; font-size: 14px; pointer-events: none; }
 
         /* Popup Modal for Creating Post */
@@ -33,7 +32,7 @@
             width: 100%; 
             max-width: 520px; 
             height: 100%;
-            max-height: 720px;
+            max-height: 85vh;
             border-radius: 12px; 
             display: flex;
             flex-direction: column;
@@ -49,21 +48,27 @@
         
         .post-form-body { padding: 15px 20px; overflow-y: auto; flex: 1; }
         
-        .modal-user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .modal-avatar { width: 45px; height: 45px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
+        .modal-user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; position: relative; }
+        .modal-avatar { width: 45px; height: 45px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; overflow: hidden; flex-shrink: 0; }
         .modal-user-details h4 { margin: 0; font-size: 16px; color: #e4e6eb; }
         
         .privacy-badge { background: #3a3b3c; color: #e4e6eb; font-size: 12px; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-weight: bold; cursor: pointer; }
-        .privacy-badge svg { width: 14px; height: 14px; fill: currentColor; }
+        
+        /* Privacy Dropdown Menu */
+        #privacyDropdown { display: none; position: absolute; top: 50px; left: 57px; background: #242526; border: 1px solid #3a3b3c; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 10000; padding: 6px 0; min-width: 140px; }
+        .privacy-option { padding: 8px 15px; font-size: 13px; color: #e4e6eb; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .privacy-option:hover { background: #3a3b3c; }
 
-        .modal-textarea { width: 100%; background: transparent; border: none; color: #e4e6eb; font-size: 16px; resize: none; outline: none; min-height: 100px; box-sizing: border-box; font-family: sans-serif; }
+        .modal-textarea { width: 100%; background: transparent; border: none; color: #e4e6eb; font-size: 16px; resize: none; outline: none; min-height: 80px; box-sizing: border-box; font-family: sans-serif; }
 
-        .action-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        /* Action Grid 2x2 */
+        .action-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; margin-bottom: 15px; }
         .action-card-item { background: #242526; border: 1px solid #3a3b3c; border-radius: 10px; padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; }
         .action-card-item:hover { background: #3a3b3c; }
-        .action-card-text { font-size: 14px; font-weight: bold; color: #e4e6eb; }
+        .action-card-text { font-size: 13px; font-weight: bold; color: #e4e6eb; }
 
-        .options-list-box { background: #242526; border: 1px solid #3a3b3c; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        /* Options List Box */
+        .options-list-box { background: #242526; border: 1px solid #3a3b3c; border-radius: 10px; overflow: hidden; margin-top: 10px; }
         .option-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #3a3b3c; cursor: pointer; transition: background 0.2s; }
         .option-row:last-child { border-bottom: none; }
         .option-row:hover { background: #3a3b3c; }
@@ -76,7 +81,7 @@
         /* Feed Post Card */
         .post-card { background: #242526; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); margin-bottom: 15px; overflow: hidden; border: 1px solid #3a3b3c; }
         .post-header { padding: 12px 15px; display: flex; align-items: center; gap: 10px; }
-        .post-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .post-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; overflow: hidden; }
         .post-user-info h4 { margin: 0; font-size: 15px; color: #e4e6eb; }
         .post-user-info span { font-size: 12px; color: #b0b3b8; }
         .post-content { padding: 0 15px 12px 15px; font-size: 15px; line-height: 1.4; color: #e4e6eb; }
@@ -164,7 +169,7 @@
 <body>
     <div class="top-nav">
         <div style="display: flex; align-items: center; gap: 8px; cursor: pointer;" onclick="location.href='{{ url_for('index') }}';">
-            <img src="{{ url_for('static', filename='chan.png') }}" alt="Chan Logo" style="width: 34px; height: 34px; border-radius: 50%; object-fit: contain; background: #242526; border: 2px solid #a855f7;">
+            <img src="{{ url_for('static', filename='chan.png') }}" alt="Chan Logo" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: #242526; border: 2px solid #a855f7;">
             <h1 style="background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 24px; font-weight: bold; margin: 0;">Chan</h1>
         </div>
         <div class="top-nav-icons">
@@ -190,7 +195,9 @@
 
     <div class="container">
         <div class="post-box" onclick="openModal()">
-            <div class="post-box-avatar">{% if current_user.is_authenticated %}{{ current_user.username[0] | upper }}{% else %}?{% endif %}</div>
+            <div class="post-box-avatar">
+                <img src="{{ url_for('static', filename='chan.png') }}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
             <div class="post-box-input">What's on your mind, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}?</div>
         </div>
 
@@ -205,26 +212,83 @@
                 <form action="{{ url_for('add_post') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
                     <div class="post-form-body">
                         <div class="modal-user-info">
-                            <div class="modal-avatar">{% if current_user.is_authenticated %}{{ current_user.username[0] | upper }}{% else %}?{% endif %}</div>
+                            <div class="modal-avatar">
+                                <img src="{{ url_for('static', filename='chan.png') }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
                             <div class="modal-user-details">
                                 <h4>{% if current_user.is_authenticated %}{{ current_user.name or current_user.username }}{% else %}Guest{% endif %}</h4>
-                                <div class="privacy-badge">Public ▼</div>
+                                <div class="privacy-badge" onclick="togglePrivacyDropdown(event)">
+                                    <span id="selectedPrivacyIcon">🌐</span> <span id="selectedPrivacyText">Public</span> ▼
+                                </div>
+                                <div id="privacyDropdown">
+                                    <div class="privacy-option" onclick="setPrivacy('Public', '🌐')">🌐 Public</div>
+                                    <div class="privacy-option" onclick="setPrivacy('Friends', '👥')">👥 Friends</div>
+                                    <div class="privacy-option" onclick="setPrivacy('Only me', '🔒')">🔒 Only me</div>
+                                </div>
                             </div>
                         </div>
 
-                        <textarea name="content" class="modal-textarea" placeholder="What's on your mind, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}?"></textarea>
+                        <textarea name="content" class="modal-textarea" placeholder="What's on your mind?"></textarea>
 
                         <input type="file" id="mediaInput" name="media" accept="image/*,video/*" style="display: none;" onchange="updateFileLabel(this)">
                         <div id="fileStatusText" style="font-size: 13px; color: #a855f7; margin-bottom: 8px; font-weight: bold;"></div>
 
+                        <!-- 2x2 Action Grid -->
                         <div class="action-cards-grid">
                             <div class="action-card-item" onclick="document.getElementById('mediaInput').click()">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#ec4899"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#ec4899"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
                                 <span class="action-card-text">Photo/Video</span>
                             </div>
                             <div class="action-card-item" onclick="alert('Tag people feature coming soon!')">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#a855f7"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#a855f7"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                                 <span class="action-card-text">Tag people</span>
+                            </div>
+                            <div class="action-card-item" onclick="alert('Location feature coming soon!')">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#ef4444"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                <span class="action-card-text">Location</span>
+                            </div>
+                            <div class="action-card-item" onclick="alert('Feeling/Activity coming soon!')">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#eab308"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                                <span class="action-card-text">Feeling/Activity</span>
+                            </div>
+                        </div>
+
+                        <!-- Options List Box -->
+                        <div class="options-list-box">
+                            <div class="option-row" onclick="alert('Background color feature coming soon!')">
+                                <div class="option-row-left">
+                                    <div style="width: 28px; height: 28px; background: #6366f1; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">Aa</div>
+                                    Background color
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('Live video coming soon!')">
+                                <div class="option-row-left">
+                                    <div style="width: 28px; height: 28px; background: #ef4444; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white;">🔴</div>
+                                    Live video
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('GIF feature coming soon!')">
+                                <div class="option-row-left">
+                                    <div style="width: 28px; height: 28px; background: #10b981; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold;">GIF</div>
+                                    GIF
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('Poll feature coming soon!')">
+                                <div class="option-row-left">
+                                    <div style="width: 28px; height: 28px; background: #06b6d4; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white;">📊</div>
+                                    Poll
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
+                            </div>
+                            <div class="option-row" onclick="alert('More options coming soon!')">
+                                <div class="option-row-left">
+                                    <div style="width: 28px; height: 28px; background: #6b7280; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white;">•••</div>
+                                    More options
+                                </div>
+                                <span style="color: #b0b3b8;">›</span>
                             </div>
                         </div>
                     </div>
@@ -244,7 +308,9 @@
                 <span style="text-align: center;">Create story</span>
             </div>
             <div class="story-card" style="background: linear-gradient(135deg, #a855f7, #ec4899);">
-                <div class="story-avatar">{% if current_user.is_authenticated %}{{ current_user.username[0] | upper }}{% else %}?{% endif %}</div>
+                <div class="story-avatar">
+                    <img src="{{ url_for('static', filename='chan.png') }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
                 <span>{% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}</span>
             </div>
         </div>
@@ -252,7 +318,9 @@
         {% for post in posts %}
         <div class="post-card">
             <div class="post-header">
-                <div class="post-avatar">{{ post.author.username[0] | upper }}</div>
+                <div class="post-avatar">
+                    <img src="{{ url_for('static', filename='chan.png') }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
                 <div class="post-user-info">
                     <h4><a href="{{ url_for('profile', username=post.author.username) }}" style="text-decoration: none; color: inherit;">{{ post.author.name or post.author.username }}</a></h4>
                     <span>Just now</span>
@@ -290,7 +358,9 @@
                     </div>
                     {% for like in post.likes %}
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <div style="width: 30px; height: 30px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: white;">{{ like.user.username[0] | upper }}</div>
+                        <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex-shrink: 0;">
+                            <img src="{{ url_for('static', filename='chan.png') }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                         <span style="font-weight: bold; font-size: 14px;">{{ like.user.username }}</span>
                         <span style="margin-left: auto; font-size: 18px;">{{ like.emoji }}</span>
                     </div>
@@ -373,9 +443,22 @@
         function closeSearchModal() { document.getElementById('searchModal').style.display = 'none'; }
         function openLikesModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeLikesModal(id) { document.getElementById(id).style.display = 'none'; }
+        
         function updateFileLabel(input) {
             let t = document.getElementById('fileStatusText');
             t.innerText = input.files && input.files[0] ? "📎 Selected File: " + input.files[0].name : "";
+        }
+
+        function togglePrivacyDropdown(event) {
+            event.stopPropagation();
+            let dropdown = document.getElementById('privacyDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function setPrivacy(text, icon) {
+            document.getElementById('selectedPrivacyText').innerText = text;
+            document.getElementById('selectedPrivacyIcon').innerText = icon;
+            document.getElementById('privacyDropdown').style.display = 'none';
         }
 
         let pressTimer;
@@ -468,8 +551,10 @@
         window.onclick = function(event) {
             let modal = document.getElementById('postModal');
             let searchModal = document.getElementById('searchModal');
+            let privacyDropdown = document.getElementById('privacyDropdown');
             if (event.target == modal) { modal.style.display = "none"; }
             if (event.target == searchModal) { searchModal.style.display = "none"; }
+            if (privacyDropdown) { privacyDropdown.style.display = "none"; }
             if (!event.target.closest('.action-wrapper')) {
                 document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
             }
@@ -477,3 +562,4 @@
     </script>
 </body>
 </html>
+
