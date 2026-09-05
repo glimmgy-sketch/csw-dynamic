@@ -33,7 +33,7 @@ app.register_blueprint(notif_bp)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Request ပြီးဆုံးတိုင်း Database session ကို သေချာရှင်းလင်းပေးရန် (Error မတက်စေရန်)
+# Request ပြီးဆုံးတိုင်း Database session ကို သေချာရှင်းလင်းပေးရန်
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db.session.remove()
@@ -59,10 +59,12 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    # Login ဝင်စရာမလိုဘဲ App ဖွင့်လိုက်တာနဲ့ Admin အကောင့်နဲ့ တန်းဝင်ပေးရန် (Auto-login)
-    admin_user = User.query.filter_by(username='MinNaungChan').first()
-    if admin_user:
-        login_user(admin_user)
+    try:
+        admin_user = User.query.filter_by(username='MinNaungChan').first()
+        if admin_user and not current_user.is_authenticated:
+            login_user(admin_user, remember=True)
+    except Exception as e:
+        print("Auto-login note:", e)
         
     posts = Post.query.order_by(Post.id.desc()).all()
     return render_template('index.html', posts=posts)
