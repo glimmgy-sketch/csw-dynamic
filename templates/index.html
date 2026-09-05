@@ -91,13 +91,50 @@
         .action-btn:hover { background: #3a3b3c; }
         .action-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
+        /* Facebook Style Floating Animated Reaction Box */
         .action-wrapper { flex: 1; position: relative; display: flex; }
-        .reaction-box { display: none; position: absolute; bottom: 45px; left: 0; background: #242526; border: 1px solid #3a3b3c; border-radius: 30px; padding: 6px 10px; gap: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 999; touch-action: none; animation: fadeInScale 0.25s forwards; }
-        .reaction-box.show { display: flex; }
-        @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.6) translateY(15px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .reaction-box { 
+            display: none; 
+            position: absolute; 
+            bottom: 45px; 
+            left: 0; 
+            background: #242526; 
+            border: 1px solid #3a3b3c;
+            border-radius: 30px; 
+            padding: 6px 10px; 
+            gap: 10px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5); 
+            z-index: 999; 
+            touch-action: none;
+            animation: fadeInScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
 
-        .reaction-icon { background: none; border: none; width: 38px; height: 38px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: transform 0.25s; padding: 0; user-select: none; }
-        .reaction-icon.active-zoom { transform: scale(1.4) translateY(-12px); }
+        .reaction-box.show { display: flex; }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.6) translateY(15px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .reaction-icon { 
+            background: none; 
+            border: none; 
+            width: 38px;
+            height: 38px;
+            font-size: 24px; 
+            cursor: pointer; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            padding: 0; 
+            user-select: none;
+        }
+        
+        .reaction-icon.active-zoom { 
+            transform: scale(1.4) translateY(-12px); 
+        }
 
         .comments-section { padding: 10px 15px; background: #18191a; font-size: 14px; }
         .comment-item { margin-bottom: 8px; color: #e4e6eb; }
@@ -105,11 +142,13 @@
         .comment-form input { flex: 1; padding: 8px 12px; background: #3a3b3c; border: none; border-radius: 20px; color: white; outline: none; }
         .comment-form button { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
+        /* Search Modal */
         #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; padding: 15px; box-sizing: border-box; }
         .search-container { max-width: 600px; margin: 0 auto; }
         .search-header { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
         .search-input { flex: 1; background: #3a3b3c; border: none; padding: 12px 15px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
 
+        /* Details Modal */
         .details-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
         .details-content { background: #242526; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; border: 1px solid #3a3b3c; max-height: 400px; overflow-y: auto; }
 
@@ -119,7 +158,7 @@
         .bottom-nav-item.active { color: #a855f7; }
         .bottom-nav-item svg { width: 24px; height: 24px; fill: currentColor; }
         .bottom-nav-item span { font-size: 10px; margin-top: 3px; font-weight: bold; }
-        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
+        .create-circle-btn { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #9333ea); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4); cursor: pointer; margin: auto; }
     </style>
 </head>
 <body>
@@ -183,6 +222,10 @@
                                 <svg viewBox="0 0 24 24" width="24" height="24" fill="#ec4899"><path d="M4 5h13v13H4V5zm15-2H2v17h17V3zm-3.5 10.5l-3-4-2.5 3L8 10l-4 5h12z"/></svg>
                                 <span class="action-card-text">Photo/Video</span>
                             </div>
+                            <div class="action-card-item" onclick="alert('Tag people feature coming soon!')">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="#a855f7"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                <span class="action-card-text">Tag people</span>
+                            </div>
                         </div>
                     </div>
 
@@ -193,6 +236,7 @@
             </div>
         </div>
 
+        <!-- Stories Section -->
         <div class="stories-container">
             <div class="story-card" style="background: #242526; justify-content: center; align-items: center;">
                 <div class="create-story-btn" style="position: static; margin-bottom: 8px;">
@@ -206,6 +250,7 @@
             </div>
         </div>
 
+        <!-- Feed Posts List -->
         {% for post in posts %}
         <div class="post-card">
             <div class="post-header">
@@ -231,7 +276,7 @@
             {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
             <div class="post-stats-bar">
                 <div class="stats-link" onclick="openLikesModal('likes-modal-{{ post.id }}')">
-                    <span>👍</span>
+                    <span>{{ user_like.emoji if user_like else '👍' }}</span>
                     <span>{{ post.likes | length }}</span>
                 </div>
                 <div class="stats-link" onclick="document.getElementById('comment-box-{{ post.id }}').style.display = 'block';">
@@ -255,14 +300,15 @@
                 </div>
             </div>
 
+            <!-- Post Footer Actions (Like, Comment, Share with full touch/slide support) -->
             <div class="post-footer-actions">
                 <div class="action-wrapper">
                     <button type="button" class="action-btn" style="color: {% if user_like %}#a855f7{% else %}#b0b3b8{% endif %};" 
                         ontouchstart="startLongPress(event, 'reaction-box-{{ post.id }}')" 
                         onmousedown="startLongPress(event, 'reaction-box-{{ post.id }}')"
-                        onclick="handleLikeClick(event, '{{ url_for('like_post', post_id=post.id) }}', '👍')">
+                        onclick="handleLikeClick(event, '{{ url_for('like_post', post_id=post.id) }}', '{{ user_like.emoji if user_like else '👍' }}')">
                         <svg viewBox="0 0 24 24" width="18" height="18" style="fill: currentColor;"><path d="M16.48 2h-3.16c-.41 0-.77.24-.93.65l-1.64 4.03C10.45 7.15 10.12 7.3 9.77 7.3H5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h11.75c1.02 0 1.9-.67 2.15-1.66l2.12-8.49c.28-1.12-.56-2.15-1.71-2.15h-4.08l.75-3.56c.11-.53-.1-1.07-.5-1.42-.39-.36-.92-.51-1.45-.36zM5 19V9h4.77l-1.92 4.72c-.22.54-.04 1.16.42 1.51.46.35 1.1.34 1.55-.03l3.68-3.02V19H5zm14.73-9.58l-2.12 8.49c-.08.31-.38.52-.71.52H12v-6.31l3.54-2.91c.24-.2.35-.52.28-.82-.07-.3-.31-.53-.62-.57H9.27l1.24-3h2.72l1.5 7h5.22c.22 0 .4.18.4.4 0 .09-.03.18-.08.25z"/></svg>
-                        Like
+                        {{ user_like.emoji if user_like else 'Like' }}
                     </button>
                     
                     <div id="reaction-box-{{ post.id }}" class="reaction-box" data-post-id="{{ post.id }}">
@@ -279,6 +325,11 @@
                     <svg viewBox="0 0 24 24"><path d="M21 6h-18c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h3l4 4 4-4h7c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 13h-7.5l-2.5 2.5-2.5-2.5h-7.5V8h18v11z"/></svg>
                     Comment
                 </button>
+
+                <button class="action-btn" onclick="alert('Post link copied to clipboard!')">
+                    <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+                    Share
+                </button>
             </div>
 
             <div id="comment-box-{{ post.id }}" class="comments-section" style="display: none;">
@@ -294,6 +345,7 @@
         {% endfor %}
     </div>
 
+    <!-- Bottom Navigation Bar -->
     <div class="chan-bottom-nav">
         <a href="{{ url_for('index') }}" class="bottom-nav-item active">
             <svg viewBox="0 0 24 24"><path d="M12 3l-10 9h3v9h5v-6h4v6h5v-9h3z"/></svg>
@@ -329,8 +381,11 @@
             let t = document.getElementById('fileStatusText');
             t.innerText = input.files && input.files[0] ? "📎 Selected File: " + input.files[0].name : "";
         }
-        let pressTimer, activeReactionBox = null;
-        function startLongPress(e, boxId) {
+
+        let pressTimer;
+        let activeReactionBox = null;
+
+        function startLongPress(event, boxId) {
             pressTimer = setTimeout(() => {
                 let box = document.getElementById(boxId);
                 document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
@@ -338,31 +393,91 @@
                 activeReactionBox = box;
             }, 300);
         }
-        window.addEventListener('mouseup', () => clearTimeout(pressTimer));
-        window.addEventListener('touchend', (e) => {
+
+        window.addEventListener('mouseup', cancelLongPress);
+        window.addEventListener('touchend', handleTouchEnd);
+        window.addEventListener('touchmove', handleTouchMove, {passive: false});
+
+        function cancelLongPress() {
             clearTimeout(pressTimer);
+        }
+
+        function handleLikeClick(event, actionUrl, defaultEmoji) {
+            if (activeReactionBox && activeReactionBox.classList.contains('show')) {
+                return;
+            }
+            submitReaction(actionUrl, defaultEmoji);
+        }
+
+        function handleTouchMove(event) {
             if (!activeReactionBox || !activeReactionBox.classList.contains('show')) return;
-            let touch = e.changedTouches[0];
+            event.preventDefault();
+
+            let touch = event.touches[0];
             let icons = activeReactionBox.querySelectorAll('.reaction-icon');
-            let selectedEmoji = null;
+            
             icons.forEach(icon => {
                 let rect = icon.getBoundingClientRect();
-                if (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                    icon.classList.add('active-zoom');
+                } else {
+                    icon.classList.remove('active-zoom');
+                }
+            });
+        }
+
+        function handleTouchEnd(event) {
+            clearTimeout(pressTimer);
+            if (!activeReactionBox || !activeReactionBox.classList.contains('show')) return;
+
+            let touch = event.changedTouches[0];
+            let icons = activeReactionBox.querySelectorAll('.reaction-icon');
+            let selectedEmoji = null;
+
+            icons.forEach(icon => {
+                let rect = icon.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
                     selectedEmoji = icon.getAttribute('data-emoji');
                 }
                 icon.classList.remove('active-zoom');
             });
+
             if (selectedEmoji) {
                 let postId = activeReactionBox.getAttribute('data-post-id');
-                let form = document.createElement('form');
-                form.method = 'POST'; form.action = `/like/${postId}`;
-                let input = document.createElement('input');
-                input.type = 'hidden'; input.name = 'emoji'; input.value = selectedEmoji;
-                form.appendChild(input); document.body.appendChild(form); form.submit();
+                let actionUrl = `/like/${postId}`;
+                submitReaction(actionUrl, selectedEmoji);
             }
+
             activeReactionBox.classList.remove('show');
             activeReactionBox = null;
-        });
+        }
+
+        function submitReaction(url, emoji) {
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'emoji';
+            input.value = emoji;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        window.onclick = function(event) {
+            let modal = document.getElementById('postModal');
+            let searchModal = document.getElementById('searchModal');
+            if (event.target == modal) { modal.style.display = "none"; }
+            if (event.target == searchModal) { searchModal.style.display = "none"; }
+            if (!event.target.closest('.action-wrapper')) {
+                document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
+            }
+        }
     </script>
 </body>
 </html>
