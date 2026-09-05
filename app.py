@@ -10,7 +10,7 @@ from notifications import notif_bp
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'csw-dynamic-secret-key'
 
-# SQLite database ချိတ်ဆက်ရန် (VPN လုံးဝ မလိုတော့ပါ)
+# SQLite database ချိတ်ဆက်ရန်
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///csw.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -36,7 +36,7 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
     
-    # 🔴 SQLite တွင် Error မတက်စေရန် Safe Column Migration
+    # SQLite တွင် Error မတက်စေရန် Safe Column Migration
     try:
         with db.engine.connect() as connection:
             result = connection.execute(db.text("PRAGMA table_info(post);"))
