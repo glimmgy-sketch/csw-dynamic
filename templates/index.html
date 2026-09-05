@@ -41,47 +41,52 @@
         .post-content { padding: 0 15px 12px 15px; font-size: 15px; line-height: 1.4; color: #e4e6eb; }
         .post-media { width: 100%; max-height: 400px; object-fit: cover; background: #000; }
         
-        /* Action buttons & 3D Reactions */
+        /* Action buttons & Slide Reactions */
         .post-footer-actions { display: flex; border-top: 1px solid #3a3b3c; border-bottom: 1px solid #3a3b3c; position: relative; }
-        .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; }
+        .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; user-select: none; }
         .action-btn:hover { background: #3a3b3c; }
 
-        /* 3D Reaction Popup Box (PC & Mobile Friendly) */
+        /* Facebook Style Slide Reaction Box */
         .action-wrapper { flex: 1; position: relative; display: flex; }
         .reaction-box { 
             display: none; 
             position: absolute; 
-            bottom: 48px; 
-            left: 5px; 
+            bottom: 50px; 
+            left: 50%; 
+            transform: translateX(-50%); 
             background: rgba(36, 37, 38, 0.98); 
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: 1px solid #3a3b3c; 
             border-radius: 40px; 
             padding: 8px 14px; 
             gap: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
             z-index: 999; 
+            touch-action: none;
             animation: fadeInScale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        
-        .action-wrapper:hover .reaction-box, .reaction-box.show { display: flex; }
+
+        .reaction-box.show { display: flex; }
 
         @keyframes fadeInScale {
-            0% { opacity: 0; transform: scale(0.7) translateY(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% { opacity: 0; transform: translateX(-50%) scale(0.7) translateY(10px); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
         }
 
         .reaction-icon { 
             background: none; 
             border: none; 
-            font-size: 26px; 
+            font-size: 28px; 
             cursor: pointer; 
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; 
             padding: 0; 
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            user-select: none;
         }
-        .reaction-icon:hover { 
-            transform: scale(1.4) translateY(-6px); 
+        
+        .reaction-icon.active-zoom { 
+            transform: scale(1.6) translateY(-12px); 
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
         }
 
         .comments-section { padding: 10px 15px; background: #18191a; font-size: 14px; }
@@ -182,30 +187,21 @@
             {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
             <div class="post-footer-actions">
                 <div class="action-wrapper">
-                    <button type="button" class="action-btn" style="width: 100%; color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};" onclick="toggleReaction(event, 'reaction-box-{{ post.id }}')">
-                        {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else 'Like' }} ({{ post.likes | length }})
+                    <button type="button" class="action-btn" style="width: 100%; color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};" 
+                        ontouchstart="startLongPress(event, 'reaction-box-{{ post.id }}')" 
+                        onmousedown="startLongPress(event, 'reaction-box-{{ post.id }}')"
+                        onclick="handleLikeClick(event, '{{ url_for('like_post', post_id=post.id) }}', '{{ user_like.emoji if user_like else '👍' }}')">
+                        {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else ('Like' if not user_like else user_like.emoji) }} ({{ post.likes | length }})
                     </button>
                     
-                    <!-- 3D Floating Reaction Box -->
-                    <div id="reaction-box-{{ post.id }}" class="reaction-box">
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="👍"><button type="submit" class="reaction-icon" title="Like">👍</button>
-                        </form>
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="❤️"><button type="submit" class="reaction-icon" title="Love">❤️</button>
-                        </form>
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😆"><button type="submit" class="reaction-icon" title="Haha">😆</button>
-                        </form>
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😮"><button type="submit" class="reaction-icon" title="Wow">😮</button>
-                        </form>
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😢"><button type="submit" class="reaction-icon" title="Sad">😢</button>
-                        </form>
-                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="emoji" value="😡"><button type="submit" class="reaction-icon" title="Angry">😡</button>
-                        </form>
+                    <!-- Slide Reaction Bar -->
+                    <div id="reaction-box-{{ post.id }}" class="reaction-box" data-post-id="{{ post.id }}">
+                        <span class="reaction-icon" data-emoji="👍">👍</span>
+                        <span class="reaction-icon" data-emoji="❤️">❤️</span>
+                        <span class="reaction-icon" data-emoji="😆">😆</span>
+                        <span class="reaction-icon" data-emoji="😮">😮</span>
+                        <span class="reaction-icon" data-emoji="😢">😢</span>
+                        <span class="reaction-icon" data-emoji="😡">😡</span>
                     </div>
                 </div>
                 <button class="action-btn" onclick="document.getElementById('comment-box-{{ post.id }}').style.display = document.getElementById('comment-box-{{ post.id }}').style.display === 'none' ? 'block' : 'none';">
@@ -261,15 +257,92 @@
         function closeModal() {
             document.getElementById('postModal').style.display = 'none';
         }
-        
-        function toggleReaction(event, boxId) {
-            event.stopPropagation();
-            let boxes = document.querySelectorAll('.reaction-box');
-            boxes.forEach(b => {
-                if (b.id !== boxId) b.classList.remove('show');
+
+        let pressTimer;
+        let activeReactionBox = null;
+
+        function startLongPress(event, boxId) {
+            pressTimer = setTimeout(() => {
+                let box = document.getElementById(boxId);
+                document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
+                box.classList.add('show');
+                activeReactionBox = box;
+            }, 350);
+        }
+
+        window.addEventListener('mouseup', cancelLongPress);
+        window.addEventListener('touchend', handleTouchEnd);
+        window.addEventListener('touchmove', handleTouchMove, {passive: false});
+
+        function cancelLongPress() {
+            clearTimeout(pressTimer);
+        }
+
+        function handleLikeClick(event, actionUrl, defaultEmoji) {
+            if (activeReactionBox && activeReactionBox.classList.contains('show')) {
+                return;
+            }
+            submitReaction(actionUrl, defaultEmoji);
+        }
+
+        function handleTouchMove(event) {
+            if (!activeReactionBox || !activeReactionBox.classList.contains('show')) return;
+            event.preventDefault();
+
+            let touch = event.touches[0];
+            let icons = activeReactionBox.querySelectorAll('.reaction-icon');
+            
+            icons.forEach(icon => {
+                let rect = icon.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                    icon.classList.add('active-zoom');
+                } else {
+                    icon.classList.remove('active-zoom');
+                }
             });
-            let box = document.getElementById(boxId);
-            box.classList.toggle('show');
+        }
+
+        function handleTouchEnd(event) {
+            clearTimeout(pressTimer);
+            if (!activeReactionBox || !activeReactionBox.classList.contains('show')) return;
+
+            let touch = event.changedTouches[0];
+            let icons = activeReactionBox.querySelectorAll('.reaction-icon');
+            let selectedEmoji = null;
+
+            icons.forEach(icon => {
+                let rect = icon.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                    selectedEmoji = icon.getAttribute('data-emoji');
+                }
+                icon.classList.remove('active-zoom');
+            });
+
+            if (selectedEmoji) {
+                let postId = activeReactionBox.getAttribute('data-post-id');
+                let actionUrl = `/like/${postId}`;
+                submitReaction(actionUrl, selectedEmoji);
+            }
+
+            activeReactionBox.classList.remove('show');
+            activeReactionBox = null;
+        }
+
+        function submitReaction(url, emoji) {
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'emoji';
+            input.value = emoji;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
 
         window.onclick = function(event) {
