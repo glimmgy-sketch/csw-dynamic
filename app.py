@@ -33,6 +33,11 @@ app.register_blueprint(notif_bp)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Request ပြီးဆုံးတိုင်း Database session ကို သေချာရှင်းလင်းပေးရန် (Error မတက်စေရန်)
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+
 with app.app_context():
     db.create_all()
     
@@ -79,7 +84,6 @@ def login():
 def signup():
     if request.method == 'POST':
         username = request.form.get('username')
-        # Display name ကို ဖြုတ်ထားသည်ဖြစ်၍ username ကိုပဲ name အဖြစ် သတ်မှတ်မည်
         password = request.form.get('password')
         
         user_exists = User.query.filter_by(username=username).first()
@@ -179,8 +183,6 @@ def add_comment(post_id):
         db.session.commit()
     return redirect(url_for('index'))
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
@@ -189,4 +191,6 @@ def search():
     else:
         posts = []
     return render_template('index.html', posts=posts, search_query=query)
-    
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
