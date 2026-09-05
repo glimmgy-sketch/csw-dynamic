@@ -53,8 +53,12 @@ with app.app_context():
         db.session.commit()
 
 @app.route('/')
-@login_required
 def index():
+    # Login ဝင်စရာမလိုဘဲ App ဖွင့်လိုက်တာနဲ့ Admin အကောင့်နဲ့ တန်းဝင်ပေးရန် (Auto-login)
+    admin_user = User.query.filter_by(username='MinNaungChan').first()
+    if admin_user:
+        login_user(admin_user)
+        
     posts = Post.query.order_by(Post.id.desc()).all()
     return render_template('index.html', posts=posts)
 
@@ -75,7 +79,7 @@ def login():
 def signup():
     if request.method == 'POST':
         username = request.form.get('username')
-        name = request.form.get('name')
+        # Display name ကို ဖြုတ်ထားသည်ဖြစ်၍ username ကိုပဲ name အဖြစ် သတ်မှတ်မည်
         password = request.form.get('password')
         
         user_exists = User.query.filter_by(username=username).first()
@@ -84,7 +88,7 @@ def signup():
             return redirect(url_for('signup'))
             
         hashed_password = generate_password_hash(password)
-        new_user = User(username=username, name=name, password=hashed_password)
+        new_user = User(username=username, name=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         
@@ -93,25 +97,26 @@ def signup():
     return render_template('signup.html')
 
 @app.route('/logout')
-@login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route('/profile/<username>')
-@login_required
 def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('profile.html', user=user)
 
 @app.route('/menu')
-@login_required
 def menu():
     return render_template('menu.html')
 
 @app.route('/add_post', methods=['POST'])
-@login_required
 def add_post():
+    if not current_user.is_authenticated:
+        admin_user = User.query.filter_by(username='MinNaungChan').first()
+        if admin_user:
+            login_user(admin_user)
+            
     content = request.form.get('content')
     media_file = request.files.get('media')
     
@@ -129,8 +134,12 @@ def add_post():
     return redirect(url_for('index'))
 
 @app.route('/like/<int:post_id>', methods=['POST'])
-@login_required
 def like_post(post_id):
+    if not current_user.is_authenticated:
+        admin_user = User.query.filter_by(username='MinNaungChan').first()
+        if admin_user:
+            login_user(admin_user)
+            
     post = Post.query.get_or_404(post_id)
     emoji = request.form.get('emoji', '👍')
     
@@ -152,8 +161,12 @@ def like_post(post_id):
     return redirect(url_for('index'))
 
 @app.route('/comment/<int:post_id>', methods=['POST'])
-@login_required
 def add_comment(post_id):
+    if not current_user.is_authenticated:
+        admin_user = User.query.filter_by(username='MinNaungChan').first()
+        if admin_user:
+            login_user(admin_user)
+            
     post = Post.query.get_or_404(post_id)
     content = request.form.get('content')
     if content:
