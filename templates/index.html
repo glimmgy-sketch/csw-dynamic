@@ -46,43 +46,42 @@
         .action-btn { flex: 1; background: none; border: none; padding: 10px; font-weight: bold; color: #b0b3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; }
         .action-btn:hover { background: #3a3b3c; }
 
-        /* Facebook Style 3D Reaction Popup */
+        /* 3D Reaction Popup Box (PC & Mobile Friendly) */
         .action-wrapper { flex: 1; position: relative; display: flex; }
         .reaction-box { 
             display: none; 
             position: absolute; 
-            bottom: 50px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(36, 37, 38, 0.95); 
+            bottom: 48px; 
+            left: 5px; 
+            background: rgba(36, 37, 38, 0.98); 
             backdrop-filter: blur(10px);
             border: 1px solid #3a3b3c; 
             border-radius: 40px; 
             padding: 8px 14px; 
             gap: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6); 
-            z-index: 100; 
-            animation: fadeInScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7); 
+            z-index: 999; 
+            animation: fadeInScale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .action-wrapper:hover .reaction-box { display: flex; }
         
+        .action-wrapper:hover .reaction-box, .reaction-box.show { display: flex; }
+
         @keyframes fadeInScale {
-            0% { opacity: 0; transform: translateX(-50%) scale(0.7) translateY(10px); }
-            100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+            0% { opacity: 0; transform: scale(0.7) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .reaction-icon { 
             background: none; 
             border: none; 
-            font-size: 28px; 
+            font-size: 26px; 
             cursor: pointer; 
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             padding: 0; 
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
         .reaction-icon:hover { 
-            transform: scale(1.5) translateY(-8px); 
-            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.5));
+            transform: scale(1.4) translateY(-6px); 
         }
 
         .comments-section { padding: 10px 15px; background: #18191a; font-size: 14px; }
@@ -183,14 +182,12 @@
             {% set user_like = post.likes | selectattr('user_id', 'equalto', current_user.id) | first %}
             <div class="post-footer-actions">
                 <div class="action-wrapper">
-                    <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="flex: 1; display: flex;">
-                        <input type="hidden" name="emoji" value="{{ user_like.emoji if user_like else '👍' }}">
-                        <button type="submit" class="action-btn" style="width: 100%; color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};">
-                            {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else 'Like' }} ({{ post.likes | length }})
-                        </button>
-                    </form>
+                    <button type="button" class="action-btn" style="width: 100%; color: {% if user_like %}#2d88ff{% else %}#b0b3b8{% endif %};" onclick="toggleReaction(event, 'reaction-box-{{ post.id }}')">
+                        {{ user_like.emoji if user_like else '👍' }} {{ user_like.emoji if user_like else 'Like' }} ({{ post.likes | length }})
+                    </button>
+                    
                     <!-- 3D Floating Reaction Box -->
-                    <div class="reaction-box">
+                    <div id="reaction-box-{{ post.id }}" class="reaction-box">
                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" style="display:inline;">
                             <input type="hidden" name="emoji" value="👍"><button type="submit" class="reaction-icon" title="Like">👍</button>
                         </form>
@@ -264,10 +261,24 @@
         function closeModal() {
             document.getElementById('postModal').style.display = 'none';
         }
+        
+        function toggleReaction(event, boxId) {
+            event.stopPropagation();
+            let boxes = document.querySelectorAll('.reaction-box');
+            boxes.forEach(b => {
+                if (b.id !== boxId) b.classList.remove('show');
+            });
+            let box = document.getElementById(boxId);
+            box.classList.toggle('show');
+        }
+
         window.onclick = function(event) {
             let modal = document.getElementById('postModal');
             if (event.target == modal) {
                 modal.style.display = "none";
+            }
+            if (!event.target.closest('.action-wrapper')) {
+                document.querySelectorAll('.reaction-box').forEach(b => b.classList.remove('show'));
             }
         }
     </script>
